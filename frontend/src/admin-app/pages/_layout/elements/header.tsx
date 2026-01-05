@@ -132,11 +132,11 @@ const Header = () => {
             <CustomLink to={'/'} className='logo'>
               <img src='/imgs/logo.png' />
             </CustomLink>
-            {/* <div className='side-menu-button' onClick={toggleDrawer}>
+            <div className='side-menu-button' onClick={toggleDrawer}>
               <div className='bar1' />
               <div className='bar2' />
               <div className='bar3' />
-            </div> */}
+            </div>
             <nav className='navbar navbar-expand-md btco-hover-menu'>
               <div className='collapse navbar-collapse'>
                 <ul className='list-unstyled navbar-nav'>
@@ -225,7 +225,7 @@ const Header = () => {
                   </li> */}
                   <li className='nav-item dropdown'>
                     <a>
-                      <b>Live Casino</b> <i className='fa fa-caret-down' />
+                      <b>Live Markets</b> <i className='fa fa-caret-down' />
                     </a>
                     <ul
                       className='dropdown-menu'
@@ -325,7 +325,7 @@ const Header = () => {
                 </a> */}
               </li>
             </ul>
-            <Marqueemessge message={userMessage}></Marqueemessge>
+            {/* <Marqueemessge message={userMessage}></Marqueemessge> */}
           </div>
         </div>
       </header>

@@ -715,7 +715,7 @@ input + .slider span:last-child {
 
 .logo img {
   max-width: 120px;
-  height: 60px;
+  /* height: 60px; */
 }
 
 .header-top ul li {

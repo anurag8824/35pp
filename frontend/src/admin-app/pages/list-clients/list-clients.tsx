@@ -418,7 +418,7 @@ const ListClients = () => {
     <>
       <div className='container-fluid'>
         <div className='row'>
-          <div className='master-balance'>
+          <div className='master-balance d-none'>
             <div
               className='text-center '
               onClick={() => {
@@ -509,7 +509,7 @@ const ListClients = () => {
                     <div className=''>
                       <h2 className='d-inline-block'>Account List</h2>
                       <p>
-                        {(userState.user.role == RoleType.admin ||
+                        {/* {(userState.user.role == RoleType.admin ||
                           userState.user.role == RoleType.sadmin) && (
                             <button
                               type='submit'
@@ -518,10 +518,10 @@ const ListClients = () => {
                             >
                               Logout All Users
                             </button>
-                          )}
+                          )} */}
 
                         <button type='submit' onClick={exportExcel} className='btn btn-small bg-green mrc-5 mlc-5'>
-                          Excel
+                        <i className="far fa-file-excel mr-1"></i>      Excel
                         </button>
 
                         <Pdf
@@ -530,7 +530,7 @@ const ListClients = () => {
                         >
                           {({ toPdf }: any) => (
                             <button className='btn btn-small bg-red' onClick={toPdf}>
-                              PDF
+                           <i className="far fa-file-pdf mr-1"></i>   PDF
                             </button>
                           )}
                         </Pdf>
@@ -628,7 +628,7 @@ const ListClients = () => {
                   </div>
                 </div>
               </div>
-              <ul className='nav nav-tabs'>
+              <ul className='nav nav-tabs d-none'>
                 <li className='nav-item'>
                   <a
                     className={`nav-link ${activeDeactive ? 'active' : ''}`}
