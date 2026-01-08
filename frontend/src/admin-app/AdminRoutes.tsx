@@ -19,6 +19,11 @@ const Message = React.lazy(() => import('../admin-app/pages/settings/message'))
 const Paymethod = React.lazy(() => import('../admin-app/pages/settings/paymethod'))
 
 const CombinedDashboard = React.lazy(() => import("../admin-app/pages/AccountStatement/CombinedDashboard"))
+const AssignAgent = React.lazy(() => import("../admin-app/pages/admin-dashboard/assign-agent"))
+const MultiLogin = React.lazy(() => import("../admin-app/pages/admin-dashboard/multi-login"))
+const SecureAuth = React.lazy(() => import("../admin-app/pages/admin-dashboard/secure-auth"))
+
+
 
 const AdminDashboard = React.lazy(
   () => import('../admin-app/pages/admin-dashboard/admin-dashboard'),
@@ -87,6 +92,12 @@ const AdminRoutes = () => {
             { path: 'accountstatement', element: <AccountStatementAdmin /> },
 
             { path: 'combined-dashboard', element: <CombinedDashboard /> },
+            { path: 'assign-agent', element: <AssignAgent /> },
+            { path: 'multi-login', element: <MultiLogin/> },
+            { path: 'secure-auth', element: <SecureAuth/> },
+
+
+
 
             { path: 'profitloss', element: <ProfitLossAdmin /> },
             { path: 'unsettledbet', element: <UnsetteleBetHistoryAdmin /> },

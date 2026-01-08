@@ -154,6 +154,12 @@ const Header = () => {
                   </li>
 
                   <li className='nav-item'>
+                    <CustomLink to={`/assign-agent`}>
+                      <b>Assign Agent</b>
+                    </CustomLink>
+                  </li>
+
+                  <li className='nav-item'>
                     <CustomLink to={'/market-analysis'}>
                       <b>Market Analysis</b>
                     </CustomLink>
@@ -291,6 +297,13 @@ const Header = () => {
 
                       </ul>
                     </li>
+
+                  
+                    <li className='nav-item'>
+                    <CustomLink to={`/multi-login`}>
+                      <b>Multi Login</b>
+                    </CustomLink>
+                  </li>
                 
                 </ul>
               </div>
@@ -301,6 +314,11 @@ const Header = () => {
                   {userState?.user?.username} <i className='fa fa-caret-down' />
                 </span>
                 <ul style={{ display: showMenu ? 'block' : 'none' }}>
+                <li>
+                    <CustomLink to='/secure-auth'>
+                      <b>Secure Auth Verify</b>
+                    </CustomLink>
+                  </li>
                   <li>
                     <CustomLink to='/change-password'>
                       <b>Change Password</b>
