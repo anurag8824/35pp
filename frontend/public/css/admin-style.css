@@ -730,7 +730,7 @@ input + .slider span:last-child {
 
 .user-search {
   position: absolute;
-  right: 30px;
+  right: 10px;
   top: 7px;
 }
 
@@ -762,7 +762,7 @@ input + .slider span:last-child {
   height: 38px;
   border: 0;
   padding: 0 10px;
-  width: 160px;
+  width: 80px;
   border-radius: 2px;
 }
 

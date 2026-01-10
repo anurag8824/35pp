@@ -27,6 +27,9 @@ const Header = () => {
   const [treeData, setTreeData] = React.useState<any>([])
   const [expanded, setExpanded] = React.useState<string[]>([])
 
+  const [expandedKeys, setExpandedKeys] = React.useState<any[]>([])
+
+
   const sportsList = useAppSelector(selectSportList)
 
   const [userMessage, setUserMessage] = React.useState<string>('')
@@ -50,7 +53,29 @@ const Header = () => {
   const toggleDrawer = () => {
     setIsOpen((prevState) => !prevState)
     setTreeData(
-      sportsList.sports.map((sport: ISport) => ({ title: sport.name, key: sport.sportId })),
+      sportsList.sports.map((sport: ISport) => ({ title: (
+        <div className="d-flex align-items-center">
+          {/* 👇 PLUS SIGN YAHI ADD HOTA HAI */}
+          <span>{sport.name}</span>
+
+          <span
+            className="ml-2"
+            style={{ cursor: 'pointer', fontWeight: 'bold' }}
+            onClick={(e) => {
+              e.stopPropagation() // node select hone se rokta hai
+              setExpandedKeys((prev) =>
+                prev.includes(sport.sportId)
+                  ? prev.filter((k) => k !== sport.sportId)
+                  : [...prev, sport.sportId]
+              )
+            }}
+          >
+            {expandedKeys.includes(sport.sportId) ? '+' : '+'}
+          </span>
+  
+          {/* 👇 Sport ka naam */}
+        </div>
+      ), key: sport.sportId })),
     )
   }
 
@@ -101,7 +126,7 @@ const Header = () => {
       return Promise.resolve()
     }
     return sportsService.getSeriesWithMatch(data.key).then((series: any) => {
-      const items = series.data.data.map((series: any) => {
+      const items = series?.data?.data.map((series: any) => {
         const { id, name } = series.competition
         const matchNodes = series.matches.map((match: any) => {
           return {
@@ -306,6 +331,7 @@ const Header = () => {
                   </li>
                 
                 </ul>
+
               </div>
             </nav>
             <ul className='user-search list-unstyled'>
@@ -353,6 +379,10 @@ const Header = () => {
         </div>
         <div className='drawer-content'>
           <Tree
+            showIcon={false}
+            expandedKeys={expandedKeys}
+            onExpand={(keys) => setExpandedKeys(keys)}
+            switcherIcon={null} 
             loadData={onLoadData}
             treeData={treeData}
             onSelect={(selectedKeys, e) => {

@@ -418,7 +418,7 @@ const ListClients = () => {
     <>
       <div className='container-fluid'>
         <div className='row'>
-          <div className='master-balance d-none'>
+          <div className='master-balance '>
             <div
               className='text-center '
               onClick={() => {
@@ -505,7 +505,7 @@ const ListClients = () => {
             <div className='listing-grid'>
               <div className='detail-row '>
                 <div className=' row'>
-                  <div className='col-md-10 '>
+                  <div className='col-md-6 '>
                     <div className=''>
                       <h2 className='d-inline-block'>Account List</h2>
                       <p>
@@ -536,6 +536,13 @@ const ListClients = () => {
                         </Pdf>
                       </p>
                     </div>
+
+                    <div className="col-sm-12 col-md-6 mt-2"><div id="tickets-table_length" className="dataTables_length"><label className="d-inline-flex align-items-center">
+                  Show&nbsp;
+                  <select className="custom-select custom-select-sm" id="__BVID__147"><option value="25">25</option><option value="50">50</option><option value="100">100</option><option value="250">250</option><option value="500">500</option><option value="750">750</option><option value="1000">1000</option></select>&nbsp;entries
+                </label></div></div>
+
+
                     {/* <Form onSubmit={handleSearch} className='col-md-4 row'>
                       <div className='col-md-6'>
                         <Form.Label htmlFor='user-type'>Select Type</Form.Label>
@@ -607,7 +614,7 @@ const ListClients = () => {
                       <button className='btn btn-primary form-group w-100'>Bet Lock</button>
                     </div> */}
                   </div>
-                  <div className='float-right col-md-2 m-b-10'>
+                  <div className='float-right col-md-6 col-sm-12 m-b-10'>
                     <p className='text-right'>
                       {username ? (
                         <CustomLink to={`/add-user/${username}`} className='btn btn-diamond'>
@@ -619,16 +626,28 @@ const ListClients = () => {
                         </CustomLink>
                       )}
                     </p>
-                    <input
-                      type='text'
-                      placeholder='Search client'
-                      className='mx-input mt-2'
-                      onChange={(e) => debouncedChangeHandler(e.target.value)}
-                    />
+
+                    <div className="d-flex  align-items-center mt-2">
+                      <label htmlFor="search" className="mr-2 mb-0">Search:</label>
+    <input
+      type='text'
+      placeholder='Search...'
+      className='mx-input'
+      onChange={(e) => debouncedChangeHandler(e.target.value)}
+    />
+
+    <button type="submit" className="btn btn-primary ml-2">
+      Load
+    </button>
+
+    <button type="button" className="btn btn-secondary ml-2">
+      Reset
+    </button>
+  </div>
                   </div>
                 </div>
               </div>
-              <ul className='nav nav-tabs d-none'>
+              <ul className='nav nav-tabs'>
                 <li className='nav-item'>
                   <a
                     className={`nav-link ${activeDeactive ? 'active' : ''}`}
