@@ -70,6 +70,12 @@ const AddUser = () => {
     }
   }, [username])
 
+  React.useEffect(() => {
+    if (isExposerAllow) {
+      setValue('exposerLimit', 1000000 as any)
+    }
+  }, [isExposerAllow, setValue])
+
   // const onSubmit = handleSubmit((data) => {
   //   // Partenership
   //   if (data.role !== RoleType.user) {
@@ -422,7 +428,7 @@ const AddUser = () => {
                       {isExposerAllow && (
                         <div className='col-md-6'>
                           <div className='form-group' id='exposer-limit'>
-                            <label htmlFor='exposerLimit'>Exposer Limit:</label>
+                            <label htmlFor='exposerLimit'>Exposer Limit:  Unlimited</label>
                             <input
                               placeholder='Exposer Limit'
                               id='exposerLimit'

@@ -857,6 +857,29 @@ input + .slider span:last-child {
   color: rgb(64, 64, 64);
 }
 
+.custom-tabs {
+  border-bottom: 1px solid #dee2e6; /* optional base line */
+}
+
+.custom-tabs .nav-link {
+  border: none;
+  background: transparent;
+  color: #0d6efd; /* blue text */
+  font-weight: 500;
+  margin-right: 10px;
+}
+
+.custom-tabs .nav-link.active {
+  background: #fff;
+  color: #000;
+  border-top: 1px solid #dee2e6;
+  border-left: 1px solid #dee2e6;
+  border-right: 1px solid #dee2e6;
+  border-bottom: 1px solid #ffffff;
+}
+
+
+
 .btco-hover-menu a,
 .navbar > li > a {
   text-transform: capitalize;

@@ -22,6 +22,26 @@ const Header = () => {
   const dispatch = useAppDispatch()
 
   const navigate = useNavigateCustom()
+  const userMenuRef = React.useRef<HTMLLIElement | null>(null)
+
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        userMenuRef.current &&
+        !userMenuRef.current.contains(event.target as Node)
+      ) {
+        setShowMenu(false)
+      }
+    }
+  
+    document.addEventListener('mousedown', handleClickOutside)
+  
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+  
+
 
   const [showMenu, setShowMenu] = React.useState<boolean>(false)
   const [treeData, setTreeData] = React.useState<any>([])
@@ -164,7 +184,12 @@ const Header = () => {
             </div>
             <nav className='navbar navbar-expand-md btco-hover-menu'>
               <div className='collapse navbar-collapse'>
-                <ul className='list-unstyled navbar-nav'>
+                <ul className='list-unstyled navbar-nav'
+                
+                style={{width: "73%",
+                  textWrap: "nowrap",
+                  flexWrap: "wrap",
+                  rowGap: "14px",}}>
 
                 {/* <li className='nav-item'>
                     <CustomLink to={`/combined-dashboard`}>
@@ -275,6 +300,28 @@ const Header = () => {
                         })}
                     </ul>
                   </li>
+
+                  <li className='nav-item dropdown'>
+                    <a>
+                      <b>Live Virtual Markets</b> <i className='fa fa-caret-down' />
+                    </a>
+                    <ul
+                      className='dropdown-menu'
+                      aria-labelledby='navbarDropdownMenuLink'
+                      style={{ height: '400px', overflowY: 'scroll' }}
+                    >
+                      {gameList?.length > 0 &&
+                        gameList.map((Item: any, key: number) => {
+                          return (
+                            <li key={key}>
+                              <CustomLink to={`/casino/${Item.slug}`} className='dropdown-item'>
+                                <b>{Item.title}</b>
+                              </CustomLink>
+                            </li>
+                          )
+                        })}
+                    </ul>
+                  </li>
                  
                     <li className='nav-item dropdown'>
                       <a>
@@ -334,8 +381,12 @@ const Header = () => {
 
               </div>
             </nav>
+
+
+            
+
             <ul className='user-search list-unstyled'>
-              <li className='username'>
+              <li className='username' ref={userMenuRef}>
                 <span onClick={() => setShowMenu(!showMenu)}>
                   {userState?.user?.username} <i className='fa fa-caret-down' />
                 </span>

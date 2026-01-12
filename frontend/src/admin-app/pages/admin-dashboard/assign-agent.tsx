@@ -28,7 +28,6 @@ const AssignAgent = () => {
                       <label className="d-inline-flex align-items-center">
                         Show&nbsp;
                         <select className="custom-select custom-select-sm">
-                          <option value="25">25</option>
                           <option value="50">50</option>
                           <option value="75">75</option>
                           <option value="100">100</option>
