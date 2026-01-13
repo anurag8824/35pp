@@ -108,7 +108,7 @@ class DealersController extends ApiController_1.ApiController {
             const session = yield Database_1.Database.getInstance().startSession();
             try {
                 session.startTransaction();
-                const { password, username, parent, partnership, role, fullname, city, phone, creditRefrences, exposerLimit, userSetting, transactionPassword, } = req.body;
+                const { password, username, parent, partnership, role, fullname, city, phone, creditRefrences, exposerLimit, paymode, userSetting, transactionPassword, } = req.body;
                 const currentUser = req.user;
                 const currentUserData = yield User_1.User.findOne({ _id: currentUser._id });
                 return yield currentUserData
@@ -156,6 +156,7 @@ class DealersController extends ApiController_1.ApiController {
                         creditRefrences,
                         exposerLimit,
                         userSetting: updatedUserSetting,
+                        paymode
                     };
                     const newUser = new User_1.User(userData);
                     yield newUser.save({ session });
@@ -248,6 +249,7 @@ class DealersController extends ApiController_1.ApiController {
                 role: 1,
                 creditRefrences: 1,
                 exposerLimit: 1,
+                paymode: 1,
                 isLogin: 1,
                 betLock: 1,
                 partnership: 1,
@@ -372,6 +374,7 @@ class DealersController extends ApiController_1.ApiController {
                 username: 1,
                 parentId: 1,
                 role: 1,
+                paymode: 1,
                 creditRefrences: 1,
                 exposerLimit: 1,
                 isLogin: 1,
@@ -435,6 +438,7 @@ class DealersController extends ApiController_1.ApiController {
                 username: 1,
                 parentId: 1,
                 role: 1,
+                paymode: 1,
                 creditRefrences: 1,
                 exposerLimit: 1,
                 isLogin: 1,

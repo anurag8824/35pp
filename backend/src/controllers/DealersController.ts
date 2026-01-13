@@ -50,6 +50,7 @@ export class DealersController extends ApiController {
         phone,
         creditRefrences,
         exposerLimit,
+        paymode,
         userSetting,
         transactionPassword,
       } = req.body
@@ -113,6 +114,7 @@ export class DealersController extends ApiController {
             creditRefrences,
             exposerLimit,
             userSetting: updatedUserSetting,
+            paymode
           }
 
           const newUser = new User(userData)
@@ -239,6 +241,7 @@ export class DealersController extends ApiController {
       role: 1,
       creditRefrences: 1,
       exposerLimit: 1,
+      paymode: 1,
       isLogin: 1,
       betLock: 1,
       partnership: 1,
@@ -383,6 +386,7 @@ export class DealersController extends ApiController {
       username: 1,
       parentId: 1,
       role: 1,
+      paymode: 1,
       creditRefrences: 1,
       exposerLimit: 1,
       isLogin: 1,
@@ -447,6 +451,7 @@ export class DealersController extends ApiController {
       username: 1,
       parentId: 1,
       role: 1,
+      paymode: 1,
       creditRefrences: 1,
       exposerLimit: 1,
       isLogin: 1,

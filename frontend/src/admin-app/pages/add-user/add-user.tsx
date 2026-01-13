@@ -41,6 +41,9 @@ const validationSchema = Yup.object().shape({
     is: 'user',
     then: Yup.string().required('Exposer Limit is required'),
   }),
+  paymode: Yup.string(),
+
+
 })
 
 const AddUser = () => {
@@ -60,7 +63,9 @@ const AddUser = () => {
     setValue,
     // setError,
     formState: { errors },
-  } = useForm<User>({ resolver: yupResolver(validationSchema) })
+  } = useForm<User>({ resolver: yupResolver(validationSchema),defaultValues: {
+    paymode: 'direct', // ✅ DEFAULT VALUE
+  }, })
 
   React.useEffect(() => {
     if (username) {
@@ -447,6 +452,20 @@ const AddUser = () => {
                           </div>
                         </div>
                       )}
+
+                         <div className="col-md-6">
+                        <div className="form-group">
+                          <label htmlFor="paymode"> Transaction Type</label>
+                          <span className="text-danger">*</span>
+                          <select
+            className="form-select" id='paymode' {...register('paymode')}
+          >
+            <option value="direct">Direct(By Admin)</option>
+            <option value="manual">Manual</option>
+
+          </select>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

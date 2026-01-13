@@ -38,6 +38,7 @@ export interface IUser {
   phone?: string
   creditRefrences?: string
   exposerLimit?: string
+  paymode?: string
   userSetting?: IUserBetInfo
   changePassAndTxn?: boolean
   transactionPassword?: string
@@ -70,6 +71,7 @@ export const userSchema: Schema = new Schema(
     phone: String,
     creditRefrences: String,
     exposerLimit: String,
+    paymode: String,
     userSetting: Object,
     changePassAndTxn: { type: Boolean, default: false },
     transactionPassword: String,

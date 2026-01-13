@@ -262,7 +262,7 @@ const Header = () => {
                     </ul>
                   </li>
 
-                  {/* <li className='nav-item dropdown'>
+                  <li className='nav-item dropdown'>
                     <a>
                       <b>Transactions</b> <i className='fa fa-caret-down' />
                     </a>
@@ -278,7 +278,7 @@ const Header = () => {
                         </CustomLink>
                       </li>
                     </ul>
-                  </li> */}
+                  </li>
                   <li className='nav-item dropdown'>
                     <a>
                       <b>Live Markets</b> <i className='fa fa-caret-down' />

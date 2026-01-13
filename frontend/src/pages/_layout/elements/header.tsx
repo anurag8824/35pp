@@ -189,10 +189,10 @@ const Header = () => {
             </div> 
 
             <ul className='flex05 justify-content-end d-flex profile-right-side'>
-              <div className='row-deposit-button d-none mr-20'>
-                <CustomLink className='btn btn-deposit mr-10' to={'/deposit'}> <img src="/depositimg.webp" className="w-2 mr-1" /> Deposit</CustomLink>
-                <CustomLink className='btn btn-withdraw' to={'/withdraw'}>  <img src="/withdrawimg.webp" className="w-2 mr-1" /> Withdraw</CustomLink>
-              </div>
+             { userParentAlldata?.paymode == "manual" && <div className='row-deposit-button d-noned d-flex mr-3'>
+                <CustomLink className='btn btn-deposit mr-10' style={{marginBottom:"0"}} to={'/deposit'}> <img src="/depositimg.webp" className="w-2 mr-1" /> Deposit</CustomLink>
+                <CustomLink className='btn btn-withdraw'  to={'/withdraw'}>  <img src="/withdrawimg.webp" className="w-2 mr-1" /> Withdraw</CustomLink>
+              </div>}
 
 <button
 style={{position: "fixed",
@@ -349,16 +349,16 @@ style={{position: "fixed",
                       Account Statement
                     </CustomLink>
                   </li>
-                  {/* <li>
+                 {userParentAlldata?.paymode == "manual" && <li>
                     <CustomLink onClick={() => closeMenu()} to='/depositstatement' className=''>
                       Deposit Statement
                     </CustomLink>
-                  </li>
-                  <li>
+                  </li>}
+                  {userParentAlldata?.paymode == "manual" && <li>
                     <CustomLink onClick={() => closeMenu()} to='/withdrawstatement' className=''>
                       Withdraw Statement
                     </CustomLink>
-                  </li> */}
+                  </li>}
                   <li>
                     <CustomLink onClick={() => closeMenu()} to='/profitloss' className=''>
                       Profit Loss Report
@@ -384,11 +384,11 @@ style={{position: "fixed",
                       Set Button Values
                     </CustomLink>
                   </li>
-                  <li>
+                  {/* <li>
                     <CustomLink onClick={() => closeMenu()} to='/settings/security-auth' className=''>
                       Security Auth Verification
                     </CustomLink>
-                  </li>
+                  </li> */}
                   <li>
                     <CustomLink onClick={() => closeMenu()} to='/changepassword' className=''>
                       Change Password
