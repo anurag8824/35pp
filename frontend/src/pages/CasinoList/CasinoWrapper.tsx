@@ -125,7 +125,7 @@ const CasinoWrapper = (props: any) => {
     /// const ref = useRef();
     casinoService.getLiveCasinoData(gameCode).then((res) => {
       // console.log(res,"responseis here")
-      const fullMarketData = res?.data?.data;
+      const fullMarketData = res?.data;
       console.log(res?.data,"fullMarketData")
       if (casinoMatchData?.match_id != fullMarketData?.match_id) {
         // dispatch(betPopup({ isOpen: false, betData: { ...betValues.betData, stack: 0, pnl: 0 } }))
@@ -582,7 +582,7 @@ const CasinoWrapper = (props: any) => {
                       // src={`https://mac88-casino-stream.scoreswift.xyz/stream?stream_id=${gameId}`}
 
                       // src={`https://sfront.starrexch.me/casino-tv?id=${gameCode}`}
-                      src={`https://time.starrexch.me/casino-tv?id=${mappedCode}`}
+                    src={`https://casino-stream-v2.cricketid.xyz/casino-tv?id=${gameId}`}
 
                     ></iframe>
                   )}
@@ -707,7 +707,9 @@ const CasinoWrapper = (props: any) => {
 
                         // src={`https://sfront.starrexch.me/casino-tv?id=${gameCode}`}
 
-                        src={`https://time.starrexch.me/casino-tv?id=${mappedCode}`}
+                        // src={`https://time.starrexch.me/casino-tv?id=${mappedCode}`}
+                         src={`https://casino-stream-v2.cricketid.xyz/casino-tv?id=${gameId}`}
+
 
                         sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
                         seamless

@@ -13,8 +13,8 @@ class Database {
     static init() {
         // const dsn = Locals.config().mongooseUrl
         // const dsn = Locals.config().mongooseUrl + `?retryWrites=false&replicaSet=myReplicaSet`
-        const dsn = "mongodb+srv://betbhainew:11new@cluster365.sxln4q8.mongodb.net/infa?retryWrites=true&w=majority&appName=betbhainew";
-        // const dsn = "mongodb://admin:Diamond11123@72.61.19.197:27017/infa?authSource=admin&replicaSet=rs0";
+        //  const dsn = "mongodb+srv://betbhainew:11new@cluster365.sxln4q8.mongodb.net/infa?retryWrites=true&w=majority&appName=betbhainew"
+        const dsn = "mongodb://admin:Diamond11123@72.61.19.197:27017/infa?authSource=admin&replicaSet=rs0";
         const options = {
             useNewUrlParser: true,
             useUnifiedTopology: true,
