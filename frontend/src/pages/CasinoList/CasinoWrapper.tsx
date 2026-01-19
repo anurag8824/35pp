@@ -280,12 +280,14 @@ const CasinoWrapper = (props: any) => {
           />
         );
       case "lucky7eu":
+      case "lucky7B":
       case "lucky7":
         return (
           <LuckSeven lastOdds={updateOdds} liveMatchData={liveMatchData} />
         );
       case "dt20":
       case "dt202":
+        case "dt20b":
         return (
           <DragonTigerA lastOdds={updateOdds} liveMatchData={liveMatchData} />
         );
@@ -301,6 +303,7 @@ const CasinoWrapper = (props: any) => {
           />
         );
       case "teen":
+      case "Tp1Day":
         return (
           <OneDayTeen lastOdds={updateOdds} liveMatchData={liveMatchData} />
         );
@@ -329,10 +332,12 @@ const CasinoWrapper = (props: any) => {
           />
         );
       case "cmeter2020":
+        case "cmeter":
         return <Cmeter20 lastOdds={updateOdds} liveMatchData={liveMatchData} />;
       case "card32b":
         return <Card32B lastOdds={updateOdds} liveMatchData={liveMatchData} />;
       case "poker":
+      case "onedaypoker":
         return (
           <Onedaypoker lastOdds={updateOdds} liveMatchData={liveMatchData} />
         );
@@ -341,6 +346,7 @@ const CasinoWrapper = (props: any) => {
           <Twentydaypoker lastOdds={updateOdds} liveMatchData={liveMatchData} />
         );
       case "teen8":
+        case "opentp":
         return <OpenTeen lastOdds={updateOdds} liveMatchData={liveMatchData} />;
       case "testtp":
         return <TestTp lastOdds={updateOdds} liveMatchData={liveMatchData} />;
