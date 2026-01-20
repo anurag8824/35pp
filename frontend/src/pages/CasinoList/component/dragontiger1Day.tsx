@@ -11,9 +11,11 @@ import Limitinfo from './_common/limitinfo';
 import LayBackButton from './_common/new/LayBackButton';
 import ButtonItem from './_common/new/ButtonItem';
 import BackButtonPnl from './_common/new/BackButtonPnl';
+import { useParams } from 'react-router-dom'
 
 const Dragontiger1Day = (props: any) => {
   const { lastOdds, liveMatchData } = props
+   const { gameCode } = useParams()
   const dispatch = useAppDispatch()
   const userState = useAppSelector(selectUserData)
   const getCurrentMatch = useAppSelector(selectCasinoCurrentMatch)
@@ -21,7 +23,7 @@ const Dragontiger1Day = (props: any) => {
 
   const onBet = (isBack = false, item: any) => {
     const ipAddress = authService.getIpAddress()
-    const oddVal = parseFloat(isBack ? item.b1 : item.l1);
+    const oddVal = parseFloat(isBack ? item.b : item.l);
     const odds = oddVal.toString();
     if (userState.user.role === RoleType.user) {
       if (parseFloat(odds) <= 0 || item.gstatus === 'SUSPENDED') return
@@ -39,14 +41,14 @@ const Dragontiger1Day = (props: any) => {
             selectionId: item.SelectionId,
             pnl: 0,
             stack: 0,
-            currentMarketOdds: isBack ? item.b1 : item.l1,
+            currentMarketOdds: isBack ? item.b : item.l,
             eventId: item.mid,
             exposure: -0,
             ipAddress: ipAddress,
             type: IBetType.Match,
             matchName: getCurrentMatch.title,
             betOn: IBetOn.CASINO,
-            gtype: 'dragontiger1Day',
+            gtype: gameCode,
           },
         }),
       )

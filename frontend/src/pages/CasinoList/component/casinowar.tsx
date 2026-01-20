@@ -9,9 +9,11 @@ import { useState } from 'react'
 import CasinoPnl from './casinoPnl'
 import { isMobile } from 'react-device-detect'
 import Limitinfo from './_common/limitinfo'
+import { useParams } from 'react-router-dom'
 
 const Casinowar = (props: any) => {
   const { lastOdds, liveMatchData } = props
+   const { gameCode } = useParams()
   const dispatch = useAppDispatch()
   const [activeTab, setActiveTab] = useState("1")
   const userState = useAppSelector(selectUserData)
@@ -19,7 +21,7 @@ const Casinowar = (props: any) => {
   const cardImageUrl = 'https://dzm0kbaskt4pv.cloudfront.net/v11/static/front/img/cards/';
   const onBet = (isBack = false, item: any) => {
     const ipAddress = authService.getIpAddress()
-    const oddVal = parseFloat(isBack ? item.b1 : item.l1)
+    const oddVal = parseFloat(isBack ? item.b : item.l)
     const odds = oddVal.toString()
     if (userState.user.role === RoleType.user) {
       if (parseFloat(odds) <= 0 || item.gstatus === 'SUSPENDED' || item.gstatus === '0') return
@@ -37,14 +39,14 @@ const Casinowar = (props: any) => {
             selectionId: parseInt(item.sid),
             pnl: 0,
             stack: 0,
-            currentMarketOdds: isBack ? item.b1 : item.l1,
+            currentMarketOdds: isBack ? item.b : item.l,
             eventId: item.mid,
             exposure: -0,
             ipAddress: ipAddress,
             type: IBetType.Match,
             matchName: liveMatchData?.title,
             betOn: IBetOn.CASINO,
-            gtype: liveMatchData?.slug,
+            gtype: gameCode,
           },
         }),
       )
@@ -93,10 +95,10 @@ const Casinowar = (props: any) => {
             return (
               !isMobile || ItemFake == activeTab ? <td className={`back teen-section ${clsnamename}`} key={keyFake}>
                 <button className={`back ${clsstatus}`} onClick={() => onBet(true, Item)}>
-                  <span className='odd'>{Item.b1}</span>{' '}
+                  <span className='odd'>{Item.b}</span>{' '}
                   {runnerFilter && <CasinoPnl
                     sectionId={runnerFilter.SelectionId}
-                    matchId={liveMatchData?.match_id}
+                    matchId={liveMatchData.match_id}
                     clsName={'text-center'}
                   />}
                 </button>

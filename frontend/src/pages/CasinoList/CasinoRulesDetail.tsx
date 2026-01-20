@@ -4,6 +4,7 @@ const CasinoRulesDetail = (props:any) => {
     const { title, gameId, isOpen, setIsOpen } = props;
   return (
     <>
+        {/* @ts-ignore Server Component */}
         <ReactModal
         isOpen={isOpen}
         onRequestClose={(e: any) => {

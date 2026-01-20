@@ -2,18 +2,44 @@
 import React, { Component, useState } from 'react'
 import { Modal, Card } from 'react-bootstrap'
 import casinoService from '../../services/casino.service'
+import { useParams } from 'react-router-dom'
 const CasinoResultDetail = (props: any) => {
   const { popupdata, setPopStatus, popupstatus } = props
   const [casinoResult, setCasinoResult] = useState<any>({})
   const [loader, setLoader] = useState<boolean>(false)
+  const [data,setData] = useState<any>();
+ const { gameCode } = useParams<{ gameCode: string }>();
 
   React.useEffect(() => {
     setCasinoResult({})
     setLoader(true)
     if (popupdata.slug && popupdata.slug) {
-      casinoService.getResultByMid(popupdata.slug, popupdata.mid).then((res) => {
+      console.log(gameCode , popupdata.mid,'popup data')
+      casinoService.getResultByMid(gameCode!, popupdata.mid).then((res) => {
         setLoader(false)
-        setCasinoResult(res?.data?.data)
+        setCasinoResult(res?.data?.data?.html)
+       const cards = res.data.data.html.card?.split(",") || [];
+const winner = res.data.data.html.winnat || "";
+
+let htmlContent = "";
+
+// Loop through each card and create image tags
+for (const card of cards) {
+  // sanitize card to avoid injection (very important)
+  const safeCard = card.replace(/[^a-zA-Z0-9_-]/g, ""); 
+  htmlContent += `<img 
+    src="https://g1ver.sprintstaticdata.com/v73/static/front/img/cards/${safeCard}.png" 
+    alt="${safeCard}" 
+    style="width:35px;margin:4px;"
+  />`;
+}
+
+// Add winner text
+htmlContent += `<div style="margin-top:8px;font-weight:bold;">Winner: ${winner}</div>`;
+
+// Set the HTML (preferably after sanitizing)
+setData(htmlContent);
+
         if (popupdata.slug === 'Andarbahar' || popupdata.slug === 'Andarbahar2') {
           // @ts-ignore
           globalThis.$('.owl-carousel').owlCarousel({
@@ -70,7 +96,7 @@ const CasinoResultDetail = (props: any) => {
           </div>
         ) : (
           <div
-            dangerouslySetInnerHTML={{ __html: casinoResult?.html || '' }}
+            dangerouslySetInnerHTML={{ __html: data || '' }}
             className={popupdata.slug}
           />
         )}

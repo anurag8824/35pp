@@ -265,6 +265,22 @@ p {
   width: 100%;
 }
 
+.mogambo-suspended .suspended::after {
+  width: 100% !important;
+  height: 100% !important;
+  right: 0% !important;
+}
+.dolidana-suspended .suspended::after {
+  width: 100% !important;
+  height: 100% !important;
+  right: 0% !important;
+}
+.vipTeenPatti1day-suspended .suspended::after {
+  width: 100% !important;
+  height: 100% !important;
+  right: 0% !important;
+}
+
 .suspendedtd {
   position: relative;
 }
@@ -1557,6 +1573,7 @@ footer {
   font-size: 18px;
   top: 0;
   color: #fff;
+  width: 100%;
 }
 
 .place-bet .coupon-table tr th {

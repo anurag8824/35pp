@@ -9,6 +9,7 @@ import { calculateTotalNumbersFromString } from '../../../../utils/helper'
 
 const TwentyCricketItem = (props: any) => {
   const { ItemNew, selectionId, lastOdds, liveMatchData, checkRoundIdChange } = props
+  // console.log(liveMatchData,'last ODDDSSSS_______')
   const [ballValue, setBallValue] = useState<any>({})
   const userState = useAppSelector(selectUserData)
   const dispatch = useAppDispatch()
@@ -17,7 +18,7 @@ const TwentyCricketItem = (props: any) => {
   const onBet = (isBack = false, item: any) => {
     const ipAddress = authService.getIpAddress()
     if (userState.user.role === RoleType.user) {
-      const oddsVal = parseFloat(isBack ? item.b1 : item.l1)
+      const oddsVal = parseFloat(isBack ? item.b : item.l)
       if (oddsVal <= 0) return
       if (item.SUSPENDED == 'SUSPENDED') return
       dispatch(
@@ -26,7 +27,7 @@ const TwentyCricketItem = (props: any) => {
           betData: {
             isBack,
             odds: oddsVal,
-            volume: isBack ? item.bs1 : item.ls1,
+            volume: isBack ? item.bs : item.ls,
             marketId: item.mid,
             marketName: item.MarketName,
             matchId: liveMatchData?.event_data?.match_id || 0,
@@ -34,7 +35,7 @@ const TwentyCricketItem = (props: any) => {
             selectionId: parseInt(item.sid),
             pnl: 0,
             stack: 0,
-            currentMarketOdds: isBack ? item.b1 : item.l1,
+            currentMarketOdds: isBack ? item.b : item.l,
             eventId: item.mid,
             exposure: -0,
             ipAddress: ipAddress,
@@ -73,7 +74,6 @@ const TwentyCricketItem = (props: any) => {
       : ''
 
    const totalDealerCard = lastOdds?.cards?.C1!='1' ? (calculateTotalNumbersFromString(lastOdds?.cards?.C1 || '')) : 0
-
    return (
     <div className={`score-box btn-theme ${clsstatus}`}>
       <img src={`imgs/casino/ball${imagename}.png`} className='img-fluid ball-image' />
@@ -85,21 +85,21 @@ const TwentyCricketItem = (props: any) => {
         <div>
           <span>Team A</span>{' '}
           <span className='ml-1'>
-            {lastOdds?.cards?.C2} /{lastOdds?.cards?.C3}
+            {liveMatchData?.score?.split(',')[1]} /{liveMatchData?.score?.split(',')[2]}
           </span>{' '}
-          <span className='ml-1'>{lastOdds?.cards?.C4} Over</span>
+          <span className='ml-1'>{liveMatchData?.score?.split(',')[3]} Over</span>
         </div>
         <div>
           <span>Team B</span>{' '}
           <span className='ml-1'>
-            {+lastOdds?.cards?.C5 + (ballValue?.[selectionId]?.ball ? +selectionId + 1 : 0) + (totalDealerCard)}/
-            {lastOdds?.cards?.C6}
+            {liveMatchData?.score?.split(',')[4]}/
+           {liveMatchData?.score?.split(',')[5]}
           </span>{' '}
           <span>
-            {(lastOdds?.cards?.C1 != '1' ? ' 20' : null) ||
+            {
               (ItemMarket.gstatus === 'SUSPENDED' ? '19.5' : null) ||
               ballValue?.[selectionId]?.ball ||
-              lastOdds?.cards?.C7}{' '}
+             liveMatchData?.score?.split(',')[6]}{' '}
             Over
           </span>
         </div>
@@ -116,7 +116,7 @@ const TwentyCricketItem = (props: any) => {
           onBet(true, ItemMarket)
         }}
       >
-        <span className='odds d-block'>{ItemMarket.b1}</span>
+        <span className='odds d-block'>{ItemMarket.b}</span>
       </div>
       <div
         className='lay laybox'
@@ -124,7 +124,7 @@ const TwentyCricketItem = (props: any) => {
           onBet(false, ItemMarket)
         }}
       >
-        <span className='odds d-block'>{ItemMarket.l1}</span>
+        <span className='odds d-block'>{ItemMarket.l}</span>
       </div>
     </div>
   )

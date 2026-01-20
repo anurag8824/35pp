@@ -7,19 +7,23 @@ import { IBetOn, IBetType } from '../../../models/IBet'
 import CasinoPnl from './casinoPnl'
 import { isMobile } from 'react-device-detect'
 import { useCallback } from 'react'
+import { useParams } from 'react-router-dom'
 
 const AndarBhar = (props: any) => {
+   const { gameCode } = useParams()
   const { lastOdds, liveMatchData } = props
   const dispatch = useAppDispatch()
   const userState = useAppSelector(selectUserData)
-  const cardNameValue: any = { J: 11, Q: 12, K: 13, A: 1 }
+  // const cardNameValue: any = { J: 11, Q: 12, K: 13, A: 1 }
 
   const onBet = (isBack = false, item: any) => {
+   
     const ipAddress = authService.getIpAddress()
-    const oddVal = item.rate
+    const oddVal = item.b
     const odds = oddVal
     if (userState.user.role === RoleType.user) {
-      if (parseFloat(odds) <= 0 || !item.gstatus || item.gstatus === '0') return
+      if (parseFloat(odds) <= 0 || !item.gstatus || item.gstatus === 'SUSPENDED') return
+       console.log(item,'item____')
       dispatch(
         betPopup({
           isOpen: true,
@@ -30,18 +34,18 @@ const AndarBhar = (props: any) => {
             marketId: item.mid,
             marketName: item.MarketName,
             matchId: parseInt(liveMatchData?.match_id) || 0,
-            selectionName: `${item.nation}`,
+            selectionName: `${item.nat}`,
             selectionId: item.sid,
             pnl: 0,
             stack: 0,
-            currentMarketOdds: item.rate,
+            currentMarketOdds: item.b,
             eventId: item.mid,
             exposure: -0,
             ipAddress: ipAddress,
             type: IBetType.Match,
             matchName: liveMatchData.title,
             betOn: IBetOn.CASINO,
-            gtype: liveMatchData?.slug,
+            gtype: gameCode,
           },
         }),
       )
@@ -50,9 +54,10 @@ const AndarBhar = (props: any) => {
   const laybacklayout = useCallback(
     (index: number) => {
       return liveMatchData?.defaultMarkets?.map((ItemNew: any, key: number) => {
-        const t3Data = liveMatchData?.t3 ? liveMatchData?.t3[0] : {}
-        const andarCardData = t3Data?.ar?.split(',')
-        const baharCardData = t3Data?.br?.split(',')
+        // console.log(liveMatchData,'_____live match______')
+        
+        const andarCardData = liveMatchData?.ar?.split(',')
+        const baharCardData = liveMatchData?.br?.split(',')
         
         return (
           <>
@@ -77,14 +82,43 @@ const AndarBhar = (props: any) => {
                                    <td id="andar-box" className={`text-center p5`} >
               <div className={isMobile?'row text-center justify-content-center ml-0':'d-flex justify-content-center'}>
                   {ItemNew.Runners.map((ItemCardsData: any, keyCardsData: number) => {
+                    // console.log(ItemCardsData,'item card data')
+                    // console.log(lastOdds,'LAST____________')
                     const Item: any = lastOdds?.[ItemCardsData?.SelectionId] || {}
+                    // console.log(Item,'__item')
+                    
                     let cardImage = ItemCardsData?.RunnerName?.replace('Bahar ', '')
                     cardImage = cardImage?.replace('Ander ', '')
-                    cardImage = cardNameValue?.[cardImage] || cardImage
+                    // cardImage = cardNameValue?.[cardImage] || cardImage
                     cardImage =
                       ItemNew.MarketName == 'Andar'
                         ? andarCardData?.[keyCardsData] || cardImage
                         : baharCardData?.[keyCardsData] || cardImage
+
+                        if(cardImage > 20){
+                          cardImage = cardImage - 20;
+                        }
+
+                        if(cardImage==1){
+                        cardImage = 'A';
+                      }
+
+                      if(cardImage==0){
+                        cardImage = '1';
+                      }
+
+                      if(cardImage==11){
+                        cardImage = 'J';
+                      }
+
+                      if(cardImage==12){
+                        cardImage = 'Q';
+                      }
+
+                       if(cardImage==13){
+                        cardImage = 'K';
+                      }
+                      
 
                     return (
                       <>
@@ -97,7 +131,7 @@ const AndarBhar = (props: any) => {
                             }}
                           >
                             <img
-                              src={`https://dzm0kbaskt4pv.cloudfront.net/v11/static/front/img/andar_bahar/${cardImage}.jpg`}
+                              src={`https://g1ver.sprintstaticdata.com/v73/static/front/img/cards/${cardImage}.png`}
                               className={`card-image`}
                               style={{marginBottom:"0px"}}
                             />
@@ -128,7 +162,7 @@ const AndarBhar = (props: any) => {
         <div className='col-lg-12 m-b-10 main-market ' style={{ padding: '0px' }}>
           <div className='live-poker'>
             <div className='card-content m-b-5'>
-              <table data-title='SUSPENDED' className={`table main-table table-bordered `}>
+              <table className={`table main-table table-bordered `}>
                 <tbody>{laybacklayout(0)}</tbody>
               </table>
             </div>

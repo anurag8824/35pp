@@ -66,9 +66,12 @@
 
 .flip-clock-wrapper:before,
 .flip-clock-wrapper:after {
-  content: " "; /* 1 */
-  display: table; /* 2 */
+  content: " ";
+  /* 1 */
+  display: table;
+  /* 2 */
 }
+
 .flip-clock-wrapper:after {
   clear: both;
 }
@@ -389,13 +392,7 @@
 /* SHADOW */
 .flip-clock-wrapper ul.play li.flip-clock-before .up .shadow {
   background: -moz-linear-gradient(top, rgba(0, 0, 0, 0.1) 0%, black 100%);
-  background: -webkit-gradient(
-    linear,
-    left top,
-    left bottom,
-    color-stop(0%, rgba(0, 0, 0, 0.1)),
-    color-stop(100%, black)
-  );
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(0, 0, 0, 0.1)), color-stop(100%, black));
   background: linear, top, rgba(0, 0, 0, 0.1) 0%, black 100%;
   background: -o-linear-gradient(top, rgba(0, 0, 0, 0.1) 0%, black 100%);
   background: -ms-linear-gradient(top, rgba(0, 0, 0, 0.1) 0%, black 100%);
@@ -407,13 +404,7 @@
 
 .flip-clock-wrapper ul.play li.flip-clock-active .up .shadow {
   background: -moz-linear-gradient(top, rgba(0, 0, 0, 0.1) 0%, black 100%);
-  background: -webkit-gradient(
-    linear,
-    left top,
-    left bottom,
-    color-stop(0%, rgba(0, 0, 0, 0.1)),
-    color-stop(100%, black)
-  );
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(0, 0, 0, 0.1)), color-stop(100%, black));
   background: linear, top, rgba(0, 0, 0, 0.1) 0%, black 100%;
   background: -o-linear-gradient(top, rgba(0, 0, 0, 0.1) 0%, black 100%);
   background: -ms-linear-gradient(top, rgba(0, 0, 0, 0.1) 0%, black 100%);
@@ -426,13 +417,7 @@
 /*DOWN*/
 .flip-clock-wrapper ul.play li.flip-clock-before .down .shadow {
   background: -moz-linear-gradient(top, black 0%, rgba(0, 0, 0, 0.1) 100%);
-  background: -webkit-gradient(
-    linear,
-    left top,
-    left bottom,
-    color-stop(0%, black),
-    color-stop(100%, rgba(0, 0, 0, 0.1))
-  );
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, black), color-stop(100%, rgba(0, 0, 0, 0.1)));
   background: linear, top, black 0%, rgba(0, 0, 0, 0.1) 100%;
   background: -o-linear-gradient(top, black 0%, rgba(0, 0, 0, 0.1) 100%);
   background: -ms-linear-gradient(top, black 0%, rgba(0, 0, 0, 0.1) 100%);
@@ -444,13 +429,7 @@
 
 .flip-clock-wrapper ul.play li.flip-clock-active .down .shadow {
   background: -moz-linear-gradient(top, black 0%, rgba(0, 0, 0, 0.1) 100%);
-  background: -webkit-gradient(
-    linear,
-    left top,
-    left bottom,
-    color-stop(0%, black),
-    color-stop(100%, rgba(0, 0, 0, 0.1))
-  );
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, black), color-stop(100%, rgba(0, 0, 0, 0.1)));
   background: linear, top, black 0%, rgba(0, 0, 0, 0.1) 100%;
   background: -o-linear-gradient(top, black 0%, rgba(0, 0, 0, 0.1) 100%);
   background: -ms-linear-gradient(top, black 0%, rgba(0, 0, 0, 0.1) 100%);
@@ -538,4 +517,43 @@
   100% {
     opacity: 0;
   }
+}
+
+
+/* ✅ ROULETTE MOBILE ONLY - roulette11/12/13 + mobile */
+.flip-clock-wrapper.roulette-mobile {
+    transform: scale(0.65) !important;
+    transform-origin: top left !important;
+    width: 120px !important;
+    margin: 0.5em !important;
+}
+
+.flip-clock-wrapper.roulette-mobile ul {
+    width: 40px !important;
+    height:60px !important;
+    font-size: 50px !important;
+    line-height: 65px !important;
+    margin: 2px !important;
+}
+
+.flip-clock-wrapper.roulette-mobile ul li {
+    line-height: 65px !important;
+}
+
+.flip-clock-wrapper.roulette-mobile ul li a div {
+    font-size: 50px !important;
+}
+
+.flip-clock-wrapper.roulette-mobile ul li a div div.inn {
+    font-size: 35px !important;
+    height: 198% !important;
+}
+
+/* Ensure animations still work */
+.flip-clock-wrapper.roulette-mobile ul.play li.flip-clock-active .down {
+    animation: turn 0.5s 0.5s linear both !important;
+}
+
+.flip-clock-wrapper.roulette-mobile ul.play li.flip-clock-before .up {
+    animation: turn2 0.5s linear both !important;
 }

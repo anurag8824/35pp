@@ -7,6 +7,7 @@ import { RoleType } from '../../../models/User'
 import { betPopup, selectBetPopup } from '../../../redux/actions/bet/betSlice'
 import { IBetOn, IBetType } from '../../../models/IBet'
 import CasinoPnl from './casinoPnl'
+import { useParams } from 'react-router-dom'
 
 const Worli = (props: any) => {
   const { lastOdds, liveMatchData } = props
@@ -19,6 +20,7 @@ const Worli = (props: any) => {
   const betValues: any = useAppSelector(selectBetPopup)
   const [checkRoundIdChange, setCheckRoundIdChange] = useState('')
   const [selectionId, setselectionId] = useState<any>([])
+   const { gameCode } = useParams()
 
   React.useEffect(() => {
     if (lastOdds && lastOdds['1']) {
@@ -42,9 +44,8 @@ const Worli = (props: any) => {
     return type ? `${firstString.join('')} ${activeTab}` : `${firstString.join('')}`
   }
   const onBet = (isBack = false, item: any) => {
-    console.log(item, "item in button item")
     const ipAddress = authService.getIpAddress()
-    const oddVal = item?.rate || item?.b1;
+    const oddVal = item?.rate || item?.b;
     const odds = oddVal
     if (userState.user.role === RoleType.user) {
       /// if (parseFloat(odds) <= 0 || item.gstatus === '0') return 
@@ -84,7 +85,7 @@ const Worli = (props: any) => {
             type: IBetType.Match,
             matchName: liveMatchData?.title,
             betOn: IBetOn.CASINO,
-            gtype: liveMatchData?.slug,
+            gtype: gameCode,
             C1: SelectionNamesStr,
             C2: selectionIdDataList.join(','),
             C3: activeTab

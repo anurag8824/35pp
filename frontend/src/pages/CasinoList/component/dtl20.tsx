@@ -9,17 +9,20 @@ import { useState } from 'react'
 import CasinoPnl from './casinoPnl'
 import { isMobile } from 'react-device-detect'
 import Limitinfo from './_common/limitinfo'
+import { useParams } from 'react-router-dom'
 
 const Dtl20Layout = (props: any) => {
   const { lastOdds, liveMatchData } = props
+   const { gameCode } = useParams()
   const dispatch = useAppDispatch()
   const [activeTab, setActiveTab] = useState("D")
   const userState = useAppSelector(selectUserData)
   const getCurrentMatch = useAppSelector(selectCasinoCurrentMatch)
 
   const onBet = (isBack = false, item: any) => {
+    
     const ipAddress = authService.getIpAddress()
-    const oddVal = parseFloat(isBack ? item.b1 : item.l1)
+    const oddVal = parseFloat(isBack ? item.b : item.l)
     const odds = oddVal.toString()
     if (userState.user.role === RoleType.user) {
       if (parseFloat(odds) <= 0 || item.gstatus === 'SUSPENDED' || item.gstatus === '0') return
@@ -37,14 +40,14 @@ const Dtl20Layout = (props: any) => {
             selectionId: item.sid,
             pnl: 0,
             stack: 0,
-            currentMarketOdds: isBack ? item.b1 : item.l1,
+            currentMarketOdds: isBack ? item.b : item.l,
             eventId: item.mid,
             exposure: -0,
             ipAddress: ipAddress,
             type: IBetType.Match,
             matchName: getCurrentMatch.title,
             betOn: IBetOn.CASINO,
-            gtype: 'dtl20',
+            gtype: gameCode,
           },
         }),
       )
@@ -94,7 +97,7 @@ const Dtl20Layout = (props: any) => {
             return (
               !isMobile || ItemFake == activeTab ? <td className={`back teen-section ${clsnamename}`} key={keyFake}>
                 <button className={`back ${clsstatus}`} onClick={() => onBet(true, Item)}>
-                  <span className='odd'>{Item.b1}</span>{' '}
+                  <span className='odd'>{Item.b}</span>{' '}
                   {runnerFilter && <CasinoPnl
                     sectionId={runnerFilter.SelectionId}
                     matchId={liveMatchData?.match_id}
@@ -148,7 +151,7 @@ const Dtl20Layout = (props: any) => {
             return (
               !isMobile || ItemFake == activeTab ? <td className={`back teen-section ${clsnamename}`} key={keyFake}>
                 <button className={`back ${clsstatus}`} onClick={() => onBet(true, Item)}>
-                  <span className='odd'>{Item.b1}</span>{' '}
+                  <span className='odd'>{Item.b}</span>{' '}
                   {runnerFilter && <CasinoPnl
                     sectionId={runnerFilter.SelectionId}
                     matchId={liveMatchData?.match_id}
@@ -168,7 +171,7 @@ const Dtl20Layout = (props: any) => {
     <div className='container ' style={{ marginTop: "-10px" }}>
       <div className='row casino-32A '>
         <div className='col-lg-12 col-12 m-b-10 main-market' style={{ padding: '0px' }}>
-          {isMobile && lastOdds ? <div className=' card-dtl-mobile'> <div className='d-flex'>
+          {isMobile && lastOdds ? <div className='card-inner card-dtl-mobile'> <div className='d-flex'>
             <div>
               <img
                 src={`https://dzm0kbaskt4pv.cloudfront.net/v11/static/front/img/cards/${lastOdds?.['cards']?.C1}.png`}

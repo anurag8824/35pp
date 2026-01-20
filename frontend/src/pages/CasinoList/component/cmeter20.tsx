@@ -8,10 +8,13 @@ import { IBetOn, IBetType } from '../../../models/IBet';
 import React from 'react';
 import CasinoPnl from './casinoPnl';
 import { isMobile } from 'react-device-detect';
+import { useParams } from 'react-router-dom'
 
 const Cmeter20 = (props: any) => {
   const { lastOdds, liveMatchData } = props
+  console.log(lastOdds,'last odds ---------------_____')
   const dispatch = useAppDispatch()
+   const { gameCode } = useParams()
   const userState = useAppSelector(selectUserData)
   const getCurrentMatch = useAppSelector(selectCasinoCurrentMatch)
   const betValues = useAppSelector(selectBetPopup)
@@ -19,7 +22,7 @@ const Cmeter20 = (props: any) => {
   const onBet = (isBack = false, item: any) => {
     const ipAddress = authService.getIpAddress()
     if (userState.user.role === RoleType.user) {
-      const oddsVal = parseFloat(isBack ? item.b1 : item.l1);
+      const oddsVal = parseFloat(isBack ? item.b : item.l);
       if (parseFloat(oddsVal.toString()) <= 0 || item.gstatus === 'SUSPENDED' || item.gstatus === '0' || (userBets && userBets[0] && userBets[0].selectionName && userBets[0].selectionName != item.nat)) return
       dispatch(
         betPopup({
@@ -27,7 +30,7 @@ const Cmeter20 = (props: any) => {
           betData: {
             isBack,
             odds: oddsVal,
-            volume: isBack ? item.bs1 : item.ls1,
+            volume: isBack ? item.bs : item.ls,
             marketId: item.mid,
             marketName: item.MarketName,
             matchId: liveMatchData?.event_data?.match_id || 0,
@@ -35,14 +38,14 @@ const Cmeter20 = (props: any) => {
             selectionId: item.sid,
             pnl: 0,
             stack: 0,
-            currentMarketOdds: isBack ? item.b1 : item.l1,
+            currentMarketOdds: isBack ? item.b : item.l,
             eventId: item.mid,
             exposure: -0,
             ipAddress: ipAddress,
             type: IBetType.Match,
             matchName: liveMatchData.title,
             betOn: IBetOn.CASINO,
-            gtype: liveMatchData.slug,
+            gtype: gameCode,
           },
         }),
       )
@@ -70,7 +73,6 @@ const Cmeter20 = (props: any) => {
       <img src="https://dzm0kbaskt4pv.cloudfront.net/v11/static/front/img/andar_bahar/11.jpg" />
       <img src="https://dzm0kbaskt4pv.cloudfront.net/v11/static/front/img/andar_bahar/12.jpg" />
       <img src="https://dzm0kbaskt4pv.cloudfront.net/v11/static/front/img/andar_bahar/13.jpg" />
-
     </div>
   }
   const laybacklayout = () => {
@@ -152,7 +154,7 @@ const Cmeter20 = (props: any) => {
       <div className={isMobile ? 'col-lg-12 col12p10' : " col-lg-12 p0"}>
         <div className="meter-lh-card-container mt-1">
           <h5 className="d-inline-block mb-0"><b >Low</b> <span
-            className="text-primary ml-1">{lastOdds?.['cards']?.C1 - (userBets?.[0]?.selectionName == 'Low' && lastOdds?.['cards']?.C3 == 1 ? 9 : 0) + (userBets?.[0]?.selectionName == 'High' && lastOdds?.['cards']?.C4 == 1 ? 10 : 0)}</span>
+            className="text-primary ml-1">{lastOdds?.desc.split(',')[0]}</span>
             {isMobile && <div className='runposition'>
               <div className="d-inline-block text-center meter-lh-card ml-1">
                 {userBets?.[0]?.selectionName == 'Low' &&
@@ -170,8 +172,8 @@ const Cmeter20 = (props: any) => {
             })}
           </div>
           {!isMobile && <div className="d-inline-block text-center meter-lh-card ml-1">
-            {userBets?.[0]?.selectionName == 'Low' &&
-              <span style={{ marginLeft: "20px" }}>Run Position :  {(parseInt(lastOdds?.['cards']?.C1) - (lastOdds?.['cards']?.C3 == 1 ? 9 : 0)) - (parseInt(lastOdds?.['cards']?.C2) + + (lastOdds?.['cards']?.C3 == 1 ? 9 : 0))}</span>}
+            {/* {userBets?.[0]?.selectionName == 'Low' &&
+              <span style={{ marginLeft: "20px" }}>Run Position :  {(parseInt(lastOdds?.['cards']?.C1) - (lastOdds?.['cards']?.C3 == 1 ? 9 : 0)) - (parseInt(lastOdds?.['cards']?.C2) + + (lastOdds?.['cards']?.C3 == 1 ? 9 : 0))}</span>} */}
           </div>}
 
         </div>
@@ -179,7 +181,7 @@ const Cmeter20 = (props: any) => {
       <div className={isMobile ? 'col-lg-12 col12p10' : " col-lg-12 p0"}>
         <div className="meter-lh-card-container mt-1">
           <h5 className="d-inline-block mb-0"><b >High</b> <span
-            className="text-primary ml-1">{lastOdds?.['cards']?.C2 - (userBets?.[0]?.selectionName == 'High' && lastOdds?.['cards']?.C4 == 1 ? 10 : 0) + (userBets?.[0]?.selectionName == 'Low' && lastOdds?.['cards']?.C3 == 1 ? 9 : 0)}</span></h5>
+            className="text-primary ml-1">{lastOdds?.desc.split(',')[1]}</span></h5>
           <div className={`${isMobile ? '' : 'd-inline-block'} text-center meter-lh-card ml-1`} style={{ display: "block !important", marginTop: "5px" }}>
             {cards && cards[1].length > 0 && cards[1].map((Item: any, key: number) => {
               return <img key={key}
@@ -187,8 +189,8 @@ const Cmeter20 = (props: any) => {
             })}
           </div>
           {!isMobile && <div className="d-inline-block text-center meter-lh-card ml-1">
-            {userBets && userBets[0] && userBets[0].selectionName && userBets[0].selectionName == 'High' &&
-              <span style={{ marginLeft: "20px" }}>Run Position : {(parseInt(lastOdds?.['cards']?.C2) - (lastOdds?.['cards']?.C4 == 1 ? 10 : 0)) - (parseInt(lastOdds?.['cards']?.C1) + + (lastOdds?.['cards']?.C4 == 1 ? 10 : 0))}</span>}
+            {/* {userBets && userBets[0] && userBets[0].selectionName && userBets[0].selectionName == 'High' &&
+              <span style={{ marginLeft: "20px" }}>Run Position : {(parseInt(lastOdds?.['cards']?.C2) - (lastOdds?.['cards']?.C4 == 1 ? 10 : 0)) - (parseInt(lastOdds?.['cards']?.C1) + + (lastOdds?.['cards']?.C4 == 1 ? 10 : 0))}</span>} */}
           </div>}
 
         </div>

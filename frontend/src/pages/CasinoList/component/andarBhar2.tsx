@@ -9,9 +9,11 @@ import { useState } from 'react';
 import CasinoPnl from './casinoPnl';
 import { isMobile } from 'react-device-detect';
 import CardItem from './_common/new/CardItem';
+import { useParams } from 'react-router-dom'
 
 const AndarBhar2 = (props: any) => {
   const { lastOdds, liveMatchData } = props
+   const { gameCode } = useParams()
   const dispatch = useAppDispatch()
   const userState = useAppSelector(selectUserData)
   const getCurrentMatch = useAppSelector(selectCasinoCurrentMatch)
@@ -36,9 +38,9 @@ const AndarBhar2 = (props: any) => {
     if (isMobile && cards.cards.length < 3) return
     onBet(ItemNew.RunnerName == 'YES' ? true : false, Item)
   }
-  const onBet = (isBack = false, item: any) => {
+  const onBet = (isBack = false, item: any,type:any = null) => {
     const ipAddress = authService.getIpAddress()
-    const oddVal = item?.rate || item?.b1;
+    const oddVal = item?.rate || item?.b;
     const odds = oddVal
     if (userState.user.role === RoleType.user) {
       if (parseFloat(odds) <= 0 || item.gstatus === '0') return
@@ -52,18 +54,18 @@ const AndarBhar2 = (props: any) => {
             marketId: item.mid,
             marketName: item.MarketName,
             matchId: liveMatchData?.event_data?.match_id || 0,
-            selectionName: `${item.nat} ${CardSelection.cards.join('')}`,
+            selectionName: `${item.nat} ${type?type:''}`,
             selectionId: item.sid,
             pnl: 0,
             stack: 0,
-            currentMarketOdds: item.rate,
+            currentMarketOdds: item.b,
             eventId: item.mid,
             exposure: -0,
             ipAddress: ipAddress,
             type: IBetType.Match,
             matchName: liveMatchData?.title,
             betOn: IBetOn.CASINO,
-            gtype: liveMatchData?.slug
+            gtype: gameCode
           },
         }),
       )
@@ -92,25 +94,25 @@ const AndarBhar2 = (props: any) => {
               <div className="sa">
                 <div className={!saMarkets?.gstatus || saMarkets?.gstatus == '0' ? 'suspended' : ''} onClick={() => onBet(true, saMarkets)}>
                   <div >SA</div>
-                  <div className="mt-1">{saMarkets?.b1 || '0.00'}</div>
+                  <div className="mt-1">{saMarkets?.b || '0.00'}</div>
                 </div>
                 <div className="book text-center" >
                   <CasinoPnl sectionId={saRunner.SelectionId} matchId={liveMatchData?.match_id} classData={'text-center'} />
                 </div>
               </div>
               <div className="first-bet">
-                <div className={!firstBetMarkets?.gstatus || firstBetMarkets?.gstatus == '0' ? 'suspended' : ''} onClick={() => onBet(true, firstBetMarkets)}>
+                <div className={!firstBetMarkets?.gstatus || firstBetMarkets?.gstatus == '0' ? 'suspended' : ''} onClick={() => onBet(true, firstBetMarkets,'Andar')}>
                   <div >1st Bet</div>
-                  <div className="mt-1">{firstBetMarkets?.b1 || '0.00'}</div>
+                  <div className="mt-1">{firstBetMarkets?.b || '0.00'}</div>
                 </div>
                 <div className="book text-center" >
                   <CasinoPnl sectionId={firstBetRunner.SelectionId} matchId={liveMatchData?.match_id} classData={'text-center'} />
                 </div>
               </div>
               <div className="second-bet">
-                <div className={!secondBetMarkets?.gstatus || secondBetMarkets?.gstatus == '0' ? 'suspended' : ''} onClick={() => onBet(true, secondBetMarkets)}>
+                <div className={!secondBetMarkets?.gstatus || secondBetMarkets?.gstatus == '0' ? 'suspended' : ''} onClick={() => onBet(true, secondBetMarkets,'Andar')}>
                   <div >2nd Bet</div>
-                  <div className="mt-1">{secondBetMarkets?.b1 || '0.00'}</div>
+                  <div className="mt-1">{secondBetMarkets?.b || '0.00'}</div>
                 </div>
                 <div className="book text-center" >
                   <CasinoPnl sectionId={secondBetRunner.SelectionId} matchId={liveMatchData?.match_id} classData={'text-center'} />
@@ -125,25 +127,25 @@ const AndarBhar2 = (props: any) => {
               <div className="sa">
                 <div className={!sbMarkets?.gstatus || sbMarkets?.gstatus == '0' ? 'suspended' : ''} onClick={() => onBet(true, sbMarkets)}>
                   <div >SB</div>
-                  <div className="mt-1">{sbMarkets?.b1 || '0.00'}</div>
+                  <div className="mt-1">{sbMarkets?.b || '0.00'}</div>
                 </div>
                 <div className="book text-center" >
                   <CasinoPnl sectionId={sbRunner.SelectionId} matchId={liveMatchData?.match_id} classData={'text-center'} />
                 </div>
               </div>
               <div className="first-bet">
-                <div className={!firstBetMarketsB?.gstatus || firstBetMarketsB?.gstatus == '0' ? 'suspended' : ''} onClick={() => onBet(true, firstBetMarketsB)}>
+                <div className={!firstBetMarketsB?.gstatus || firstBetMarketsB?.gstatus == '0' ? 'suspended' : ''} onClick={() => onBet(true, firstBetMarketsB,'Bahar')}>
                   <div >1st Bet</div>
-                  <div className="mt-1">{firstBetMarketsB?.b1 || '0.00'}</div>
+                  <div className="mt-1">{firstBetMarketsB?.b || '0.00'}</div>
                 </div>
                 <div className="book text-center" >
                   <CasinoPnl sectionId={firstBetRunnerB.SelectionId} matchId={liveMatchData?.match_id} classData={'text-center'} />
                 </div>
               </div>
               <div className="second-bet">
-                <div className={!secondBetMarketsB?.gstatus || secondBetMarketsB?.gstatus == '0' ? 'suspended' : ''} onClick={() => onBet(true, secondBetMarketsB)}>
+                <div className={!secondBetMarketsB?.gstatus || secondBetMarketsB?.gstatus == '0' ? 'suspended' : ''} onClick={() => onBet(true, secondBetMarketsB,'Bahar')}>
                   <div >2nd Bet</div>
-                  <div className="mt-1">{secondBetMarketsB?.b1 || '0.00'}</div>
+                  <div className="mt-1">{secondBetMarketsB?.b || '0.00'}</div>
                 </div>
                 <div className="book text-center" >
                   <CasinoPnl sectionId={secondBetRunnerB.SelectionId} matchId={liveMatchData?.match_id} classData={'text-center'} />
@@ -192,7 +194,7 @@ const AndarBhar2 = (props: any) => {
             title = title == 'Diamond' ? <img src="/imgs/casino/diamond.png" /> : title;
             return <div className={`${clsName} text-center`} key={indexRunner}>
               <div className="bltitle"><b >{title}</b></div>
-              <div className={`back mt-1 blbox ${suspend}`} onClick={() => onBet(true, ItemMarket)}><span className="odd">{ItemMarket?.b1 || 0}</span></div>
+              <div className={`back mt-1 blbox ${suspend}`} onClick={() => onBet(true, ItemMarket)}><span className="odd">{ItemMarket?.b || 0}</span></div>
               <div className="mt-1">  <CasinoPnl matchId={liveMatchData.match_id} sectionId={ItemN.SelectionId} /></div>
             </div>
           })

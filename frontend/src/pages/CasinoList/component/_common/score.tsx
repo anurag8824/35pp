@@ -20,7 +20,7 @@ const Score = (parmas: any) => {
     }
     return cls
   }
-  console.log('scoreData', scoreData)
+  // console.log('scoreData', scoreData)
   return (
     <>
       {scoreData && (

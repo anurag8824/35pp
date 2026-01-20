@@ -8,14 +8,20 @@ import { betPopup, selectBetPopup } from '../../../redux/actions/bet/betSlice'
 import { IBetOn, IBetType } from '../../../models/IBet'
 import CasinoPnl from './casinoPnl'
 import { isMobile } from 'react-device-detect'
+import { useParams } from 'react-router-dom';
+
 
 const Instantworli = (props: any) => {
   const { lastOdds, liveMatchData } = props
+  const {matchId}:any = useParams();
+   const { gameCode } = useParams()
+  // console.log(lastOdds,'live data')
   const dispatch = useAppDispatch()
   const userState = useAppSelector(selectUserData)
   const [selectionId, setselectionId] = useState<any>("")
   const [checkRoundIdChange, setCheckRoundIdChange] = useState('')
   const betValues: any = useAppSelector(selectBetPopup)
+  // console.log(lastOdds,'lastOdds')
 
   React.useEffect(() => {
     if (lastOdds && lastOdds['1']) {
@@ -29,9 +35,10 @@ const Instantworli = (props: any) => {
     if (betValues.isOpen == false) setselectionId("")
   }, [betValues.betData])
   const onBet = (isBack = false, item: any) => {
-    console.log(item, 'item in button item')
+    
+    // console.log(item,'item',liveMatchData)
     const ipAddress = authService.getIpAddress()
-    const oddVal = item?.rate || item?.b1;
+    const oddVal = item?.rate || item?.b;
     const odds = oddVal
     if (userState.user.role === RoleType.user) {
       if (parseFloat(odds) <= 0 || item.gstatus === '0') return
@@ -45,7 +52,7 @@ const Instantworli = (props: any) => {
             volume: 100,
             marketId: liveMatchData.match_id,
             marketName: item.MarketName,
-            matchId: parseInt(liveMatchData?.match_id) || 0,
+            matchId: +matchId || 0,
             selectionName: item.RunnerName,
             selectionId: item.sid,
             pnl: 0,
@@ -57,7 +64,7 @@ const Instantworli = (props: any) => {
             type: IBetType.Match,
             matchName: liveMatchData?.title,
             betOn: IBetOn.CASINO,
-            gtype: liveMatchData?.slug
+            gtype:gameCode
           },
         }),
       )
@@ -80,7 +87,7 @@ const Instantworli = (props: any) => {
             </th>
             <th style={{ paddingLeft: "5px", width: "40%" }}>
               <div style={{ width: "97%", fontSize: "18px", textAlign: "center" }}>
-                9
+                2
               </div>
 
             </th>
@@ -95,8 +102,10 @@ const Instantworli = (props: any) => {
                   <tr style={{ height: isMobile ? "69px" : "89px" }} key={2} className={`${heightdata}`}>
                     {[0, 1, 2, 3, 4].map((indexMarket: any, key: number) => {
                       const Item: any = liveMatchData?.defaultMarkets?.[indexMarket]?.Runners?.[0] || {}
-                      const ItemMarket: any = lastOdds?.[Item.SelectionId] || {}
+                      const ItemMarket: any = {...lastOdds?.market?.[0]}
                       ItemMarket['rate'] = 9;
+                      ItemMarket['RunnerName'] = lastOdds?.market?.[indexMarket]?.MarketName
+                      ItemMarket['sid'] = Item.SelectionId
                       return <td key={key} className={`text-center bet-action back ${selectionId == Item.SelectionId ? 'bg-green' : ''}`} onClick={() => onBet(true, ItemMarket)}>
                         <span className="d-block card-number">{Item?.RunnerName?.replace(' Single', '')}</span>
                         <div>
@@ -113,9 +122,11 @@ const Instantworli = (props: any) => {
                   </tr>
                   <tr style={{ height: isMobile ? "69px" : "89px" }} key={3} className={`${heightdata}`}>
                     {[5, 6, 7, 8, 9].map((indexMarket: any, key: number) => {
-                      const Item: any = liveMatchData?.defaultMarkets?.[indexMarket]?.Runners?.[0] || {}
-                      const ItemMarket: any = lastOdds?.[Item.SelectionId] || {}
+                       const Item: any = liveMatchData?.defaultMarkets?.[indexMarket]?.Runners?.[0] || {}
+                      const ItemMarket: any = {...lastOdds?.market?.[0]}
                       ItemMarket['rate'] = 9;
+                      ItemMarket['RunnerName'] = lastOdds?.market?.[indexMarket]?.MarketName
+                      ItemMarket['sid'] =Item.SelectionId
                       return <td key={key} className={`text-center bet-action back ${selectionId == Item.SelectionId ? 'bg-green' : ''}`} onClick={() => onBet(true, ItemMarket)}>
                         <span className="d-block card-number">{Item?.RunnerName?.replace(' Single', '')}</span>
                         <div>
@@ -139,9 +150,11 @@ const Instantworli = (props: any) => {
                 <tbody data-title='SUSPENDED' className={`card32btbody`}>
                   <tr style={{ height: isMobile ? "59px" : "89px" }} key={0} className={`${heightdata}`}>
                     {[10, 12].map((indexMarket: any, key: number) => {
-                      const Item: any = liveMatchData?.defaultMarkets?.[indexMarket]?.Runners?.[0] || {}
-                      const ItemMarket: any = lastOdds?.[Item.SelectionId] || {}
-                      ItemMarket['rate'] = 9;
+                       const Item: any = liveMatchData?.defaultMarkets?.[indexMarket]?.Runners?.[0] || {}
+                      const ItemMarket: any = {...lastOdds?.market?.[0]}
+                      ItemMarket['rate'] = 2;
+                      ItemMarket['RunnerName'] = lastOdds?.market?.[indexMarket]?.MarketName
+                      ItemMarket['sid'] = Item.SelectionId
                       return <td className={`text-center bet-action back ${selectionId == Item.SelectionId ? 'bg-green' : ''}`} key={Item.SelectionId} onClick={() => onBet(true, ItemMarket)}>
                         <span className="d-block" style={{ fontSize: "18px" }}>{Item?.RunnerName}</span>
                         {indexMarket == 10 && <p style={{ fontSize: "18px", marginTop: isMobile ? "5px" : "10px" }}>1|2|3|4|5</p>}
@@ -155,8 +168,10 @@ const Instantworli = (props: any) => {
                   <tr style={{ height: isMobile ? "59px" : "89px" }} key={1} className={`${heightdata}`}>
                     {[11, 13].map((indexMarket: any, key: number) => {
                       const Item: any = liveMatchData?.defaultMarkets?.[indexMarket]?.Runners?.[0] || {}
-                      const ItemMarket: any = lastOdds?.[Item.SelectionId] || {}
-                      ItemMarket['rate'] = 9;
+                      const ItemMarket: any = {...lastOdds?.market?.[0]}
+                      ItemMarket['rate'] = 2;
+                      ItemMarket['RunnerName'] = lastOdds?.market?.[indexMarket]?.MarketName
+                      ItemMarket['sid'] = Item.SelectionId
                       return <td className={`text-center bet-action back ${selectionId == Item.SelectionId ? 'bg-green' : ''}`} key={Item.SelectionId} onClick={() => onBet(true, ItemMarket)}>
                         <span className="d-block" style={{ fontSize: "18px" }}>{Item?.RunnerName}</span>
                         {indexMarket == 11 && <p style={{ fontSize: "18px", marginTop: isMobile ? "5px" : "10px" }}>6|7|8|9|0</p>}
@@ -199,9 +214,11 @@ const Instantworli = (props: any) => {
 
           <tr style={{ height: isMobile ? "69px" : "89px" }} key={2} className={`${heightdata}`}>
             {[0, 1, 2, 3, 4].map((indexMarket: any, key: number) => {
-              const Item: any = liveMatchData?.defaultMarkets?.[indexMarket]?.Runners?.[0] || {}
-              const ItemMarket: any = lastOdds?.[Item.SelectionId] || {}
-              ItemMarket['rate'] = 9;
+               const Item: any = liveMatchData?.defaultMarkets?.[indexMarket]?.Runners?.[0] || {}
+                      const ItemMarket: any = {...lastOdds?.market?.[0]}
+                      ItemMarket['rate'] = 9;
+                      ItemMarket['RunnerName'] = lastOdds?.market?.[indexMarket]?.MarketName
+                      ItemMarket['sid'] = Item.SelectionId
               return <td key={key} className={`text-center bet-action back ${selectionId == Item.SelectionId ? 'bg-green' : ''}`} onClick={() => onBet(true, ItemMarket)}>
                 <span className="d-block card-number">{Item?.RunnerName?.replace(' Single', '')}</span>
                 <div>
@@ -218,9 +235,11 @@ const Instantworli = (props: any) => {
           </tr>
           <tr style={{ height: isMobile ? "69px" : "89px" }} key={3} className={`${heightdata}`}>
             {[5, 6, 7, 8, 9].map((indexMarket: any, key: number) => {
-              const Item: any = liveMatchData?.defaultMarkets?.[indexMarket]?.Runners?.[0] || {}
-              const ItemMarket: any = lastOdds?.[Item.SelectionId] || {}
-              ItemMarket['rate'] = 9;
+               const Item: any = liveMatchData?.defaultMarkets?.[indexMarket]?.Runners?.[0] || {}
+                      const ItemMarket: any = {...lastOdds?.market?.[0]}
+                      ItemMarket['rate'] = 9;
+                      ItemMarket['RunnerName'] = lastOdds?.market?.[indexMarket]?.MarketName
+                      ItemMarket['sid'] = Item.SelectionId
               return <td key={key} className={`text-center bet-action back ${selectionId == Item.SelectionId ? 'bg-green' : ''}`} onClick={() => onBet(true, ItemMarket)}>
                 <span className="d-block card-number">{Item?.RunnerName?.replace(' Single', '')}</span>
                 <div>
@@ -251,7 +270,7 @@ const Instantworli = (props: any) => {
           <tr>
             <th style={{ paddingLeft: "5px", display: "flex", alignItems: "center" }} colSpan={5}>
               <div style={{ width: "97%", fontSize: "18px", textAlign: "center" }}>
-                9
+                2
               </div>
 
               <span className='tx-right'><Limitinfo nameString={'lbmarket'} min={100} max={50000} /></span>
@@ -262,8 +281,10 @@ const Instantworli = (props: any) => {
           <tr style={{ height: isMobile ? "59px" : "89px" }} key={0} className={`${heightdata}`}>
             {[10, 12].map((indexMarket: any, key: number) => {
               const Item: any = liveMatchData?.defaultMarkets?.[indexMarket]?.Runners?.[0] || {}
-              const ItemMarket: any = lastOdds?.[Item.SelectionId] || {}
-              ItemMarket['rate'] = 9;
+                      const ItemMarket: any = {...lastOdds?.market?.[0]}
+                      ItemMarket['rate'] = 2;
+                      ItemMarket['RunnerName'] = lastOdds?.market?.[indexMarket]?.MarketName
+                      ItemMarket['sid'] = Item.SelectionId
               return <td className={`text-center bet-action back ${selectionId == Item.SelectionId ? 'bg-green' : ''}`} key={Item.SelectionId} onClick={() => onBet(true, ItemMarket)}>
                 <span className="d-block" style={{ fontSize: "18px" }}>{Item?.RunnerName}</span>
                 {indexMarket == 10 && <p style={{ fontSize: "18px", marginTop: isMobile ? "5px" : "10px" }}>1|2|3|4|5</p>}
@@ -276,9 +297,11 @@ const Instantworli = (props: any) => {
           </tr>
           <tr style={{ height: isMobile ? "59px" : "89px" }} key={1} className={`${heightdata}`}>
             {[11, 13].map((indexMarket: any, key: number) => {
-              const Item: any = liveMatchData?.defaultMarkets?.[indexMarket]?.Runners?.[0] || {}
-              const ItemMarket: any = lastOdds?.[Item.SelectionId] || {}
-              ItemMarket['rate'] = 9;
+               const Item: any = liveMatchData?.defaultMarkets?.[indexMarket]?.Runners?.[0] || {}
+                      const ItemMarket: any = {...lastOdds?.market?.[0]}
+                      ItemMarket['rate'] = 2;
+                      ItemMarket['RunnerName'] = lastOdds?.market?.[indexMarket]?.MarketName
+                      ItemMarket['sid'] = Item.SelectionId
               return <td className={`text-center bet-action back ${selectionId == Item.SelectionId ? 'bg-green' : ''}`} key={Item.SelectionId} onClick={() => onBet(true, ItemMarket)}>
                 <span className="d-block" style={{ fontSize: "18px" }}>{Item?.RunnerName}</span>
                 {indexMarket == 11 && <p style={{ fontSize: "18px", marginTop: isMobile ? "5px" : "10px" }}>6|7|8|9|0</p>}

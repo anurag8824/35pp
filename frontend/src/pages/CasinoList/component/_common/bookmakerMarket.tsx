@@ -17,7 +17,7 @@ const BookmakerMarket = (props: any) => {
   const getCurrentMatch = useAppSelector(selectCasinoCurrentMatch)
   const onBet = (isBack = false, item: any) => {
     const ipAddress = authService.getIpAddress()
-    const oddVal = parseFloat(isBack ? item.b1 : item.l1);
+    const oddVal = parseFloat(isBack ? item.b : item.l);
     const odds = oddVal.toString()
     if (userState.user.role === RoleType.user) {
       if (parseFloat(odds) <= 0 || item.status === 'SUSPENDED') return
@@ -27,7 +27,7 @@ const BookmakerMarket = (props: any) => {
           betData: {
             isBack,
             odds: parseFloat(odds),
-            volume: parseFloat(isBack ? item.bs1 : item.ls1),
+            volume: parseFloat(isBack ? item.bs : item.ls),
             marketId: item.mid,
             marketName: oddsMarket.MarketName,
             matchId: parseInt(lastOdds?.match_id || 0),
@@ -35,7 +35,7 @@ const BookmakerMarket = (props: any) => {
             selectionId: item.sid,
             pnl: 0,
             stack: 0,
-            currentMarketOdds: isBack ? item.b1 : item.l1,
+            currentMarketOdds: isBack ? item.b : item.l,
             eventId: item.mid,
             exposure: -0,
             ipAddress: ipAddress,
@@ -64,12 +64,12 @@ const BookmakerMarket = (props: any) => {
         <div className={`${boxLayoutCls2} back1 back-2 float-left text-center`}>
         </div>
         <div className={`${boxLayoutCls2} back float-left back lock text-center betting-disabled`} onClick={() => { onBet(true, ItemRunner) }}>
-          {ItemRunner.b1}
-          <span className="d-block">{nFormatter(ItemRunner.bs1, 2)}</span>
+          {ItemRunner.b}
+          <span className="d-block">{nFormatter(ItemRunner.bs, 2)}</span>
         </div>
         <div className={`${boxLayoutCls2} lay float-left text-center betting-disabled`} onClick={() => { onBet(false, ItemRunner) }}>
-        {ItemRunner.l1}
-          <span className="d-block">{nFormatter(ItemRunner.ls1, 2)}</span>
+        {ItemRunner.l}
+          <span className="d-block">{nFormatter(ItemRunner.ls, 2)}</span>
         </div>
         <div className={`${boxLayoutCls2} lay2 float-left text-center`}>
         </div>

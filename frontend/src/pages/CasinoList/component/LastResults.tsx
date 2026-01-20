@@ -1,10 +1,13 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { useNavigate } from 'react-router-dom'
 import { selectCasinoCurrentMatch } from '../../../redux/actions/casino/casinoSlice'
 import { useAppSelector } from '../../../redux/hooks'
 import CasinoResultDetail from '../CasinoResultDetail'
+import RouletteFrame from './RouletteFrame'
 // ARimport { useState } from "react"
+
+
 
 const gameWiseResultStyle: any = {
   dt20: {
@@ -25,7 +28,7 @@ const gameWiseResultStyle: any = {
       shortName: 'T',
     },
   },
-  Tp1Day: {
+  teen: {
     '0': {
       clsname: 'ball-runs playerc last-result',
       shortName: 'T',
@@ -99,7 +102,7 @@ const gameWiseResultStyle: any = {
       shortName: '11',
     },
   },
-  ddb: {
+  btable: {
     '1': {
       clsname: 'ball-runs playerb last-result',
       shortName: 'A',
@@ -125,12 +128,12 @@ const gameWiseResultStyle: any = {
       shortName: 'F',
     },
   },
-  onedaypoker: {
-    '11': {
+  poker: {
+    '1': {
       clsname: 'ball-runs playerb last-result',
       shortName: 'A',
     },
-    '21': {
+    '2': {
       clsname: 'ball-runs playera last-result',
       shortName: 'B',
     },
@@ -139,12 +142,12 @@ const gameWiseResultStyle: any = {
       shortName: 'T',
     },
   },
-  onedaypoker20: {
-    '11': {
+  poker20: {
+    '1': {
       clsname: 'ball-runs playerb last-result',
       shortName: 'A',
     },
-    '21': {
+    '2': {
       clsname: 'ball-runs playera last-result',
       shortName: 'B',
     },
@@ -167,16 +170,16 @@ const gameWiseResultStyle: any = {
       shortName: 'L',
     },
   },
-  testtp: {
-    '11': {
+  teen9: {
+    '1': {
       clsname: 'ball-runs playera last-result',
       shortName: 'T',
     },
-    '21': {
+    '2': {
       clsname: 'ball-runs playerb last-result',
       shortName: 'L',
     },
-    '31': {
+    '3': {
       clsname: 'ball-runs playera last-result',
       shortName: 'D',
     },
@@ -190,12 +193,22 @@ const gameWiseResultStyle: any = {
       clsname: 'ball-runs playerb last-result',
       shortName: 'A',
     },
-    '3': {
+    '2': {
       clsname: 'ball-runs playera last-result',
       shortName: 'B',
     },
   },
-  poker6player: {
+  mogambo: {
+    '1': {
+      clsname: 'ball-runs playerb last-result',
+      shortName: 'W',
+    },
+    '2': {
+      clsname: 'ball-runs playera last-result',
+      shortName: 'L',
+    },
+  },
+  poker6: {
     '11': {
       clsname: 'ball-runs playerb last-result',
       shortName: '1',
@@ -245,7 +258,7 @@ const gameWiseResultStyle: any = {
       ),
     },
   },
-  Superover: {
+  superover: {
     '1': {
       clsname: 'ball-runs playera last-result',
       shortName: 'E',
@@ -259,7 +272,63 @@ const gameWiseResultStyle: any = {
       shortName: 'T',
     },
   },
+  cmeter: {
+    '1': {
+      clsname: 'ball-runs playera last-result',
+      shortName: 'L',
+    },
+    '2': {
+      clsname: 'ball-runs playerb last-result',
+      shortName: 'H',
+    },
+    '0': {
+      clsname: 'ball-runs playera last-result',
+      shortName: 'T',
+    },
+  },
   worli2: {
+    '1': {
+      clsname: 'ball-runs playera last-result',
+      shortName: '1',
+    },
+    '0': {
+      clsname: 'ball-runs playera last-result',
+      shortName: '0',
+    },
+    '2': {
+      clsname: 'ball-runs playera last-result',
+      shortName: '2',
+    },
+    '3': {
+      clsname: 'ball-runs playera last-result',
+      shortName: '3',
+    },
+    '4': {
+      clsname: 'ball-runs playera last-result',
+      shortName: '4',
+    },
+    '5': {
+      clsname: 'ball-runs playera last-result',
+      shortName: '5',
+    },
+    '6': {
+      clsname: 'ball-runs playera last-result',
+      shortName: '6',
+    },
+    '7': {
+      clsname: 'ball-runs playera last-result',
+      shortName: '7',
+    },
+    '8': {
+      clsname: 'ball-runs playera last-result',
+      shortName: '8',
+    },
+    '9': {
+      clsname: 'ball-runs playera last-result',
+      shortName: '9',
+    },
+  },
+  other: {
     '1': {
       clsname: 'ball-runs playera last-result',
       shortName: 'R',
@@ -286,48 +355,48 @@ const gameWiseResultStyle: any = {
   cmatch20: {
     '1': {
       clsname: 'ball-runs playera last-result',
-      shortName: <img src={`imgs/casino/ball2.png`} className='img-fluid ball-image' />,
+      shortName: <img src={`/imgs/casino/ball2.png`} className='img-fluid' />,
     },
     '2': {
       clsname: 'ball-runs playerb last-result',
-      shortName: <img src={`imgs/casino/ball3.png`} className='img-fluid ball-image' />,
+      shortName: <img src={`/imgs/casino/ball3.png`} className='img-fluid' />,
     },
     '3': {
       clsname: 'ball-runs playerb last-result',
-      shortName: <img src={`imgs/casino/ball4.png`} className='img-fluid ball-image' />,
+      shortName: <img src={`/imgs/casino/ball4.png`} className='img-fluid' />,
     },
     '4': {
       clsname: 'ball-runs playerb last-result',
-      shortName: <img src={`imgs/casino/ball5.png`} className='img-fluid ball-image' />,
+      shortName: <img src={`/imgs/casino/ball5.png`} className='img-fluid' />,
     },
     '5': {
       clsname: 'ball-runs playerb last-result',
-      shortName: <img src={`imgs/casino/ball6.png`} className='img-fluid ball-image' />,
+      shortName: <img src={`/imgs/casino/ball6.png`} className='img-fluid' />,
     },
     '6': {
       clsname: 'ball-runs playerb last-result',
-      shortName: <img src={`imgs/casino/ball7.png`} className='img-fluid ball-image' />,
+      shortName: <img src={`/imgs/casino/ball7.png`} className='img-fluid' />,
     },
     '7': {
       clsname: 'ball-runs playerb last-result',
-      shortName: <img src={`imgs/casino/ball8.png`} className='img-fluid ball-image' />,
+      shortName: <img src={`/imgs/casino/ball8.png`} className='img-fluid' />,
     },
     '8': {
       clsname: 'ball-runs playerb last-result',
-      shortName: <img src={`imgs/casino/ball9.png`} className='img-fluid ball-image' />,
+      shortName: <img src={`/imgs/casino/ball9.png`} className='img-fluid' />,
     },
     '9': {
       clsname: 'ball-runs playerb last-result',
-      shortName: <img src={`imgs/casino/ball10.png`} className='img-fluid ball-image' />,
+      shortName: <img src={`/imgs/casino/ball10.png`} className='img-fluid' />,
     },
   },
-  Andarbahar: {
+  ab20: {
     '0': {
       clsname: 'ball-runs playera last-result',
       shortName: 'R',
     }
   },
-  Andarbahar2: {
+  abj: {
     '1': {
       clsname: 'ball-runs playera last-result',
       shortName: 'A',
@@ -336,320 +405,309 @@ const gameWiseResultStyle: any = {
       clsname: 'ball-runs playerb last-result',
       shortName: 'B',
     },
-  }
-
+  },
+  race17: {
+    '0': {
+      clsname: 'ball-runs playera last-result',
+      shortName: 'N',
+    },
+    '1': {
+      clsname: 'ball-runs playerb last-result',
+      shortName: 'Y',
+    },
+  },
+  teen1: {
+    '1': {
+      clsname: 'ball-runs playera last-result',
+      shortName: 'P',
+    },
+    '2': {
+      clsname: 'ball-runs playerb last-result',
+      shortName: 'D',
+    },
+  },
+  lottcard: {
+    '756': {
+      clsname: 'ball-runs playerb last-result',
+      shortName: '756',
+    },
+    '2': {
+      clsname: 'ball-runs playerb last-result',
+      shortName: '735',
+    },
+    '3': {
+      clsname: 'ball-runs playerb last-result',
+      shortName: '230',
+    },
+    '4': {
+      clsname: 'ball-runs playerb last-result',
+      shortName: '820',
+    },
+  },
 }
+
+// ===== ROULETTE COLOR LOGIC (NEW, SAFE) =====
+const ROULETTE_RED = new Set([
+  1, 3, 5, 7, 9, 12, 14, 16, 18,
+  19, 21, 23, 25, 27, 30, 32, 34, 36
+])
+
+const ROULETTE_BLACK = new Set([
+  2, 4, 6, 8, 10, 11, 13, 15, 17,
+  20, 22, 24, 26, 28, 29, 31, 33, 35
+])
+
+const getRouletteBgClass = (num: string | number) => {
+  if (num === '0' || num === 0 || num === '00') return 'bg-success'
+  const n = Number(num)
+  if (ROULETTE_RED.has(n)) return 'bg-danger'
+  if (ROULETTE_BLACK.has(n)) return 'bg-dark'
+  return 'bg-secondary'
+}
+
 const LastResults = (props: any) => {
   const { lastResult, gameId } = props
+  console.log(lastResult, 'lastresult')
   const navigate = useNavigate()
   const [popupdata, setPopData] = useState<any>({})
   const [popupstatus, setPopStatus] = useState<any>(false)
   const getCurrentMatch = useAppSelector(selectCasinoCurrentMatch)
 
+  useEffect(() => {
+    console.log(popupdata, 'popup data')
+  }, [])
+
+  const shouldHideHeader = () => {
+    if (!isMobile) return false;
+    switch (gameId) {
+      case 'roulette12':
+      case 'roulette11':
+      case 'roulette13':
+        return true;
+
+      default:
+        return false;
+    }
+  };
   const getShortName = ({ shortName, result }: any) => {
     return <span className={`player${result}`}>{shortName}</span>
   }
   const handleResultsClick = (Item: any) => {
 
+    // console.log(Item,'result item')
+
     setPopData({ ...Item, ...{ title: getCurrentMatch.title, slug: getCurrentMatch.slug, "event_data": { title: getCurrentMatch.title } } })
     setPopStatus(true)
   }
 
-  // const datamapItem = (Item: any, key: number) => {
-  //   let clsname = ''
-  //   let shortName = ''
-  //   if (!Item.result) return
-  //   try {
-  //     switch (gameId) {
-  //       case 'race20':
-  //         clsname = 'ball-runs playerb last-result playersuit'
-  //         break
-  //       case 'lucky7eu':
-  //       case 'lucky7':
-  //         clsname = gameWiseResultStyle['lucky7eu'][Item.win]['clsname']
-  //         shortName = gameWiseResultStyle['lucky7eu'][Item.win]['shortName']
-  //         break
-  //       case 'AAA':
-  //         clsname = gameWiseResultStyle['aaa'][Item.result]['clsname']
-  //         shortName = gameWiseResultStyle['aaa'][Item.result]['shortName']
-  //         break
-  //       case 'baccarat':
-  //       case 'baccarat2':
-  //         clsname = gameWiseResultStyle['baccarat'][Item.result]['clsname']
-  //         shortName = gameWiseResultStyle['baccarat'][Item.result]['shortName']
-  //         break
-  //       case 'queen':
-  //         clsname = 'ball-runs playerb last-result'
-  //         shortName = (Item.result - 1).toString()
-  //         break
-  //       case 'Tp1Day':
-  //         clsname = gameWiseResultStyle['Tp1Day'][Item.result]['clsname']
-  //         shortName = gameWiseResultStyle['Tp1Day'][Item.result]['shortName']
-  //         break
-  //       case 'card32':
-  //       case 'card32b':
-  //         clsname = gameWiseResultStyle['card32'][Item.result]['clsname']
-  //         shortName = gameWiseResultStyle['card32'][Item.result]['shortName']
-  //         break
-  //       case 'ddb':
-  //         clsname = gameWiseResultStyle['ddb'][Item.result]['clsname']
-  //         shortName = gameWiseResultStyle['ddb'][Item.result]['shortName']
-  //         break
-  //       case 'dt20':
-  //       case 'dt20b':
-  //       case 'dragontiger1Day':
-  //         clsname = gameWiseResultStyle['dt20'][Item.result]['clsname']
-  //         shortName = gameWiseResultStyle['dt20'][Item.result]['shortName']
-  //         break
-  //       case 'onedaypoker':
-  //         clsname = gameWiseResultStyle['onedaypoker'][Item.result]['clsname']
-  //         shortName = gameWiseResultStyle['onedaypoker'][Item.result]['shortName']
-  //         break
-  //       case 'onedaypoker20':
-  //         clsname = gameWiseResultStyle['onedaypoker'][Item.result]['clsname']
-  //         shortName = gameWiseResultStyle['onedaypoker'][Item.result]['shortName']
-  //         break
-  //       case 'dtl20':
-  //         clsname = gameWiseResultStyle['dtl20'][Item.result]['clsname']
-  //         shortName = gameWiseResultStyle['dtl20'][Item.result]['shortName']
-  //         break
-  //       case 'teen20':
-  //         clsname = gameWiseResultStyle['teen20'][Item.result]['clsname']
-  //         shortName = gameWiseResultStyle['teen20'][Item.result]['shortName']
-  //         break
-  //       case 'poker6player':
-  //         clsname = gameWiseResultStyle['poker6player'][Item.result]['clsname']
-  //         shortName = gameWiseResultStyle['poker6player'][Item.result]['shortName']
-  //         break
-  //       case 'race2020':
-  //         clsname = gameWiseResultStyle['race2020'][Item.result]['clsname']
-  //         shortName = gameWiseResultStyle['race2020'][Item.result]['shortName']
-  //         break
-  //       case 'testtp':
-  //         clsname = gameWiseResultStyle['testtp'][Item?.result || 0]['clsname']
-  //         shortName = gameWiseResultStyle['testtp'][Item?.result || 0]['shortName']
-  //         break
-  //       case 'Superover':
-  //         clsname = gameWiseResultStyle['Superover'][Item.result]['clsname']
-  //         shortName = gameWiseResultStyle['Superover'][Item.result]['shortName']
-  //         break
-  //       case 'fivewicket':
-  //         clsname = gameWiseResultStyle['fivewicket'][Item.result]['clsname']
-  //         shortName = gameWiseResultStyle['fivewicket'][Item.result]['shortName']
-  //         break
-  //       case 'worliinstant':
-  //       case 'worlimatka':
-  //       case 'warcasino':
-  //       case 'opentp':
-  //       case 'cmeter2020':
-  //       case 'Cards3J':
-  //       case 'ab1':
-  //       case 'Andarbahar':
-  //         clsname = gameWiseResultStyle['worli2'][1]['clsname']
-  //         shortName = gameWiseResultStyle['worli2'][1]['shortName']
-  //         break
-  //       case 'Andarbahar2':
-  //         clsname = gameWiseResultStyle['Andarbahar2'][Item.result]['clsname']
-  //         shortName = gameWiseResultStyle['Andarbahar2'][Item.result]['shortName']
-  //         break
-
-  //       default:
-  //         clsname = 'ball-runs playerb last-result'
-  //         shortName = Item.result
-  //         break
-  //     }
-  //   } catch (error) {
-  //     console.log('deni')
-  //   }
-
-  //   let clsscolor =
-  //     (gameId == 'baccarat2' && Item.winnerName == 'Player') ||
-  //       (gameId == 'baccarat' && Item.winnerName == 'Player')
-  //       ? 'player-color'
-  //       : ''
-  //   clsscolor =
-  //     (gameId == 'baccarat2' && Item.winnerName == 'Banker') ||
-  //       (gameId == 'baccarat' && Item.winnerName == 'Banker')
-  //       ? 'banker-color'
-  //       : clsscolor
-  //   clsscolor =
-  //     (gameId == 'baccarat2' && Item.winnerName == 'Tie Game') ||
-  //       (gameId == 'baccarat' && Item.winnerName == 'Tie Game')
-  //       ? 'tie-color'
-  //       : clsscolor
-
-  //   return (
-  //     <span
-  //       key={key}
-  //       onClick={() => {
-  //         handleResultsClick(Item)
-  //       }}
-  //       className={`${clsname} ${clsscolor}`}
-  //     >
-  //       {getShortName({ shortName })}
-  //     </span>
-  //   )
-  // }
-
-
   const datamapItem = (Item: any, key: number) => {
-    let clsname = '';
-    let shortName = '';
-  
-    // 👇 yeh line automatically win ya result pick karegi
-    const value = Item?.win || Item?.result;
-
-    console.log(gameId, 'gameIdgameIdgameId');
-  
+    console.log(Item, key, 'result item')
+    let clsname = ''
+    let shortName = ''
+    // if (!Item.result) return
     try {
       switch (gameId) {
-        case 'race20':
-          clsname = 'ball-runs playerb last-result playersuit';
-          break;
-  
+        // case 'race20':
+        //   clsname = 'ball-runs playerb last-result playersuit'
+        //   break
         case 'lucky7eu':
         case 'lucky7':
-          clsname = gameWiseResultStyle['lucky7eu'][value]?.clsname || '';
-          shortName = gameWiseResultStyle['lucky7eu'][value]?.shortName || '';
-          break;
-  
-        case 'AAA':
-          clsname = gameWiseResultStyle['aaa'][value]?.clsname || '';
-          shortName = gameWiseResultStyle['aaa'][value]?.shortName || '';
-          break;
-  
+        case 'lucky7eu2':
+        case 'lucky5':
+          clsname = gameWiseResultStyle['lucky7eu'][Item.win]['clsname']
+          shortName = gameWiseResultStyle['lucky7eu'][Item.win]['shortName']
+          break
+        case 'aaa':
+        case 'aaa2':
+        case 'dum10':
+        case 'joker20':
+        case 'poison':
+        case 'poison20':
+          clsname = gameWiseResultStyle['aaa'][Item.win]['clsname']
+          shortName = gameWiseResultStyle['aaa'][Item.win]['shortName']
+          break
         case 'baccarat':
         case 'baccarat2':
-          clsname = gameWiseResultStyle['baccarat'][value]?.clsname || '';
-          shortName = gameWiseResultStyle['baccarat'][value]?.shortName || '';
-          break;
-  
+          clsname = gameWiseResultStyle['baccarat'][Item.win]['clsname']
+          shortName = gameWiseResultStyle['baccarat'][Item.win]['shortName']
+          break
+        case 'race17':
+          clsname = gameWiseResultStyle['race17'][Item.win]['clsname']
+          shortName = gameWiseResultStyle['race17'][Item.win]['shortName']
+          break
         case 'queen':
-          clsname = 'ball-runs playerb last-result';
-          shortName = ((value || 1) - 1).toString();
-          break;
-  
+          clsname = 'ball-runs playerb last-result'
+          shortName = (Item.win - 1).toString()
+          break
         case 'teen':
-          clsname = gameWiseResultStyle['Tp1Day'][value]?.clsname || '';
-          shortName = gameWiseResultStyle['Tp1Day'][value]?.shortName || '';
-          break;
-  
+        case 'teen3':
+        case 'teen32':
+        case 'teen33':
+        case 'teen41':
+        case 'teen42':
+        case 'teen62':
+        case 'cmeter1':
+          clsname = gameWiseResultStyle['teen'][Item.win]['clsname']
+          shortName = gameWiseResultStyle['teen'][Item.win]['shortName']
+          break
         case 'card32':
-        case 'card32b':
-          clsname = gameWiseResultStyle['card32'][value]?.clsname || '';
-          shortName = gameWiseResultStyle['card32'][value]?.shortName || '';
-          break;
-  
-        case 'ddb':
-          clsname = gameWiseResultStyle['ddb'][value]?.clsname || '';
-          shortName = gameWiseResultStyle['ddb'][value]?.shortName || '';
-          break;
-  
+        case 'card32eu':
+          clsname = gameWiseResultStyle['card32'][Item.win]['clsname']
+          shortName = gameWiseResultStyle['card32'][Item.win]['shortName']
+          break
+        case 'lottcard':
+          // clsname = gameWiseResultStyle['lottcard'][Item.win]['clsname']
+          // shortName = gameWiseResultStyle['lottcard'][Item.win]['shortName']
+          clsname = 'ball-runs ball-runs-lottcard playerb last-result'
+          shortName = Item.win
+          break
+
+        case 'btable':
+        case 'btable2':
+        case 'race2':
+          clsname = gameWiseResultStyle['btable'][Item.win]['clsname']
+          shortName = gameWiseResultStyle['btable'][Item.win]['shortName']
+          break
         case 'dt20':
         case 'dt202':
-        case 'dragontiger1Day':
-          clsname = gameWiseResultStyle['dt20'][value]?.clsname || '';
-          shortName = gameWiseResultStyle['dt20'][value]?.shortName || '';
-          break;
-  
-        case 'onedaypoker':
-        case 'onedaypoker20':
-          clsname = gameWiseResultStyle['onedaypoker'][value]?.clsname || '';
-          shortName = gameWiseResultStyle['onedaypoker'][value]?.shortName || '';
-          break;
-  
+        case 'dt6':
+          clsname = gameWiseResultStyle['dt20'][Item.win]['clsname']
+          shortName = gameWiseResultStyle['dt20'][Item.win]['shortName']
+          break
+        case 'poker':
+          clsname = gameWiseResultStyle['poker'][Item.win]['clsname']
+          shortName = gameWiseResultStyle['poker'][Item.win]['shortName']
+          break
+        case 'poker20':
+        case 'goal':
+          clsname = gameWiseResultStyle['poker20'][Item.win]['clsname']
+          shortName = gameWiseResultStyle['poker20'][Item.win]['shortName']
+          break
         case 'dtl20':
-          clsname = gameWiseResultStyle['dtl20'][value]?.clsname || '';
-          shortName = gameWiseResultStyle['dtl20'][value]?.shortName || '';
-          break;
-  
+          clsname = gameWiseResultStyle['dtl20'][Item.win]['clsname']
+          shortName = gameWiseResultStyle['dtl20'][Item.win]['shortName']
+          break
         case 'teen20':
-          clsname = gameWiseResultStyle['teen20'][value]?.clsname || '';
-          shortName = gameWiseResultStyle['teen20'][value]?.shortName || '';
-          break;
-  
-        case 'poker6player':
-          clsname = gameWiseResultStyle['poker6player'][value]?.clsname || '';
-          shortName = gameWiseResultStyle['poker6player'][value]?.shortName || '';
-          break;
-  
-        case 'race2020':
-          clsname = gameWiseResultStyle['race2020'][value]?.clsname || '';
-          shortName = gameWiseResultStyle['race2020'][value]?.shortName || '';
-          break;
-  
-        case 'testtp':
-          clsname = gameWiseResultStyle['testtp'][value || 0]?.clsname || '';
-          shortName = gameWiseResultStyle['testtp'][value || 0]?.shortName || '';
-          break;
-  
-        case 'Superover':
-          clsname = gameWiseResultStyle['Superover'][value]?.clsname || '';
-          shortName = gameWiseResultStyle['Superover'][value]?.shortName || '';
-          break;
-  
+        case 'teen20b':
+        case 'teen20c':
+        case 'teenmuf':
+        case 'patti2':
+        case 'teensin':
+          clsname = gameWiseResultStyle['teen20'][Item.win]['clsname']
+          shortName = gameWiseResultStyle['teen20'][Item.win]['shortName']
+          break
+        case 'mogambo':
+          clsname = gameWiseResultStyle['mogambo'][Item.win]['clsname']
+          shortName = gameWiseResultStyle['mogambo'][Item.win]['shortName']
+          break
+
+        case 'roulette12':
+        case 'roulette13':
+        case 'roulette11':
+          clsname = `badge rounded-circle mx-1 p-1 ${getRouletteBgClass(Item.win)} text-white`
+          shortName = Item.win
+          break
+        case 'poker6':
+          clsname = gameWiseResultStyle['poker6'][Item.win]['clsname']
+          shortName = gameWiseResultStyle['poker6'][Item.win]['shortName']
+          break
+        case 'race20':
+          clsname = gameWiseResultStyle['race2020'][Item.win]['clsname']
+          shortName = gameWiseResultStyle['race2020'][Item.win]['shortName']
+          break
+        case 'teen9':
+          clsname = gameWiseResultStyle['teen9'][Item?.win || 0]['clsname']
+          shortName = gameWiseResultStyle['teen9'][Item?.win || 0]['shortName']
+          break
+        case 'superover':
+          clsname = gameWiseResultStyle['superover'][Item.win]['clsname']
+          shortName = gameWiseResultStyle['superover'][Item.win]['shortName']
+          break
         case 'fivewicket':
-          clsname = gameWiseResultStyle['fivewicket'][value]?.clsname || '';
-          shortName = gameWiseResultStyle['fivewicket'][value]?.shortName || '';
-          break;
-  
-        case 'worliinstant':
+          clsname = gameWiseResultStyle['fivewicket'][Item.win]['clsname']
+          shortName = gameWiseResultStyle['fivewicket'][Item.win]['shortName']
+          break
+        case 'worli2':
+          clsname = gameWiseResultStyle['worli2'][Item.win]['clsname']
+          shortName = gameWiseResultStyle['worli2'][Item.win]['shortName']
+          break
+        case 'cmeter':
+          clsname = gameWiseResultStyle['cmeter'][Item.win]['clsname']
+          shortName = gameWiseResultStyle['cmeter'][Item.win]['shortName']
+          break
+        case 'cmatch20':
+          clsname = gameWiseResultStyle['cmatch20'][Item.win]['clsname']
+          shortName = gameWiseResultStyle['cmatch20'][Item.win]['shortName']
+          break
         case 'worlimatka':
-        case 'warcasino':
-        case 'opentp':
-        case 'cmeter2020':
-        case 'Cards3J':
-        case 'ab1':
-        case 'Andarbahar':
-          clsname = gameWiseResultStyle['worli2'][1]?.clsname || '';
-          shortName = gameWiseResultStyle['worli2'][1]?.shortName || '';
-          break;
-  
-        case 'Andarbahar2':
-          clsname = gameWiseResultStyle['Andarbahar2'][value]?.clsname || '';
-          shortName = gameWiseResultStyle['Andarbahar2'][value]?.shortName || '';
-          break;
-  
+        case 'war':
+        case 'teen8':
+        case '3cardsj':
+        case 'ab2':
+        case 'ab20':
+        case 'dolidana':
+        case 'trio':
+        case 'goal':
+        case 'lucky15':
+        case 'ballbyball':
+        case 'kbc':
+        case 'notenum':
+        case 'joker1':
+        case 'joker120':
+          clsname = gameWiseResultStyle['other'][1]['clsname']
+          shortName = gameWiseResultStyle['other'][1]['shortName']
+          break
+        case 'abj':
+        case 'teen6':
+        case 'trap':
+          clsname = gameWiseResultStyle['abj'][Item.win]['clsname']
+          shortName = gameWiseResultStyle['abj'][Item.win]['shortName']
+          break
+        case 'teen1':
+        case 'teen120':
+          clsname = gameWiseResultStyle['teen1'][Item.win]['clsname']
+          shortName = gameWiseResultStyle['teen1'][Item.win]['shortName']
+          break
+
         default:
-          clsname = 'ball-runs playerb last-result';
-          shortName = value;
-          break;
+          clsname = 'ball-runs playerb last-result'
+          shortName = Item.result
+          break
       }
     } catch (error) {
-      console.log('Error in datamapItem', error);
+      console.log('deni')
     }
-  
+
     let clsscolor =
-      (gameId === 'baccarat2' && Item.winnerName === 'Player') ||
-      (gameId === 'baccarat' && Item.winnerName === 'Player')
+      (gameId == 'baccarat2' && Item.winnerName == 'Player') ||
+        (gameId == 'baccarat' && Item.winnerName == 'Player')
         ? 'player-color'
-        : '';
-  
+        : ''
     clsscolor =
-      (gameId === 'baccarat2' && Item.winnerName === 'Banker') ||
-      (gameId === 'baccarat' && Item.winnerName === 'Banker')
+      (gameId == 'baccarat2' && Item.winnerName == 'Banker') ||
+        (gameId == 'baccarat' && Item.winnerName == 'Banker')
         ? 'banker-color'
-        : clsscolor;
-  
+        : clsscolor
     clsscolor =
-      (gameId === 'baccarat2' && Item.winnerName === 'Tie Game') ||
-      (gameId === 'baccarat' && Item.winnerName === 'Tie Game')
+      (gameId == 'baccarat2' && Item.winnerName == 'Tie Game') ||
+        (gameId == 'baccarat' && Item.winnerName == 'Tie Game')
         ? 'tie-color'
-        : clsscolor;
-  
+        : clsscolor
+
     return (
       <span
         key={key}
-        onClick={() => handleResultsClick(Item)}
+        onClick={() => {
+          handleResultsClick(Item)
+        }}
         className={`${clsname} ${clsscolor}`}
       >
         {getShortName({ shortName })}
       </span>
-    );
-  };
+    )
+  }
 
   const datamap = () => {
-    console.log('lastResulddt', lastResult)
     return lastResult && lastResult.results && lastResult.results.data
       ? lastResult.results.data.map((Item: any, key: number) => {
         return datamapItem(Item, key)
@@ -657,7 +715,6 @@ const LastResults = (props: any) => {
       : ''
   }
   const datamapnew = () => {
-    console.log('lastResulddt', lastResult)
     return lastResult && lastResult.results && lastResult.results
       ? lastResult.results.map((Item: any, key: number) => {
         return datamapItem(Item, key)
@@ -666,23 +723,44 @@ const LastResults = (props: any) => {
   }
   return (
     <>
-      <div className='card m-b-10 my-bet mt-10'>
-        <div className='card-header casino'>
-          <h6 className='card-title d-inline-block'>
-            {'Last Result'}
-            <span
-              className='float-right'
-              onClick={() => {
-                navigate(`/casino/result/${gameId}`)
-              }}
-            >
-              View All{' '}
-            </span>
-          </h6>
-        </div>
-        <div className='card-body' style={{ padding: '5px', textAlign: 'right' }}>
-          {lastResult && lastResult.results && lastResult.results.data && datamap()}
-          {lastResult && lastResult.results && !lastResult.results.data && datamapnew()}
+      <div className={`card m-b-10 my-bet mt-${shouldHideHeader() ? '0' : '10'}`}
+        style={{
+          width: shouldHideHeader() ? '160px' : undefined,
+          height: shouldHideHeader() ? '55px' : undefined,
+        }}
+      >
+        {
+          !shouldHideHeader() && (
+            <div className='card-header casino'>
+              <h6 className='card-title d-inline-block'>
+                {'Last Result'}
+                <span
+                  className='float-right'
+                // onClick={() => {
+                //   navigate(`/casino/result/${gameId}`)
+                // }}
+                >
+                  {/* View All{' '} */}
+                </span>
+              </h6>
+            </div>
+          )
+        }
+        <div
+          className='card-body'
+          style={{
+            padding: shouldHideHeader() ? '4px' : '5px',
+            display: shouldHideHeader() ? 'inline-grid' : 'block',
+            gridTemplateColumns: shouldHideHeader()
+              ? 'repeat(5, minmax(0, 1fr))'
+              : 'auto',
+            gap: '3px',
+            justifyContent: 'end',
+            marginLeft: 'auto',
+            width: shouldHideHeader() ? '100%' : 'unset',
+          }}
+        >
+          {lastResult && lastResult.results && datamapnew()}
         </div>
       </div>
       <CasinoResultDetail

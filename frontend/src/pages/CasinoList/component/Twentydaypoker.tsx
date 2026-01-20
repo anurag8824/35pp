@@ -63,4 +63,4 @@ const Twentydaypoker = (props: any) => {
     </div>
   )
 }
-export default Twentydaypoker
+export default Twentydaypoker;

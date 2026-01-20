@@ -14,7 +14,7 @@ const ButtonLayout = (props: any) => {
   const getCurrentMatch = useAppSelector(selectCasinoCurrentMatch)
   const onBet = (isBack = false, item: any) => {
     const ipAddress = authService.getIpAddress()
-    const oddVal = parseFloat(isBack ? item.b1 : item.l1);
+    const oddVal = parseFloat(isBack ? item.b : item.l);
     const odds = oddVal>0?`1.${oddVal}`:"0"
     if (userState.user.role === RoleType.user) {
       if(parseFloat(odds)<=0 || item.gstatus==='SUSPENDED') return
@@ -32,7 +32,7 @@ const ButtonLayout = (props: any) => {
             selectionId: item.selectionId,
             pnl: 0,
             stack: 0,
-            currentMarketOdds: isBack ? item.b1 : item.l1,
+            currentMarketOdds: isBack ? item.b : item.l,
             eventId: item.mid,
             exposure: -0,
             ipAddress: ipAddress,

@@ -18,7 +18,7 @@ const FancyMarket = (props: any) => {
   const getCurrentMatch = useAppSelector(selectCasinoCurrentMatch)
   const onBet = (isBack = false, item: any) => {
     const ipAddress = authService.getIpAddress()
-    const oddVal = parseFloat(isBack ? item.b1 : item.l1)
+    const oddVal = parseFloat(isBack ? item.b : item.l)
     const odds = oddVal.toString()
     if (userState.user.role === RoleType.user) {
       if (parseFloat(odds) <= 0 || item.status === 'SUSPENDED') return
@@ -28,7 +28,7 @@ const FancyMarket = (props: any) => {
           betData: {
             isBack,
             odds: parseFloat(odds),
-            volume: parseFloat(isBack ? item.bs1 : item.ls1),
+            volume: parseFloat(isBack ? item.bs : item.ls),
             marketId: item.mid,
             marketName: oddsMarket.MarketName,
             matchId: parseInt(lastOdds?.match_id || 0),
@@ -36,7 +36,7 @@ const FancyMarket = (props: any) => {
             selectionId: item.sid,
             pnl: 0,
             stack: 0,
-            currentMarketOdds: isBack ? item.b1 : item.l1,
+            currentMarketOdds: isBack ? item.b : item.l,
             eventId: item.mid,
             exposure: -0,
             ipAddress: ipAddress,
@@ -77,8 +77,8 @@ const FancyMarket = (props: any) => {
                     onBet(false, ItemRunner)
                   }}
                 >
-                  <span className='odd d-block'> {ItemRunner.l1}</span>
-                  <span>{ItemRunner.ls1}</span>
+                  <span className='odd d-block'> {ItemRunner.l}</span>
+                  <span>{ItemRunner.ls}</span>
                 </div>
                 <div
                   className={`back ${!isMobile ? 'box-1' : 'box-2'} float-left back text-center`}
@@ -86,8 +86,8 @@ const FancyMarket = (props: any) => {
                     onBet(true, ItemRunner)
                   }}
                 >
-                  <span className='odd d-block'> {ItemRunner.b1}</span>
-                  <span>{ItemRunner.bs1}</span>
+                  <span className='odd d-block'> {ItemRunner.b}</span>
+                  <span>{ItemRunner.bs}</span>
                 </div>
                 {!isMobile ? <div className='box-2 float-left text-right min-max'></div> : ''}
               </div>

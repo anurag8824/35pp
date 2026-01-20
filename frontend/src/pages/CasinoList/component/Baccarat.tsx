@@ -9,6 +9,7 @@ import { betPopup } from '../../../redux/actions/bet/betSlice'
 import { IBetOn, IBetType } from '../../../models/IBet'
 import Minmax from './_common/minmax'
 import CasinoPnl from './casinoPnl'
+import { useParams } from 'react-router-dom'
 const data = [
   ['Task', 'Hours per Day'],
   ['Banker', 52],
@@ -35,13 +36,14 @@ const options = {
 }
 const Baccarat = (props: any) => {
   const { lastOdds, liveMatchData } = props
+   const { gameCode } = useParams()
   const [chartclass, setchatclass] = useState(isMobile ? 'hidemob' : '')
   const dispatch = useAppDispatch()
   const userState = useAppSelector(selectUserData)
   const onBet = (isBack = false, item: any) => {
     const ipAddress = authService.getIpAddress()
     if (userState.user.role === RoleType.user) {
-        const oddsVal = parseFloat(isBack ? item.b1 : item.l1);
+        const oddsVal = parseFloat(isBack ? item.b : item.l);
         if (oddsVal <= 0) return
         if (!item.gstatus || item.gstatus == '0' || item.gstatus == 'SUSPENDED') return
         dispatch(
@@ -50,7 +52,7 @@ const Baccarat = (props: any) => {
                 betData: {
                     isBack,
                     odds: oddsVal,
-                    volume: isBack ? item.bs1 : item.ls1,
+                    volume: isBack ? item.bs : item.ls,
                     marketId: item.mid,
                     marketName: item.MarketName,
                     matchId: liveMatchData?.event_data?.match_id || 0,
@@ -58,14 +60,14 @@ const Baccarat = (props: any) => {
                     selectionId: item.sid,
                     pnl: 0,
                     stack: 0,
-                    currentMarketOdds: isBack ? item.b1 : item.l1,
+                    currentMarketOdds: isBack ? item.b : item.l,
                     eventId: item.mid,
                     exposure: -0,
                     ipAddress: ipAddress,
                     type: IBetType.Match,
                     matchName: liveMatchData.title,
                     betOn: IBetOn.CASINO,
-                    gtype: liveMatchData.slug,
+                    gtype: gameCode,
                 },
             }),
         )
@@ -85,7 +87,7 @@ const Baccarat = (props: any) => {
       return odds ? (
         <div className={classgrid} key={index} onClick={() => onBet(true, ItemMarket)}>
           <div className={`bet-odds ${statusclass}`}>
-            {market.RunnerName} <br /> {ItemMarket.b1}:1
+            {market.RunnerName} <br /> {ItemMarket.b}:1
           </div>
           <div className='book' style={{ color: 'black' }}>
             <CasinoPnl sectionId={market.SelectionId} matchId={liveMatchData.match_id} />
@@ -98,13 +100,11 @@ const Baccarat = (props: any) => {
   }
   const displayCard = (classn: any, cardIndex: any) => {
     const lastCard = lastOdds?.[`cards`]
-    console.log('lastCard', lastCard);
     return <div className={`player-card ${classn}`} style={{display:"flex"}}>
-      
       {cardIndex.map((Item: any, index: number) => {
               const clsbacrrat2 = Item == 5 ? 'rrotate' : ((Item == 6) ?'rrotate' : '')
         return <img key={index}
-        src={`/imgs/casino/cards/${lastCard?.[`C${Item}`] === "1" ? "patti_back" : lastCard?.[`C${Item}`]}.png`}
+          src={`https://dzm0kbaskt4pv.cloudfront.net/v11/static/front/img/cards/${lastCard?.[`C${Item}`] || 1}.png`}
           className={`${clsbacrrat2} mr--1`}
           style={{marginRight:"5px"}}
         />
@@ -122,7 +122,7 @@ const Baccarat = (props: any) => {
       return <div key={key} className={Item.RunnerName} onClick={() => onBet(true, ItemMarket)}>
         <div className={statusclassm}>
           <b className='text-uppercase'>{Item.RunnerName}</b>
-          <span className='d-block'>{Math.round(ItemMarket.b1)}:1</span>
+          <span className='d-block'>{Math.round(ItemMarket.b)}:1</span>
           {Item?.RunnerName == 'Player' && displayCard(classn, [5, 3, 1])}
           {Item?.RunnerName == 'Banker' && displayCard(classn, [2, 4, 6])}
         </div>
@@ -133,7 +133,6 @@ const Baccarat = (props: any) => {
 
     })
   }
-
   const updatechartclass = () => {
     if (chartclass == '') {
       setchatclass('hidemob');
@@ -151,7 +150,7 @@ const Baccarat = (props: any) => {
         <div className={statusclassm}>
           {market.RunnerName}
           <br />
-          {Math.round(ItemMarket.b1)}:1
+          {Math.round(ItemMarket.b)}:1
         </div>
         <div className='book' style={{ color: 'black' }}>
           <CasinoPnl sectionId={market.SelectionId} matchId={liveMatchData.match_id} />

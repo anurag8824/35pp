@@ -17,7 +17,7 @@ const CasinoQueenLayout = (props: any) => {
   const onBet = (isBack = false, item: any) => {
     const ipAddress = authService.getIpAddress()
     if (userState.user.role === RoleType.user) {
-      const oddsVal = parseFloat(isBack ? item.b1 : item.l1);
+      const oddsVal = parseFloat(isBack ? item.b : item.l);
       if (oddsVal <= 0) return
       if (item.SUSPENDED == 'SUSPENDED') return
       dispatch(
@@ -26,7 +26,7 @@ const CasinoQueenLayout = (props: any) => {
           betData: {
             isBack,
             odds: oddsVal,
-            volume: isBack ? item.bs1 : item.ls1,
+            volume: isBack ? item.bs : item.ls,
             marketId: item.mid,
             marketName: item.MarketName,
             matchId: liveMatchData?.event_data?.match_id || 0,
@@ -34,7 +34,7 @@ const CasinoQueenLayout = (props: any) => {
             selectionId: item.sid,
             pnl: 0,
             stack: 0,
-            currentMarketOdds: isBack ? item.b1 : item.l1,
+            currentMarketOdds: isBack ? item.b : item.l,
             eventId: item.mid,
             exposure: -0,
             ipAddress: ipAddress,
@@ -60,15 +60,15 @@ const CasinoQueenLayout = (props: any) => {
         className={`back-border ${suspended}`}
         onClick={() => onBet(true, liveMarketData)}
       >
-        <span className='casino-odds-box-odd'>{liveMarketData.b1}</span>
-        <span className='fw-12 laysize'>{liveMarketData.bs1}</span>
+        <span className='casino-odds-box-odd'>{liveMarketData.b}</span>
+        <span className='fw-12 laysize'>{liveMarketData.bs}</span>
       </div>
       <div
         className={`lay-border ${suspended}`}
         onClick={() => onBet(false, liveMarketData)}
       >
-        <span className='casino-odds-box-odd'>{liveMarketData.l1}</span>
-        <span className='fw-12 laysize'>{liveMarketData.ls1}</span>
+        <span className='casino-odds-box-odd'>{liveMarketData.l}</span>
+        <span className='fw-12 laysize'>{liveMarketData.ls}</span>
       </div>
     </div>
   }
@@ -102,11 +102,11 @@ const CasinoQueenLayout = (props: any) => {
         <div className='col-md-12 text-right'>
           <span className='m-r-10'>
             <b>Min:</b>
-            <span>{liveMatchData?.min}</span>
+            <span>{liveMatchData.min}</span>
           </span>
           <span>
             <b>Max:</b>
-            <span>{liveMatchData?.max}</span>
+            <span>{liveMatchData.max}</span>
           </span>
         </div>
       </div>

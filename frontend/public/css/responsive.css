@@ -130,6 +130,24 @@
     color: #fff;
   }
 
+  .mogambo-suspended .suspended::after {
+        width: 100% !important;
+        height: 100% !important;
+        right: 0% !important;
+    }
+
+    .dolidana-suspended .suspended::after {
+        width: 100% !important;
+        height: 100% !important;
+        right: 0% !important;
+    }
+
+    .vipTeenPatti1day-suspended .suspended::after {
+        width: 100% !important;
+        height: 100% !important;
+        right: 0% !important;
+    }
+
   .video-tv-popup {
     position: absolute;
     top: 0;

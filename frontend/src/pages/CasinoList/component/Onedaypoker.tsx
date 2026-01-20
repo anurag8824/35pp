@@ -69,7 +69,7 @@ const Onedaypoker = (props: any) => {
                 {
                   Item.map((MarketIndex: any, KeyIndex: number) => {
                     const market = liveMatchData?.defaultMarkets?.[MarketIndex]?.Runners?.[0] || {}
-                    return <BackButtonPnl key={KeyIndex} selectionid={market.SelectionId} lastOdds={lastOdds} liveMatchData={liveMatchData} clsnamename={''} needSuspend={false} titleStatus={true}/>
+                    return <BackButtonPnl key={KeyIndex} selectionid={market.SelectionId} lastOdds={lastOdds} liveMatchData={liveMatchData} clsnamename={''} needSuspend={true} titleStatus={true}/>
                   })
                 }
               </tr>

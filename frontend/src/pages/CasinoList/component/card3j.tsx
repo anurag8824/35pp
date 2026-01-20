@@ -10,10 +10,12 @@ import CasinoPnl from './casinoPnl';
 import { isMobile } from 'react-device-detect';
 import { IApiStatus } from '../../../models/IApiStatus';
 import Marquee from 'react-fast-marquee';
+import { useParams } from 'react-router-dom'
 
 const Card3JLayout = (props: any) => {
   const { lastOdds, liveMatchData } = props
   const dispatch = useAppDispatch()
+   const { gameCode } = useParams()
   const userState = useAppSelector(selectUserData)
   const getCurrentMatch = useAppSelector(selectCasinoCurrentMatch)
   const getPlaceBet = useAppSelector(selectPlaceBet)
@@ -41,10 +43,10 @@ const Card3JLayout = (props: any) => {
   }
   const onBet = (isBack = false, item: any) => {
     const ipAddress = authService.getIpAddress()
-    const oddVal = item.rate;
+    const oddVal = item.b;
     const odds = oddVal
     if (userState.user.role === RoleType.user) {
-      if (parseFloat(odds) <= 0 || item.gstatus === '0' || CardSelection.cards.length < 3) return
+      if (parseFloat(odds) <= 0 || item.gstatus === 'SUSPENDED' || CardSelection.cards.length < 3) return
       dispatch(
         betPopup({
           isOpen: true,
@@ -59,14 +61,14 @@ const Card3JLayout = (props: any) => {
             selectionId: parseInt(item.sid),
             pnl: 0,
             stack: 0,
-            currentMarketOdds: item.rate,
+            currentMarketOdds: item.b,
             eventId: item.mid,
             exposure: -0,
             ipAddress: ipAddress,
             type: IBetType.Match,
             matchName: liveMatchData.title,
             betOn: IBetOn.CASINO,
-            gtype: liveMatchData.slug,
+            gtype: gameCode,
             C1: CardSelection.cards[0],
             C2: CardSelection.cards[1],
             C3: CardSelection.cards[2]
@@ -84,7 +86,7 @@ const Card3JLayout = (props: any) => {
           <>
             <tr>
               <td colSpan={isMobile ? 1 : 2} className={`${!isMobile ? 'text-center' : clsnameForLB} brate`}><span>
-                {isMobile && `${ItemNew.RunnerName} -`}{Item?.rate || `0.00`}</span>
+                {isMobile && `${ItemNew.RunnerName} -`}{Item?.b || `0.00`}</span>
                 {getMarketBook[`${liveMatchData?.match_id || 0}_${ItemNew.SelectionId}`] ? (
                   <span
                     className={
@@ -101,7 +103,7 @@ const Card3JLayout = (props: any) => {
                 )}
               </td>
             </tr>
-            <tbody className={`${!lastOdds?.[1] && !isMobile || lastOdds?.[1]?.gstatus == '0' && !isMobile ? 'suspended' : ''}`}>
+            <tbody className={`${!lastOdds?.[1] && !isMobile || lastOdds?.[1]?.gstatus == 'SUSPENDED' && !isMobile ? 'suspended' : ''}`}>
               <tr className={`${ItemNew.RunnerName == 'YES' ? 'back' : 'lay'} ${!lastOdds?.[1] && isMobile || lastOdds?.[1]?.gstatus == '0' && isMobile ? 'suspended' : ''}`} >
                 {!isMobile && <td width="10%">
                   <div id="nation1" className="p-title text-center">{ItemNew.RunnerName}</div> <span

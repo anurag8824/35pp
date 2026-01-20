@@ -68,7 +68,7 @@ const BollywoodCasino = (props: any) => {
         <div className='col-lg-12 col-12'>
           <p className='m-b-0 text-center text-uppercase' style={{display:"flex", alignItems:"center", justifyContent:"space-around"}}>
           <div>{MarketName} {`3.75`}</div>
-            <Limitinfo nameString={"cards"} min={liveMatchData?.min} max={liveMatchData?.max} />
+            <Limitinfo nameString={"cards"} min={liveMatchData.min} max={liveMatchData.max} />
             </p>
         </div>
         <div className='card-dt col-lg-12  col-12 text-center m-t-10 card-seven'>
@@ -197,11 +197,7 @@ const BollywoodCasino = (props: any) => {
       </div>
     </div>
   }
-// if(lastOdds &&  liveMatchData){
-//   return(
-//     <div>data is loading....</div>
-//   )
-// }
+
   return (<>
     {!isMobile ? layoutForDesktop() : ""}
     {isMobile ? layoutForMobile() : ""}

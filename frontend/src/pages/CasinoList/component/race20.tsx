@@ -6,7 +6,6 @@ import { isMobile } from 'react-device-detect';
 
 const Race20 = (props: any) => {
   const { lastOdds, liveMatchData } = props
-  // if()
  
   const laybacklayout = () => {
     return (liveMatchData?.defaultMarkets?.[0]?.Runners?.map((Item: any, index: number) => {
@@ -25,7 +24,7 @@ const Race20 = (props: any) => {
           <QueenItem selectionid={Item.SelectionId} lastOdds={lastOdds} liveMatchData={liveMatchData} />
           <div className='col-12 casino-odds-book'>
             <span className='d-block m-t-5'>
-              <CasinoPnl matchId={liveMatchData?.match_id} sectionId={Item?.SelectionId} />
+              <CasinoPnl matchId={liveMatchData.match_id} sectionId={Item.SelectionId} />
             </span>
           </div>
         </div>
@@ -50,7 +49,7 @@ const Race20 = (props: any) => {
           <QueenBackItem selectionid={Item.SelectionId} lastOdds={lastOdds} liveMatchData={liveMatchData} />
           <div className='col-12 casino-odds-book'>
             <span className='d-block m-t-5'>
-              <CasinoPnl matchId={liveMatchData?.match_id} sectionId={Item.SelectionId} />
+              <CasinoPnl matchId={liveMatchData.match_id} sectionId={Item.SelectionId} />
             </span>
           </div>
         </div>
@@ -81,7 +80,7 @@ const Race20 = (props: any) => {
           <div className={`casino-odds-box-container casino-odds-box-container-extra`}>
             <QueenItem selectionid={Item.SelectionId} lastOdds={lastOdds} liveMatchData={liveMatchData} fancystatus={true}/>
             <div className='col-12 casino-odds-book'>
-              <CasinoPnl matchId={liveMatchData?.match_id} sectionId={Item.SelectionId} />
+              <CasinoPnl matchId={liveMatchData.match_id} sectionId={Item.SelectionId} />
             </div>
           </div>
         </div></>

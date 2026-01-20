@@ -79,7 +79,7 @@ const DragonTigerA = (props: any) => {
         <div className='row row6'>
           {buttonLayout('col-lg-3 col-4', [0, 1, 2])}
           {buttonLayout('col-lg-3 col-12', [3])}
-          <Minmax min={liveMatchData?.min} max={liveMatchData?.max} />
+          <Minmax min={liveMatchData.min} max={liveMatchData.max} />
         </div>
       </div>
       {isMobile ? <div className="home_mobile">
@@ -99,7 +99,7 @@ const DragonTigerA = (props: any) => {
               </div>
               {buttonLayout('col-lg-6 col-6 mb-10 mt-10', [4, 5])}
               {buttonLayout('col-lg-6 col-6', [6, 7])}
-              <Minmax min={liveMatchData?.min} max={liveMatchData?.max} />
+              <Minmax min={liveMatchData.min} max={liveMatchData.max} />
 
             </div>
           </div>
@@ -113,7 +113,7 @@ const DragonTigerA = (props: any) => {
                 </div>
                 {buttonLayout('col-lg-6 col-6 mb-10 mt-10', [21, 22])}
                 {buttonLayout('col-lg-6 col-6', [23, 24])}
-                <Minmax min={liveMatchData?.min} max={liveMatchData?.max} />
+                <Minmax min={liveMatchData.min} max={liveMatchData.max} />
 
               </div>
 

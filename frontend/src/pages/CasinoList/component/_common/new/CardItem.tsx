@@ -5,16 +5,19 @@ import { betPopup } from "../../../../../redux/actions/bet/betSlice";
 import { selectUserData } from "../../../../../redux/actions/login/loginSlice";
 import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
 import authService from "../../../../../services/auth.service";
+import { useParams } from 'react-router-dom'
 
 const CardItem = (props: any) => {
     const { selectionid, title, lastOdds, liveMatchData } = props;
+     const { gameCode } = useParams()
     const dispatch = useAppDispatch()
     const userState = useAppSelector(selectUserData)
 
     const onBet = (isBack = false, item: any) => {
+        
         const ipAddress = authService.getIpAddress()
         if (userState.user.role === RoleType.user) {
-            const oddsVal = parseFloat(isBack ? item.b1 : item.l1);
+            const oddsVal = parseFloat(isBack ? item.b : item.l);
             if (oddsVal <= 0) return
             if (item.SUSPENDED == 'SUSPENDED') return
             dispatch(
@@ -23,7 +26,7 @@ const CardItem = (props: any) => {
                     betData: {
                         isBack,
                         odds: oddsVal,
-                        volume: isBack ? item.bs1 : item.ls1,
+                        volume: isBack ? item.bs : item.ls,
                         marketId: item.mid,
                         marketName: item.MarketName,
                         matchId: liveMatchData?.event_data?.match_id || 0,
@@ -31,14 +34,14 @@ const CardItem = (props: any) => {
                         selectionId: item.sid,
                         pnl: 0,
                         stack: 0,
-                        currentMarketOdds: isBack ? item.b1 : item.l1,
+                        currentMarketOdds: isBack ? item.b : item.l,
                         eventId: item.mid,
                         exposure: -0,
                         ipAddress: ipAddress,
                         type: IBetType.Match,
                         matchName: liveMatchData.title,
                         betOn: IBetOn.CASINO,
-                        gtype: liveMatchData.slug,
+                        gtype: gameCode,
                     },
                 }),
             )

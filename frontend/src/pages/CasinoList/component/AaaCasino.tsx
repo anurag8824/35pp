@@ -112,7 +112,7 @@ const AaaCasino = (props: any) => {
         <div className='col-lg-12 col-12'>
           <h4 className='m-b-0 text-center text-uppercase'>
             {MarketName}
-            {ItemMarket?.b1}
+            {ItemMarket?.b}
           </h4>
         </div>
         <div className='card-dt col-lg-12  col-12 text-center m-t-10 card-seven'>
