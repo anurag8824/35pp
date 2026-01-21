@@ -12,27 +12,31 @@ const CasinoListItem = (props: any) => {
 
   const onCasinoClick = (e: MouseEvent<HTMLAnchorElement>, Item: ICasinoMatch) => {
     e.preventDefault()
-    if (!Item.isDisable && Item.match_id!=-1 ) navigate.go(`/casino/${Item.slug}/${Item.match_id}`)
-      else toast.warn('This game is suspended by admin, please try again later')
+    if (!Item.isDisable && Item.match_id != -1) navigate.go(`/casino/${Item.slug}/${Item.match_id}`)
+    else toast.warn('This game is suspended by admin, please try again later')
   }
   return (
     <>
-          {gamesList &&
-            gamesList
-            .filter((item: any) => !item.isDisable && item.match_id !== -1)
-            .map((Item: any, key: number) => {
-              return (
-                <div className={"casino-list-item"} key={key}>
-                  <a href='#' onClick={(e) => onCasinoClick(e, Item)} className=''>
-                      <div className="casino-list-item-banner" 
-                        style={{ backgroundImage: `url(${Item.image})`}}>
-                      </div>
-                      <div className='casino-list-name'>{Item.title}</div>
-               
-                  </a>
-                </div>
-              )
-            })}
+      {gamesList &&
+        gamesList
+          .filter((item: any) => !item.isDisable && item.match_id !== -1)
+          .map((Item: any, key: number) => {
+            return (
+              <div className={"casino-list-item"} key={key}>
+                <a href='#' onClick={(e) => onCasinoClick(e, Item)} className=''>
+                  <div
+                    className="casino-list-item-banner"
+                    style={{
+                      backgroundImage: `url(${Item.image}${Item.slug}.jpg)`,
+                    }}
+                  >
+                  </div>
+                  <div className='casino-list-name'>{Item.title}</div>
+
+                </a>
+              </div>
+            )
+          })}
     </>
   )
 }
