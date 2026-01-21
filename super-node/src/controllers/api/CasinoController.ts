@@ -10,18 +10,22 @@ export default class CasinoController extends ApiController {
     let time1 = Date.now()
 
     let { type, selectionId } = req.params;
+    console.log(type,"FGHJKI")
     console.log(type)
     try {
       if (!type) this.fail(res, "type is required field");
 
       if (type === "AAA") type = "aaa";
 
-
+       console.log("fghjkl")
 
       const [response, resultResponse] = await Promise.all([
         axios.get(`http://69.62.123.205:3000/tabledata2/${type}`),
-        axios.get(`http://69.62.123.205:3000/casino/result?type=${type}`)
+        axios.get(`http://69.62.123.205:3000/casinoresult2/${type}`)
       ]);
+
+
+      console.log(response,resultResponse.data,"hello world")
 
       console.log('Api time', Date.now() - time1)
 
