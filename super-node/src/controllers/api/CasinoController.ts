@@ -25,12 +25,12 @@ export default class CasinoController extends ApiController {
       ]);
 
 
-      console.log(response,resultResponse.data,"hello world")
+      // console.log(response,resultResponse.data,"hello world")
 
       console.log('Api time', Date.now() - time1)
 
       let data = response.data;
-      console.log(data)
+      // console.log(data)
       data = data ? data : { data: [] };
       let markets: any = [];
       let results: any = [];
@@ -161,7 +161,7 @@ export default class CasinoController extends ApiController {
               };
             }
             eventData.event_data.market = marketData;
-            console.log('hello3', Date.now() - time1)
+            // console.log('hello3', Date.now() - time1)
             return this.success(res, { ...eventData, t3, t4 });
           } else {
             const eventData = {
@@ -189,33 +189,118 @@ export default class CasinoController extends ApiController {
     }
   };
 
-  getSingleMarket = async (req: Request, res: Response) => {
-    let { type, selectionId } = req.params;
-    try {
-      if (!type) this.fail(res, "type is required field");
-      if (!selectionId) this.fail(res, "selectionId is required field");
+  // getSingleMarket = async (req: Request, res: Response) => {
+  //   let { type, selectionId } = req.params;
+  //   try {
+  //     if (!type) this.fail(res, "type is required field");
+  //     if (!selectionId) this.fail(res, "selectionId is required field");
 
-      //let casinoType: any = new DynamicClass(type, {});
+  //     //let casinoType: any = new DynamicClass(type, {});
+
+  //     if (type === "AAA") type = "aaa";
+
+  //     let data: any = await redisReplica.get(types[type]);
+  //     data = data ? { data: JSON.parse(data) } : { data: [] };
+
+  //     let markets: any = [];
+  //     let singleMarket = {};
+  //     if (data?.data?.t2) markets = [...markets, ...data?.data?.t2];
+  //     if (data?.data?.t3) markets = [...markets, ...data?.data?.t3];
+  //     if (data?.data?.t4) markets = [...markets, ...data?.data?.t4];
+  //     if (data?.data?.bf) markets = [...data?.data?.bf];
+
+  //     if (markets.length > 0 && selectionId) {
+  //       let sidStr = "sid";
+  //       switch (type.toLowerCase()) {
+  //         case "teen9":
+  //           sidStr = "tsection";
+  //           break;
+  //         case "teen":
+  //           sidStr = "sectionId";
+  //           break;
+  //       }
+
+  //       const matchedRecord = markets.filter(
+  //         (market: any) => market[sidStr] == selectionId
+  //       );
+
+  //       if (matchedRecord.length > 0) {
+  //         singleMarket = matchedRecord[0];
+  //       }
+  //     }
+
+  //     if (
+  //       data?.data?.t1 &&
+  //       data?.data?.t1.length > 0 &&
+  //       data?.data?.t1[0].min
+  //     ) {
+  //       const min =
+  //         data?.data?.t1 && data?.data?.t1.length > 0
+  //           ? data?.data?.t1[0].min
+  //           : 0;
+  //       const max =
+  //         data?.data?.t1 && data?.data?.t1.length > 0
+  //           ? data?.data?.t1[0].max
+  //           : 0;
+  //       singleMarket = { ...singleMarket, min, max };
+  //     }
+
+  //     console.log(singleMarket,"aif")
+
+  //     return this.success(res, { ...singleMarket });
+  //   } catch (e: any) {
+  //     return this.fail(res, e.stack);
+  //   }
+  // };
+
+getSingleMarket = async (req: Request, res: Response) => {
+    let { type, selectionId } = req.params;
+    console.log(req.params, "getsinglemarket");
+    
+
+    try {
+      if (!type) return this.fail(res, "type is a required field");
+      console.log("type", type);
+      if (!selectionId)
+        return this.fail(res, "selectionId is a required field");
 
       if (type === "AAA") type = "aaa";
 
-      let data: any = await redisReplica.get(types[type]);
-      data = data ? { data: JSON.parse(data) } : { data: [] };
+      let response = await axios.get(
+        `http://69.62.123.205:3000/tabledata2/${type}`
+      );
+      let data = response.data;
 
-      let markets: any = [];
-      let singleMarket = {};
-      if (data?.data?.t2) markets = [...markets, ...data?.data?.t2];
-      if (data?.data?.t3) markets = [...markets, ...data?.data?.t3];
-      if (data?.data?.t4) markets = [...markets, ...data?.data?.t4];
-      if (data?.data?.bf) markets = [...data?.data?.bf];
+
+      let pdata = data?.data?.sub ?? [];
+      let markets: any = pdata;
+      // console.log(markets, "markets");
+
+      interface Market {
+        sid?: string | undefined; // Ensure sid is always a string (no undefined allowed)
+        nat?: string | undefined;
+        b?: number;
+        l?:number | 0;
+        max: number;
+        min: number;
+        gstatus?: string | undefined;
+        b1?: number; // Optional if missing in API
+        l1?:any;
+        runnerName?: string | undefined;
+        title?: string;
+      }
+
+      // let l :any;
+
+      let singleMarket: Market | null = null;
 
       if (markets.length > 0 && selectionId) {
         let sidStr = "sid";
         switch (type.toLowerCase()) {
-          case "teen9":
+          case "testtp":
             sidStr = "tsection";
             break;
-          case "teen":
+          case "tp1day":
             sidStr = "sectionId";
             break;
         }
@@ -225,29 +310,43 @@ export default class CasinoController extends ApiController {
         );
 
         if (matchedRecord.length > 0) {
-          singleMarket = matchedRecord[0];
+          singleMarket = matchedRecord[0] as Market;
         }
       }
 
-      if (
-        data?.data?.t1 &&
-        data?.data?.t1.length > 0 &&
-        data?.data?.t1[0].min
-      ) {
-        const min =
-          data?.data?.t1 && data?.data?.t1.length > 0
-            ? data?.data?.t1[0].min
-            : 0;
-        const max =
-          data?.data?.t1 && data?.data?.t1.length > 0
-            ? data?.data?.t1[0].max
-            : 0;
-        singleMarket = { ...singleMarket, min, max };
-      }
+      console.log(singleMarket, "singleMarket");
+      let bhav: any = singleMarket?.b;
 
-      return this.success(res, { ...singleMarket });
+
+
+      // Ensure singleMarketData has all required properties, with default values where needed
+      let singleMarketData: Market | null = singleMarket
+        ? {
+          sid: singleMarket?.sid ?? "defaultSid", // Default value for sid
+          nat: singleMarket?.nat ?? "", // Default empty string for optional string fields
+          b1: bhav.toString() ?? 0,
+          l1:singleMarket?.l?.toString(),// Default 0 for numbers
+          max: singleMarket?.max ?? 0,
+          min: singleMarket?.min ?? 0,
+          gstatus: singleMarket?.gstatus ?? "",
+          runnerName: singleMarket?.nat ?? "", // Default empty string
+          title: singleMarket?.title ?? "", // Default empty string
+        }
+        : null;
+
+      // Add min/max from the API if available
+      if (data?.data?.t1?.length > 0 && data?.data?.t1[0].min) {
+        const min: number = data?.data?.t1[0].min ?? 0;
+        const max: number = data?.data?.t1[0].max ?? 0;
+        singleMarketData = { ...singleMarketData, min, max };
+      }
+      console.log("single market Data", singleMarketData);
+      return this.success(res, { ...singleMarketData });
     } catch (e: any) {
       return this.fail(res, e.stack);
     }
   };
+
+
+
 }
