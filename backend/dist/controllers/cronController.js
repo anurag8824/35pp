@@ -78,7 +78,7 @@ const startCronJob = () => {
         for (const match of uniquePairs) {
             let resultApi;
             try {
-                resultApi = yield axios_1.default.get(`http://147.258.171.110:3001/casino/detail_result?type=${match.slug}&mid=${match.marketId}`);
+                resultApi = yield axios_1.default.get(`http://69.62.123.205:3000/detailresult2/${match.slug}/${match.marketId}`);
                 console.log(resultApi.data, 'result0');
             }
             catch (error) {

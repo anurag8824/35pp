@@ -490,7 +490,8 @@ const CasinoWrapper = (props: any) => {
                       width='100%'
                       height='420'
                       style={{ border: '0px' }}
-                      src={``}
+                      src={`https://casino-stream-v2.cricketid.xyz/casino-tv?id=${gameCode}`}
+
                     />
                   )}
 
@@ -598,7 +599,8 @@ const CasinoWrapper = (props: any) => {
                         width='100%'
                         height='250'
                         style={{ border: '0px' }}
-                        src={``}
+                        src={`https://casino-stream-v2.cricketid.xyz/casino-tv?id=${gameCode}`}
+
                         sandbox='allow-same-origin allow-scripts allow-popups allow-forms'
                         seamless
                       />
