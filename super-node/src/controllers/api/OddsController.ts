@@ -272,10 +272,12 @@ class OddsController {
 
       if (!SelectionId) throw Error("SelectionId is required field");
 
-      let response: any = await redisReplica.get(`fancy-${MatchID}`);
+      // let response: any = await redisReplica.get(`fancy-${MatchID}`);
       // console.log(response,"ghjkhjklbjk")
+      let response: any = await axios.get(`http://72.61.238.131/exchange/api/GetSession?eventid=${MatchID}`);
 
-      response = response ? { data: JSON.parse(response) } : { data: [] };
+
+      // response = response ? { data: JSON.parse(response) } : { data: [] };
       const market = response.data
         .filter((m: any) => m.SelectionId == SelectionId)
         .filter((m: any) => m.gtype === "session" || m.gtype === "fancy1");

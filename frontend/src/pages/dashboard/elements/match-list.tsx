@@ -26,10 +26,10 @@ const MatchList: React.FC<MatchListProps> = ({ matchList, currentMatch, memoOdds
               match?.markets && match?.markets?.length > 0 ? match?.markets[0].marketId : null
             return (
               <tr key={match.matchId}>
-                <td>
+                <td  onClick={() => currentMatch(match)}>
                   <div className='game-name'>
                     <a
-                      onClick={() => currentMatch(match)}
+                     
                       className='text-dark'
                       href={undefined}
                     >
@@ -44,7 +44,7 @@ const MatchList: React.FC<MatchListProps> = ({ matchList, currentMatch, memoOdds
                     </span>
 
                     <span className='game-icon'>
-                      <i className='fas fa-tv v-m icon-tv' />
+                      Live <i className='fas fa-tv v-m icon-tv' />
                     </span>
 
                     <span className='game-icon'>

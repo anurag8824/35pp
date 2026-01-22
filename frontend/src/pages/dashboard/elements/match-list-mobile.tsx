@@ -24,10 +24,10 @@ const MatchListMobile = (props: any) => {
               return (
                 <Fragment key={match.matchId}>
                   <tr>
-                    <td colSpan={4}>
+                    <td colSpan={4}  onClick={() => props.currentMatch(match)}>
                       <div className='game-name'>
                         <a
-                          onClick={() => props.currentMatch(match)}
+                         
                           className='text-edark'
                           href={undefined}
                         >
@@ -46,7 +46,7 @@ const MatchListMobile = (props: any) => {
                           </span>
                         )}
                         <span className='game-icon'>
-                          <i className='fas fa-tv v-m icon-tv' />
+                         Live  <i className='fas fa-tv v-m icon-tv' />
                         </span>
                         {match.isFancy && (
                           <span className='game-icon'>

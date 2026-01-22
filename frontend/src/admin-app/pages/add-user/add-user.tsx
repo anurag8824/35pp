@@ -460,7 +460,7 @@ const AddUser = () => {
                           <select
             className="form-select" id='paymode' {...register('paymode')}
           >
-            <option value="direct">Direct(By Admin)</option>
+            <option value="direct">Auto</option>
             <option value="manual">Manual</option>
 
           </select>
