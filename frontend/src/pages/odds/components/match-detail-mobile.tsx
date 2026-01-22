@@ -65,7 +65,7 @@ const MatchDetailWrapper = (props: any) => {
         </Tabs>
         <div className='csmobileround' style={{ top: '16px' }}>
           <span onClick={() => settvstatus(tavstatus ? false : true)}>
-            <i className='fa fa-tv'></i>{' '}
+           Live <i className='fa fa-tv'></i>{' '}
           </span>
         </div>
       </div>

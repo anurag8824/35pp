@@ -27,7 +27,7 @@ const CasinoListItem = (props: any) => {
                   <div
                     className="casino-list-item-banner"
                     style={{
-                      backgroundImage: `url(${Item.image}${Item.slug}.jpg)`,
+                      backgroundImage: `url(${Item.image})`,
                     }}
                   >
                   </div>
