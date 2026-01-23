@@ -218,7 +218,8 @@ const AccountStatement = () => {
                     >
                       <option value='ALL'>All </option>
                       <option value='chip'>Deposit/Withdraw </option>
-                      <option value='game'>Game Report </option>
+                       <option value='cgame'>Casino Report</option>
+                      <option value='sgame'>Sport Report </option>
                     </select>
                   </div>
                 </div>

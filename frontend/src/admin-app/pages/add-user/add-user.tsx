@@ -52,7 +52,9 @@ const AddUser = () => {
   const [isPartnership, setIsPartnership] = React.useState(false)
   const [isExposerAllow, setExposerAllow] = React.useState(false)
   const sportListState = useAppSelector<{ sports: ISport[] }>(selectSportList)
+const UNLIMITED_VALUE = 10000000;
 
+const [isUnlimited, setIsUnlimited] = React.useState(false);
   const { username } = useParams()
 
   const {
@@ -430,7 +432,7 @@ const AddUser = () => {
                           )}
                         </div>
                       </div>
-                      {isExposerAllow && (
+                      {/* {isExposerAllow && (
                         <div className='col-md-6'>
                           <div className='form-group' id='exposer-limit'>
                             <label htmlFor='exposerLimit'>Exposer Limit:  Unlimited</label>
@@ -451,7 +453,58 @@ const AddUser = () => {
                             )}
                           </div>
                         </div>
-                      )}
+                      )} */}
+                      {isExposerAllow && (
+  <div className="col-md-6">
+    <div className="form-group" id="exposer-limit">
+      <label htmlFor="exposerLimit">
+        Exposer Limit {isUnlimited && "(Unlimited)"}
+      </label>
+
+      {/* Unlimited checkbox */}
+      <div className="mb-2">
+        <input
+          type="checkbox"
+          id="unlimited"
+          checked={isUnlimited}
+          onChange={(e) => {
+            const checked = e.target.checked;
+            setIsUnlimited(checked);
+
+            if (checked) {
+              setValue("exposerLimit", UNLIMITED_VALUE);
+            } else {
+              setValue("exposerLimit", 0);
+            }
+          }}
+        />
+        <label htmlFor="unlimited" className="ms-2">
+          Unlimited
+        </label>
+      </div>
+
+      {/* Exposer input */}
+      <input
+        placeholder="Exposer Limit"
+        id="exposerLimit"
+        type="number"
+        className="form-control"
+        min="0"
+        disabled={isUnlimited}
+        {...register("exposerLimit", {
+          required: "Exposer limit is required",
+        })}
+      />
+
+      {errors?.exposerLimit && (
+        <span id="exposerlimit-error" className="error">
+          {errors.exposerLimit.message}
+        </span>
+      )}
+    </div>
+  </div>
+)}
+
 
                          <div className="col-md-6">
                         <div className="form-group">

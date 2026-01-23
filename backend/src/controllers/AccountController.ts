@@ -311,7 +311,7 @@ export class AccountController extends ApiController {
     }
   }
 
-  async withdrawAccountBalance(req: Request,  userData: any) {
+  async withdrawAccountBalance(req: Request, userData: any) {
     const { userId, parentUserId, amount, narration } = req.body
     const user: any = req.user
     let userAccBal
@@ -546,7 +546,7 @@ export class AccountController extends ApiController {
       pnlData,
     }
   }
-  
+
   getAccountStmtList = async (req: Request, res: Response) => {
     try {
       const { page }: any = req.query
@@ -564,9 +564,22 @@ export class AccountController extends ApiController {
           $lte: new Date(`${endDate} 23:59:59`),
         },
       }
-      if (reportType == 'game') {
-        filter = { ...filter, ...{ betId: { $ne: null } } }
+      if (reportType === "cgame") {
+        filter = {
+          ...filter,
+          betId: { $ne: null },
+          sportId: 5000,
+        };
       }
+
+      if (reportType === "sgame") {
+        filter = {
+          ...filter,
+          betId: { $ne: null },
+          sportId: { $ne: 5000 },
+        };
+      }
+
       if (reportType == 'chip') {
         filter = { ...filter, ...{ betId: null } }
       }
