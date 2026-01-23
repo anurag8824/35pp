@@ -241,7 +241,9 @@ const AccountStatementAdmin = () => {
                       >
                         <option value='ALL'>All </option>
                         <option value='chip'>Deposit/Withdraw </option>
-                        <option value='game'>Game Report </option>
+                        <option value='cchip'>Sport Report</option>
+
+                        <option value='schip'>Casino Report </option>
                       </select>
                     </div>
                   </div>

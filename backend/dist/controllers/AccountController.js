@@ -196,8 +196,11 @@ class AccountController extends ApiController_1.ApiController {
                         $lte: new Date(`${endDate} 23:59:59`),
                     },
                 };
-                if (reportType == 'game') {
-                    filter = Object.assign(Object.assign({}, filter), { betId: { $ne: null } });
+                if (reportType === "cgame") {
+                    filter = Object.assign(Object.assign({}, filter), { betId: { $ne: null }, sportId: 5000 });
+                }
+                if (reportType === "sgame") {
+                    filter = Object.assign(Object.assign({}, filter), { betId: { $ne: null }, sportId: { $ne: 5000 } });
                 }
                 if (reportType == 'chip') {
                     filter = Object.assign(Object.assign({}, filter), { betId: null });
