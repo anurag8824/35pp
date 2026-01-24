@@ -3,13 +3,14 @@ import { redisReplica } from "../../database/redis";
 import api from "../../utils/api";
 import axios from "axios"
 
-const fetchDataFromApi = async (EventID: any, sportId: any) => {
+const fetchDataFromApi = async (EventID: any, sportId: any,markettype:any) => {
   try {
-    const res = await axios.get(`http://195.110.59.236:3000/allMatchUsingSports/${sportId}`);
-    const competitions = res?.data?.data?.t1 || [];
-    console.log(competitions,"competitions")
-
-    const fcompetitions = competitions.filter((match:any)=>match.gmid == EventID)
+    const res = await axios.get(`http://130.250.191.174:3009/getPriveteData?gmid=${EventID}&sid=${sportId}&key=dijbfuwd719e12rqhfbjdqdnkqnd11eqdqd`);
+    const competitions = res?.data?.data || [];
+    // console.log(competitions,"competitions")
+    let fcompetitions;
+    if(markettype == "matchodds") { fcompetitions = competitions.filter((match:any)=>match.mname == "MATCH_ODDS")}
+    if(markettype == "Bookmaker") { fcompetitions = competitions.filter((match:any)=>match.gtype.includes('match') )}
 
     // const matchedMarkets = competitions.flatMap((s: any) =>
     //   s.markets
@@ -46,7 +47,7 @@ const fetchDataFromApi = async (EventID: any, sportId: any) => {
       sportId: sportId,
       matchId: m.gmid,
       marketId: m.mid,
-      marketName: m.mname,
+      marketName: m.mname === "MATCH_ODDS" ? "Match Odds":m.mname,
       marketStartTime: m.stime,
       runners: (m.section || []).map((r: any, index: number) => ({
         selectionId: r?.sid,
@@ -59,7 +60,7 @@ const fetchDataFromApi = async (EventID: any, sportId: any) => {
     
     
     
-    console.log(matchedMarkets, 'Filtered Market Data');
+    // console.log(matchedMarkets, 'Filtered Market Data');
     return matchedMarkets;
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -141,11 +142,11 @@ const fetchBookMakerDataFromApi = async (EventID: any, sportId: any) => {
 
 const GetsessionFromApi = async (MatchId: any, sportId: any) => {
   try {
-    const res = await axios.get(`http://195.110.59.236:3000/allMatchData/4/${MatchId}`);
-
-    const fancyData: any = res.data?.data
+    const res = await axios.get(`http://130.250.191.174:3009/getPriveteData?gmid=${MatchId}&sid=${sportId}&key=dijbfuwd719e12rqhfbjdqdnkqnd11eqdqd`);
+    console.log(res?.data?.data,"fancy data Lokesh")
+    const fancyData: any = res?.data?.data
       ?.filter((p: any) => 
-        p.mname === "Normal" || p.mname === "fancy1" // fixed logical condition
+        p.gtype != p.gtype.includes('match') // fixed logical condition
         // p.marketType !== "BOOKMAKER" // uncomment if needed
       )
       ?.flatMap((f: any) =>
@@ -272,12 +273,10 @@ class OddsController {
 
       if (!SelectionId) throw Error("SelectionId is required field");
 
-      // let response: any = await redisReplica.get(`fancy-${MatchID}`);
+      let response: any = await redisReplica.get(`fancy-${MatchID}`);
       // console.log(response,"ghjkhjklbjk")
-      let response: any = await axios.get(`http://72.61.238.131/exchange/api/GetSession?eventid=${MatchID}`);
 
-
-      // response = response ? { data: JSON.parse(response) } : { data: [] };
+      response = response ? { data: JSON.parse(response) } : { data: [] };
       const market = response.data
         .filter((m: any) => m.SelectionId == SelectionId)
         .filter((m: any) => m.gtype === "session" || m.gtype === "fancy1");
@@ -386,6 +385,56 @@ class OddsController {
     }
   }
 
+  // public static async getMarketList(
+  //   req: Request,
+  //   res: Response
+  // ): Promise<Response> {
+  //   try {
+  //     const { EventID, sportId } = req.query;
+  //     if (!EventID) throw Error("EventID is required field");
+  //     if (!sportId) throw Error("sportId is required field");
+
+  //     let matchList = [];
+  //     if (req.originalUrl.includes("get-marketes-t10")) {
+  //       const data = await redisReplica.get(`getMarketList-bm-${EventID}`);
+  //       if (data) matchList = JSON.parse(data);
+  //       if (!data) {
+  //         const res = await api.get(
+  //           `/get-marketes-t10?sportId=${sportId}&EventID=${EventID}`
+  //         );
+  //         matchList = res.data.sports;
+  //       }
+  //     } else if (req.originalUrl.includes("get-marketes")) {
+  //       const data = await redisReplica.get(`getMarketList-${EventID}`);
+  //       if (data) matchList = JSON.parse(data);
+  //       if (!data) {
+  //         const res = await api.get(
+  //           `/get-marketes?sportId=${sportId}&EventID=${EventID}`
+  //         );
+  //         matchList = res.data.sports;
+  //       }
+  //     } else if (req.originalUrl.includes("get-bookmaker-marketes")) {
+  //       const data = await redisReplica.get(`getMarketList-bm-${EventID}`);
+  //       if (data) matchList = JSON.parse(data);
+  //       if (!data) {
+  //         const res = await api.get(
+  //           `/get-bookmaker-marketes?sportId=${sportId}&EventID=${EventID}`
+  //         );
+  //         matchList = res.data.sports;
+  //       }
+  //     }
+
+  //     return res.json({
+  //       sports: matchList,
+  //     });
+  //   } catch (e: any) {
+  //     return res.json({
+  //       sports: [],
+  //       error: e.message,
+  //     });
+  //   }
+  // }
+
   public static async getMarketList(
     req: Request,
     res: Response
@@ -406,17 +455,23 @@ class OddsController {
           matchList = res.data.sports;
         }
       } else if (req.originalUrl.includes("get-marketes")) {
-        const data = await redisReplica.get(`getMarketList-${EventID}`);
-        if (data) matchList = JSON.parse(data);
-        if (!data) {
+        // const data = await redisReplica.get(`getMarketList-${EventID}`);
+        const data :any =  await fetchDataFromApi(EventID,sportId,"Matchodds")
+        console.log(data,"data here is data ")
+        // if (data) matchList = JSON.parse(data);
+        if (data.length == 0) {
           const res = await api.get(
             `/get-marketes?sportId=${sportId}&EventID=${EventID}`
           );
-          matchList = res.data.sports;
+         return matchList = data;
+          // console.log(matchList,"matchList")
         }
+        matchList = data;
       } else if (req.originalUrl.includes("get-bookmaker-marketes")) {
-        const data = await redisReplica.get(`getMarketList-bm-${EventID}`);
-        if (data) matchList = JSON.parse(data);
+        const data = await fetchDataFromApi(EventID,sportId,"Bookmaker")
+        // await redisReplica.get(`getMarketList-bm-${EventID}`);
+        if (data) matchList = data
+        console.log("Bookmaker data",data)
         if (!data) {
           const res = await api.get(
             `/get-bookmaker-marketes?sportId=${sportId}&EventID=${EventID}`
@@ -434,93 +489,37 @@ class OddsController {
         error: e.message,
       });
     }
-  }
+}
 
-//   public static async getMarketList(
-//     req: Request,
-//     res: Response
-//   ): Promise<Response> {
-//     try {
-//       const { EventID, sportId } = req.query;
-//       if (!EventID) throw Error("EventID is required field");
-//       if (!sportId) throw Error("sportId is required field");
+  // public static async getSessions(
+  //   req: Request,
+  //   res: Response
+  // ): Promise<Response> {
+  //   try {
+  //     const { MatchID } = req.query;
+  //     if (!MatchID) throw Error("MatchID is required field");
 
-//       let matchList = [];
-//       if (req.originalUrl.includes("get-marketes-t10")) {
-//         const data = await redisReplica.get(`getMarketList-bm-${EventID}`);
-//         if (data) matchList = JSON.parse(data);
-//         if (!data) {
-//           const res = await api.get(
-//             `/get-marketes-t10?sportId=${sportId}&EventID=${EventID}`
-//           );
-//           matchList = res.data.sports;
-//         }
-//       } else if (req.originalUrl.includes("get-marketes")) {
-//         // const data = await redisReplica.get(`getMarketList-${EventID}`);
-//         const data :any =  await fetchDataFromApi(EventID,sportId)
-//         console.log(data,"data here is data ")
-//         // if (data) matchList = JSON.parse(data);
-//         if (data.length == 0) {
-//           const res = await api.get(
-//             `/get-marketes?sportId=${sportId}&EventID=${EventID}`
-//           );
-//          return matchList = data;
-//           // console.log(matchList,"matchList")
-//         }
-//         matchList = data;
-//       } else if (req.originalUrl.includes("get-bookmaker-marketes")) {
-//         const data = await fetchBookMakerDataFromApi(EventID,sportId)
-//         // await redisReplica.get(`getMarketList-bm-${EventID}`);
-//         if (data) matchList = data
-//         console.log("Bookmaker data",data)
-//         if (!data) {
-//           const res = await api.get(
-//             `/get-bookmaker-marketes?sportId=${sportId}&EventID=${EventID}`
-//           );
-//           matchList = res.data.sports;
-//         }
-//       }
+  //     let matchList = [];
+  //     const data = await redisReplica.get(`fancy-${MatchID}`);
+  //     if (data) matchList = JSON.parse(data);
+  //     if (req.originalUrl.includes("get-sessions-t10") && !data) {
+  //       const res = await api.get(`/get-sessions-t10?MatchID=${MatchID}`);
+  //       matchList = res.data.sports;
+  //     } else if (req.originalUrl.includes("get-sessions") && !data) {
+  //       const res = await api.get(`/get-sessions?MatchID=${MatchID}`);
+  //       matchList = res.data.sports;
+  //     }
 
-//       return res.json({
-//         sports: matchList,
-//       });
-//     } catch (e: any) {
-//       return res.json({
-//         sports: [],
-//         error: e.message,
-//       });
-//     }
-// }
-
-  public static async getSessions(
-    req: Request,
-    res: Response
-  ): Promise<Response> {
-    try {
-      const { MatchID } = req.query;
-      if (!MatchID) throw Error("MatchID is required field");
-
-      let matchList = [];
-      const data = await redisReplica.get(`fancy-${MatchID}`);
-      if (data) matchList = JSON.parse(data);
-      if (req.originalUrl.includes("get-sessions-t10") && !data) {
-        const res = await api.get(`/get-sessions-t10?MatchID=${MatchID}`);
-        matchList = res.data.sports;
-      } else if (req.originalUrl.includes("get-sessions") && !data) {
-        const res = await api.get(`/get-sessions?MatchID=${MatchID}`);
-        matchList = res.data.sports;
-      }
-
-      return res.json({
-        sports: matchList,
-      });
-    } catch (e: any) {
-      return res.json({
-        sports: [],
-        error: e.message,
-      });
-    }
-  }
+  //     return res.json({
+  //       sports: matchList,
+  //     });
+  //   } catch (e: any) {
+  //     return res.json({
+  //       sports: [],
+  //       error: e.message,
+  //     });
+  //   }
+  // }
 
   // public static async fancyData(
   //   req: Request,
@@ -725,37 +724,38 @@ class OddsController {
 //     }
 // }
 
-// public static async getSessions(
-//   req: Request,
-//   res: Response
-// ): Promise<Response> {
-//   try {
-//     const { MatchID,sportId} = req.query;
-//     if (!MatchID) throw Error("MatchID is required field");
+public static async getSessions(
+  req: Request,
+  res: Response
+): Promise<Response> {
+  try {
+    const { MatchID,sportId} = req.query;
+    if (!MatchID) throw Error("MatchID is required field");
 
-//     let matchList = [];
-//     // const data = await redisReplica.get(`fancy-${MatchID}`);
-//     const data:any = await GetsessionFromApi(MatchID,sportId)
-//     matchList = data;
-//     // if (data) matchList = JSON.parse(data);
-//     if (req.originalUrl.includes("get-sessions-t10") && data.length ==0) {
-//       const res = await api.get(`/get-sessions-t10?MatchID=${MatchID}`);
-//       matchList = res.data.sports;
-//     } else if (req.originalUrl.includes("get-sessions") && data.length ==0) {
-//       const res = await api.get(`/get-sessions?MatchID=${MatchID}`);
-//        matchList = res.data.sports;
-//     }
+    let matchList = [];
+    // const data = await redisReplica.get(`fancy-${MatchID}`);
+    const data:any = await GetsessionFromApi(MatchID,sportId)
+    matchList = data;
+    console.log(matchList)
+    // if (data) matchList = JSON.parse(data);
+    if (req.originalUrl.includes("get-sessions-t10") && data.length ==0) {
+      const res = await api.get(`/get-sessions-t10?MatchID=${MatchID}`);
+      matchList = res.data.sports;
+    } else if (req.originalUrl.includes("get-sessions") && data.length ==0) {
+      const res = await api.get(`/get-sessions?MatchID=${MatchID}`);
+       matchList = res.data.sports;
+    }
 
-//     return res.json({
-//       sports: matchList,
-//     });
-//   } catch (e: any) {
-//     return res.json({
-//       sports: [],
-//       error: e.message,
-//     });
-//   }
-// }
+    return res.json({
+      sports: matchList,
+    });
+  } catch (e: any) {
+    return res.json({
+      sports: [],
+      error: e.message,
+    });
+  }
+}
 
 public static async fancyData(
   req: Request,
