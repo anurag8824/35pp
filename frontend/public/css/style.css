@@ -7070,7 +7070,7 @@ footer p {
     transition: none;
   }
   .home-page .casino-list-item {
-    width: calc(25% - 3px);
+    width: calc(25% - 2px);
   }
   .btn-deposit {
     padding: 5px;
@@ -9080,11 +9080,13 @@ footer p {
 .casino-list-item {
   width: calc(10% - 10px);
   margin-left: 1px;
-  margin-right: 2px;
+  margin-right: 1px;
   margin-bottom: 2px;
   cursor: pointer;
   position: relative;
 }
+
+
 
 .casino-list-item.rect {
   width: calc(16.66% - 10px);
@@ -9229,4 +9231,41 @@ footer p {
   font-weight: bold;
   text-decoration: underline;
   background-color: transparent;
+}
+
+.menu-tabs {
+  overflow-x: auto;
+  white-space: nowrap;
+  border-bottom: none;
+  display: flex;
+
+}
+
+.menu-tabs .nav-item {
+  display: flex;
+  align-items: center;
+}
+
+.menu-tabs .nav-item:not(:last-child) {
+  /* border-right: 2px solid rgba(255, 255, 255, 0.6); */
+}
+
+.menu-tabs .nav-link {
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px 14px;
+  height: 48px;
+  border: none;
+  border-radius: 0;
+}
+
+.menu-tabs .nav-link.active,
+.menu-tabs .nav-link:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+.menu-tabs::-webkit-scrollbar {
+  display: none;
 }

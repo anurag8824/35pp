@@ -22,17 +22,19 @@ const NavMobileMenu = (props: any) => {
     <div className="header-mobile">
       <Fav />
       <div className=" header-b-menud">
-        <a href={headerMessage?.headerMessageLink}>
+        {/* <a href={headerMessage?.headerMessageLink}>
           {headerMessage?.headerMessage}
-        </a>
-        <ul className="nav nav-tabs d-xl-none menu-tabs " style={{overflowX:"auto"}}>
-          <li className="nav-item d-none">
-            <a className="nav-link" href="/aviator-list">
+        </a> */}
+       <ul className="nav nav-tabs d-xl-none menu-tabs flex-nowrap">
+
+          <li className="nav-item">
+            <CustomLink className="nav-link d-flex align-items-center justify-content-center gap-1" to="/aviator-list">
               <svg
                 id="Layer_2"
                 data-name="Layer 2"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 457.6 277.4"
+                style={{ height: "22px", width: "22px", flexShrink: 0 }}
               >
                 <defs></defs>
                 <g id="Layer_1-2" data-name="Layer 1">
@@ -65,35 +67,35 @@ const NavMobileMenu = (props: any) => {
                 </g>
               </svg>
               <span className="ms-1">Crash</span>
-            </a>
+            </CustomLink>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="#">
+            <a className="nav-link d-flex align-items-center justify-content-center gap-1" href="#">
               Lottery
             </a>
           </li>
           <li className="nav-item">
-            <CustomLink className="nav-link" to="match/4/sports" aria-current="page">
+            <CustomLink className="nav-link d-flex align-items-center justify-content-center gap-1" to="match/4/sports" aria-current="page">
               Sports
             </CustomLink>
           </li>
           <li className="nav-item">
-            <CustomLink className="nav-link" to="/casino-games">
+            <CustomLink className="nav-link d-flex align-items-center justify-content-center gap-1" to="/casino-games">
               Our Casino
             </CustomLink>
           </li>
           <li className="nav-item">
-            <CustomLink className="nav-link" to="/casino-games">
+            <CustomLink className="nav-link d-flex align-items-center justify-content-center gap-1" to="/casino-games">
               Live Casino
             </CustomLink>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="#">
+            <a className="nav-link d-flex align-items-center justify-content-center gap-1" href="#">
               Slots
             </a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="#">
+            <a className="nav-link d-flex align-items-center justify-content-center gap-1" href="#">
               Fantasy
             </a>
           </li>

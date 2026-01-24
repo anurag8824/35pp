@@ -195,33 +195,104 @@ class SportsController extends ApiController_1.ApiController {
                 if (!EventTypeID)
                     return this.fail(res, 'EventTypeID is required field');
                 const alreadyAdded = yield Match_1.Match.find({ active: true }, { matchId: 1 });
+                console.log(alreadyAdded, "Hello  World");
                 const matchIds = alreadyAdded.map((match) => match.matchId);
-                const response = yield api_1.sportsApi
-                    .get(`/get-series-redis/${EventTypeID}`)
+                // const response = await sportsApi
+                //   .get(`/get-series-redis/${EventTypeID}`)
+                // const response  = await axios.get(`http://69.62.123.205:7000/api/v/events?id=${EventTypeID}`)
+                // .then(async (series: any) => {
+                //   console.log(series,"series from api")
+                //   const getMatches = series?.data?.competition?.map(async (s: any) => {
+                //     // return s.match.map((fm: any) => {
+                //     //   fm.series = s.competition
+                //     //   fm.matchId = fm.event.id
+                //     //   fm.matchDateTime = fm.event.openDate
+                //     //   fm.name = fm.event.name
+                //     //   fm.seriesId = s.competition?.id
+                //     //   fm.sportId = EventTypeID
+                //     //   fm.active = matchIds.indexOf(parseInt(fm.event.id)) > -1 ? true : false
+                //     //   return fm
+                //     // })
+                //     const xyz =   s?.markets?.map(async (t:any)=>{
+                //       event:{
+                //         "id":t.gmid,
+                //         "name":t.ename,
+                //         "timezone":"GMT",
+                //         "openDate":t.stime,
+                //       },
+                //      series:{
+                //       "id":t.cid.toString(),
+                //       "name":t.cname,
+                //      },
+                //      "matchId":t.gmid,
+                //      "matchDateTime":t.time,
+                //      "name"t.ename,
+                //      "seriesId":t.cid.toString(),
+                //      "sportId":EventTypeID,
+                //      "active ":matchIds.indexOf(parseInt(s.gmid)) > -1 ? true : false
+                //       })
+                //     // return{  event:{
+                //     //     "id":s.gmid,
+                //     //     "name":s.ename,
+                //     //     "timezone":"GMT",
+                //     //     "openDate":s.stime,
+                //     //   },
+                //     //  series:{
+                //     //   "id":s.cid.toString(),
+                //     //   "name":s.cname,
+                //     //  },
+                //     //  "matchId":s.gmid,
+                //     //  "matchDateTime":s.time,
+                //     //  "name":s.ename,
+                //     //  "seriesId":s.cid.toString(),
+                //     //  "sportId":EventTypeID,
+                //     //  "active ":matchIds.indexOf(parseInt(s.gmid)) > -1 ? true : false
+                //     // }
+                // })
+                //   return Promise.all([...getMatches])
+                // })
+                // .then((m) => {
+                //   return m
+                //     .filter((element: any) => {
+                //       return !Array.isArray(element) || element.length !== 0
+                //     })
+                //     .flat()
+                // })
+                // .catch((e) => console.log('error', e))
+                const response = yield axios_1.default.get(`http://130.250.191.174:3009/esid?sid=${EventTypeID}&key=dijbfuwd719e12rqhfbjdqdnkqnd11eqdqd`)
                     .then((series) => __awaiter(this, void 0, void 0, function* () {
-                    const getMatches = series.data.data.map((s) => __awaiter(this, void 0, void 0, function* () {
-                        return s.match.map((fm) => {
-                            var _a;
-                            fm.series = s.competition;
-                            fm.matchId = fm.event.id;
-                            fm.matchDateTime = fm.event.openDate;
-                            fm.name = fm.event.name;
-                            fm.seriesId = (_a = s.competition) === null || _a === void 0 ? void 0 : _a.id;
-                            fm.sportId = EventTypeID;
-                            fm.active = matchIds.indexOf(parseInt(fm.event.id)) > -1 ? true : false;
-                            return fm;
-                        });
-                    }));
+                    var _b, _c, _d;
+                    console.log(series, "series from api");
+                    const getMatches = ((_d = (_c = (_b = series === null || series === void 0 ? void 0 : series.data) === null || _b === void 0 ? void 0 : _b.data) === null || _c === void 0 ? void 0 : _c.t1) === null || _d === void 0 ? void 0 : _d.flatMap((s) => {
+                        return {
+                            event: {
+                                id: s.gmid,
+                                name: s.ename,
+                                timezone: "GMT",
+                                openDate: s.stime,
+                            },
+                            series: {
+                                id: s.cid.toString(),
+                                name: s.cname,
+                            },
+                            matchId: s.gmid,
+                            matchDateTime: s.stime,
+                            name: s.ename,
+                            seriesId: s.cid.toString(),
+                            sportId: EventTypeID,
+                            active: matchIds.includes(parseInt(s.gmid)),
+                        };
+                    })) || [];
                     return Promise.all([...getMatches]);
                 }))
-                    .then((m) => {
-                    return m
-                        .filter((element) => {
-                        return !Array.isArray(element) || element.length !== 0;
-                    })
-                        .flat();
+                    .then((matches) => {
+                    return matches.filter(Boolean); // remove undefined/null if any
                 })
-                    .catch((e) => console.log('error', e));
+                    .catch((e) => {
+                    console.log('error', e);
+                    return [];
+                });
+                console.log(response, "response is here");
                 return this.success(res, response, '');
             }
             catch (e) {
