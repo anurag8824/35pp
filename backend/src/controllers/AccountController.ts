@@ -13,6 +13,7 @@ import { paginationPipeLine } from '../util/aggregation-pipeline-pagination'
 import { IUserModel, User } from '../models/User'
 import { RoleType } from '../models/Role'
 import UserSocket from '../sockets/user-socket'
+import Operation from '../models/Operation'
 
 export class AccountController extends ApiController {
   constructor() {
@@ -431,6 +432,41 @@ export class AccountController extends ApiController {
     // const pnl_ = bal?.profitLoss ? bal?.profitLoss + withdAmt : 0
     return bal?.profitLoss ? bal?.profitLoss : 0
   }
+
+  settelement2 = async (req: Request, res: Response) => {
+    console.log(req.body, "data from settlement");
+  
+    const { username } = req.body;
+  
+    if (!username) {
+      return this.fail(res, "Username is required");
+    }
+  
+    try {
+      const operations = await Operation
+        .find({ username })
+        .sort({ createdAt: -1 });
+  
+      if (!operations || operations.length === 0) {
+        return this.success(res, {
+          msg: "No operations found for this username",
+          operations: []
+        });
+      }
+  
+      return this.success(res, {
+        msg: "Success",
+        operations
+      });
+  
+    } catch (error: any) {
+      console.error(error);
+      return this.fail(res, "Server error: " + error.message);
+    }
+  };
+  
+
+
   getUserBalanceWithExposer = async (req: Request, res: Response) => {
     try {
       const user: any = req.user

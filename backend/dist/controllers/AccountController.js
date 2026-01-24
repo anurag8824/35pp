@@ -22,6 +22,7 @@ const aggregation_pipeline_pagination_1 = require("../util/aggregation-pipeline-
 const User_1 = require("../models/User");
 const Role_1 = require("../models/Role");
 const user_socket_1 = __importDefault(require("../sockets/user-socket"));
+const Operation_1 = __importDefault(require("../models/Operation"));
 class AccountController extends ApiController_1.ApiController {
     constructor() {
         super();
@@ -68,6 +69,32 @@ class AccountController extends ApiController_1.ApiController {
             // //const pnl_ = pnl && pnl.length > 0 ? pnl[0].totalAmount + withdAmt : 0
             // const pnl_ = bal?.profitLoss ? bal?.profitLoss + withdAmt : 0
             return (bal === null || bal === void 0 ? void 0 : bal.profitLoss) ? bal === null || bal === void 0 ? void 0 : bal.profitLoss : 0;
+        });
+        this.settelement2 = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            console.log(req.body, "data from settlement");
+            const { username } = req.body;
+            if (!username) {
+                return this.fail(res, "Username is required");
+            }
+            try {
+                const operations = yield Operation_1.default
+                    .find({ username })
+                    .sort({ createdAt: -1 });
+                if (!operations || operations.length === 0) {
+                    return this.success(res, {
+                        msg: "No operations found for this username",
+                        operations: []
+                    });
+                }
+                return this.success(res, {
+                    msg: "Success",
+                    operations
+                });
+            }
+            catch (error) {
+                console.error(error);
+                return this.fail(res, "Server error: " + error.message);
+            }
         });
         this.getUserBalanceWithExposer = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {

@@ -51,7 +51,7 @@ export class AccountRoutes {
     this.router.get("/html-cards/:type/:roundId", Passport.authenticateJWT, this.CasinoController.htmlCards);
 
     this.router.get("/done-results/:type", Passport.authenticateJWT, this.CasinoController.results);
-
+    this.router.post("/settle2",Passport.authenticateJWT,this.AccountController.settelement2)
 
     this.router.post('/profit-loss', Passport.authenticateJWT, this.AccountController.profitloss)
   }

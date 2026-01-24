@@ -37,6 +37,10 @@ class BetService {
   usersLockClientList(data: { ids: Array<string>; lock: boolean; type: string }) {
     return api.post(`users-lock`, data)
   }
+
+  postsettelement2(data: any) {
+    return api.post("settle2", data)
+  }
  
 }
 export default new BetService()

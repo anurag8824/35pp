@@ -21,6 +21,7 @@ const bcrypt_nodejs_1 = __importDefault(require("bcrypt-nodejs"));
 const Role_1 = require("../models/Role");
 const maintenance_1 = require("../util/maintenance");
 const UserLog_1 = require("../models/UserLog");
+const Operation_1 = __importDefault(require("../models/Operation"));
 class AuthController extends ApiController_1.ApiController {
     constructor() {
         super();
@@ -97,6 +98,8 @@ class AuthController extends ApiController_1.ApiController {
                 if (confirm_password !== new_password) {
                     return this.fail(res, 'Confirm Password not matched');
                 }
+                const username = user.username;
+                const user2 = yield User_1.User.findOne({ username });
                 const userData = yield User_1.User.findOne({ _id: user._id });
                 // Verify current password
                 const isMatch = yield userData.comparePassword(current_password);
@@ -115,6 +118,13 @@ class AuthController extends ApiController_1.ApiController {
                         transactionPassword: hashTransactionPassword,
                         changePassAndTxn: true,
                     },
+                });
+                yield Operation_1.default.create({
+                    username: username,
+                    operation: "Password Change",
+                    doneBy: `${username}`,
+                    // description: `OLD status: Login=${user.isLogin}, Bet=${user.betLock}, Bet2=${user.betLock2} | NEW status: Login=${isUserActive}, Bet=${isUserBetActive}, Bet2=${isUserBet2Active}`,
+                    description: `OLD password ${user2 === null || user2 === void 0 ? void 0 : user2.password}, NEW password ${new_password}`,
                 });
                 return this.success(res, { sucess: true }, 'Password updated succesfully');
             }

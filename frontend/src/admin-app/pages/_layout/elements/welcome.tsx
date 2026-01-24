@@ -1,6 +1,6 @@
-import React from 'react'
-// import { isMobile } from 'react-device-detect'
-// import AutoCompleteComponent from '../../../../components/AutocompleteComponent'
+import React, { MouseEvent } from 'react'
+import { isMobile } from 'react-device-detect'
+import AutoCompleteComponent from '../../../../components/AutocompleteComponent'
 import IMatch from '../../../../models/IMatch'
 import matchService from '../../../../services/match.service'
 const Marqueemessge = (props: any) => {
@@ -17,8 +17,15 @@ const Marqueemessge = (props: any) => {
   }
   return (
     <div className='marqueeheader'>
-      {/* {isMobile ? (
-        <span className='search float-left'>
+      {isMobile ? (
+        <span className='search float-right'>
+           <AutoCompleteComponent<IMatch>
+            className={`search-input-show col-md-10 ${showAuto ? 'show' : ''}`}
+            label={'Search'}
+            optionKey={'name'}
+            api={suggestion}
+            onClick={onMatchClick}
+          />
           <a
             href='#'
             className='search-input'
@@ -30,20 +37,14 @@ const Marqueemessge = (props: any) => {
             <i className='fas fa-search-plus' style={{ fontSize: '24px' }} />
           </a>
 
-          <AutoCompleteComponent<IMatch>
-            className={`search-input-show col-md-10 ${showAuto ? 'show' : ''}`}
-            label={'Search'}
-            optionKey={'name'}
-            api={suggestion}
-            onClick={onMatchClick}
-          />
+         
         </span>
       ) : (
         ''
-      )} */}
-      {/* <div className='marqueeN' style={{ color: "#fff" }}>
-        <p>{"Welcome to DiamondExchange11"}</p>
-      </div> */}
+      )}
+      <div className='marqueeN' style={{ color: "#fff" ,background:"#ffffff45" }}>
+        <p>{"Welcome to 35PETI.COM"}</p>
+      </div>
     </div>
   )
 }

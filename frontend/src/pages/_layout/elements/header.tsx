@@ -188,6 +188,8 @@ const Header = () => {
 
             </div> 
 
+        
+
             <ul className='flex05 justify-content-end d-flex profile-right-side'>
              { userParentAlldata?.paymode == "manual" && <div className='row-deposit-button d-noned d-flex mr-3'>
                 <CustomLink className='btn btn-deposit mr-10' style={{marginBottom:"0"}} to={'/deposit'}> <img src="/depositimg.webp" className="w-2 mr-1" /> Deposit</CustomLink>
@@ -259,7 +261,7 @@ style={{position: "fixed",
                 </>
               ) : (
                 <div>
-                <AutocompleteComponent<IMatch>
+                {/* <AutocompleteComponent<IMatch>
                       className={`search-input-show ${showAuto ? 'show' : ''}`}
                       label={'Search'}
                       optionKey={'name'}
@@ -276,7 +278,7 @@ style={{position: "fixed",
                       className={`search-input`}
                     >
                       <i className='fas fa-search-plus' />
-                    </a>
+                    </a> */}
                    </div>
               )}
               <li className='ballance float-left'>

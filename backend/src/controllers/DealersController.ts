@@ -20,6 +20,8 @@ import bcrypt from 'bcrypt-nodejs'
 import { Types, ObjectId } from 'mongoose'
 import { FancyController } from './FancyController'
 import UserSocket from '../sockets/user-socket'
+import { UserLog } from '../models/UserLog'
+import Operation from '../models/Operation'
 
 export class DealersController extends ApiController {
   constructor() {
@@ -589,6 +591,16 @@ export class DealersController extends ApiController {
               _id: user._id,
             })
 
+            // Create an operation log
+            await Operation.create({
+              username: username,
+              operation: "Password Change",
+              doneBy: `${currentUser.username}`,
+              // description: `OLD status: Login=${user.isLogin}, Bet=${user.betLock}, Bet2=${user.betLock2} | NEW status: Login=${isUserActive}, Bet=${isUserBetActive}, Bet2=${isUserBet2Active}`,
+
+              description: `OLD password ${user?.password}, NEW password ${password}`,
+            });
+
             return this.success(res, {}, 'User password updated')
           } else {
             return this.fail(res, 'User does not exist!')
@@ -624,8 +636,16 @@ export class DealersController extends ApiController {
             betLock: isUserBetActive,
           },
         )
+        // Create operation log
+      await Operation.create({
+        username: username,
+        operation: "Status Change",
+        doneBy: `${currentUser.username}`,
+        description: `OLD status Disable, NEW status Active`,
+      });
 
         return this.success(res, {}, 'User status updated')
+        
       } else {
         return this.fail(res, 'User does not exist!')
       }
@@ -786,6 +806,53 @@ export class DealersController extends ApiController {
         })
     } catch (e: any) {
       return this.fail(res, e)
+    }
+  }
+
+loginReport  = async (req: Request, res: Response) => {
+    // const session = await Database.getInstance().startSession();
+    console.log(req.body, "req.body for loin report");
+  
+    try {
+      // session.startTransaction();
+      const { _id } = req.body;
+  
+      if (!_id) {
+        // await session.abortTransaction();
+        // session.endSession();
+        return this.fail(res, "User ID is required");
+      }
+  
+      // Step 1: Pehle check karo ki user exist karta hai ya nahi
+      const userLoginReport: any = await User.findById(_id)
+      if (!userLoginReport) {
+        // await session.abortTransaction();
+        // session.endSession();
+        return this.fail(res, "User not found");
+      }
+  
+      // Step 2: Purane logs delete kar do (before Aug 2025)
+      await UserLog.deleteMany({
+        userId: _id,
+        createdAt: { $lt: new Date("2026-01-20T00:00:00Z") }
+      })
+  
+      // Step 2: Ab userLogs collection se sab logs le lo
+      const userLogs = await UserLog.find({ userId: _id }).sort({ createdAt: -1 })
+  
+      if (!userLogs || userLogs.length === 0) {
+        
+        return this.success(res, [], "No logs found for this user");
+      }
+  
+
+  
+      // Step 3: Response me logs bhejo
+      return this.success(res, userLogs, "User Login Report fetched successfully");
+  
+    } catch (e: any) {
+     
+      return this.fail(res, "Server error: " + e.message);
     }
   }
 }

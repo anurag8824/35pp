@@ -376,6 +376,12 @@ const Header = () => {
                       <b>Multi Login</b>
                     </CustomLink>
                   </li>
+
+                  <li className='nav-item'>
+                    <CustomLink to={`/login-reports`}>
+                      <b>Login Report</b>
+                    </CustomLink>
+                  </li>
                 
                 </ul>
 

@@ -93,6 +93,10 @@ class UserService {
   getExposerEvent() {
     return api.get('/get-exposer-event')
   }
+
+  loginReports(data:any){
+    return api.post('/login-report', data)
+  }
 }
 
 export default new UserService()

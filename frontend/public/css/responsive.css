@@ -372,6 +372,7 @@
   .search {
     display: flex;
     align-items: center;
+    gap: 6px;
   }
 
   .casino-video-title {
@@ -515,7 +516,7 @@
   }
 
   .marqueeheader {
-    padding: 0px 10px 10px 10px;
+    padding: 10px 10px 10px 10px;
   }
 
   .support-detail h2 {

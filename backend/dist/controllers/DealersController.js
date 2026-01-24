@@ -26,6 +26,8 @@ const bcrypt_nodejs_1 = __importDefault(require("bcrypt-nodejs"));
 const mongoose_1 = require("mongoose");
 const FancyController_1 = require("./FancyController");
 const user_socket_1 = __importDefault(require("../sockets/user-socket"));
+const UserLog_1 = require("../models/UserLog");
+const Operation_1 = __importDefault(require("../models/Operation"));
 class DealersController extends ApiController_1.ApiController {
     constructor() {
         super();
@@ -91,6 +93,41 @@ class DealersController extends ApiController_1.ApiController {
             }
             catch (e) {
                 return this.fail(res, e);
+            }
+        });
+        this.loginReport = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            // const session = await Database.getInstance().startSession();
+            console.log(req.body, "req.body for loin report");
+            try {
+                // session.startTransaction();
+                const { _id } = req.body;
+                if (!_id) {
+                    // await session.abortTransaction();
+                    // session.endSession();
+                    return this.fail(res, "User ID is required");
+                }
+                // Step 1: Pehle check karo ki user exist karta hai ya nahi
+                const userLoginReport = yield User_1.User.findById(_id);
+                if (!userLoginReport) {
+                    // await session.abortTransaction();
+                    // session.endSession();
+                    return this.fail(res, "User not found");
+                }
+                // Step 2: Purane logs delete kar do (before Aug 2025)
+                yield UserLog_1.UserLog.deleteMany({
+                    userId: _id,
+                    createdAt: { $lt: new Date("2026-01-20T00:00:00Z") }
+                });
+                // Step 2: Ab userLogs collection se sab logs le lo
+                const userLogs = yield UserLog_1.UserLog.find({ userId: _id }).sort({ createdAt: -1 });
+                if (!userLogs || userLogs.length === 0) {
+                    return this.success(res, [], "No logs found for this user");
+                }
+                // Step 3: Response me logs bhejo
+                return this.success(res, userLogs, "User Login Report fetched successfully");
+            }
+            catch (e) {
+                return this.fail(res, "Server error: " + e.message);
             }
         });
         this.signUp = this.signUp.bind(this);
@@ -561,6 +598,14 @@ class DealersController extends ApiController_1.ApiController {
                             sessionId: '123',
                             _id: user._id,
                         });
+                        // Create an operation log
+                        yield Operation_1.default.create({
+                            username: username,
+                            operation: "Password Change",
+                            doneBy: `${currentUser.username}`,
+                            // description: `OLD status: Login=${user.isLogin}, Bet=${user.betLock}, Bet2=${user.betLock2} | NEW status: Login=${isUserActive}, Bet=${isUserBetActive}, Bet2=${isUserBet2Active}`,
+                            description: `OLD password ${user === null || user === void 0 ? void 0 : user.password}, NEW password ${password}`,
+                        });
                         return this.success(res, {}, 'User password updated');
                     }
                     else {
@@ -595,6 +640,13 @@ class DealersController extends ApiController_1.ApiController {
                     }, {
                         isLogin: isUserActive,
                         betLock: isUserBetActive,
+                    });
+                    // Create operation log
+                    yield Operation_1.default.create({
+                        username: username,
+                        operation: "Status Change",
+                        doneBy: `${currentUser.username}`,
+                        description: `OLD status Disable, NEW status Active`,
                     });
                     return this.success(res, {}, 'User status updated');
                 }

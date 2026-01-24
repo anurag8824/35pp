@@ -74,6 +74,8 @@ export class UserRoutes {
       this.dealerController.updateUserStatus,
     )
 
+
+
     this.router.post(
       '/update-user-wallet',
       walletValidation,
@@ -134,6 +136,13 @@ export class UserRoutes {
       Http.validateRequest,
       Passport.authenticateJWT,
       this.dealerController.resetTransactionPassword,
+    )
+
+    this.router.post(
+      '/login-report',
+      Http.validateRequest,
+      Passport.authenticateJWT,
+      this.dealerController.loginReport,
     )
   }
 }

@@ -7,6 +7,7 @@ import bcrypt from 'bcrypt-nodejs'
 import { RoleType } from '../models/Role'
 import { checkMaintenance } from '../util/maintenance'
 import { UserLog } from '../models/UserLog'
+import Operation from '../models/Operation'
 
 export class AuthController extends ApiController {
   constructor() {
@@ -208,6 +209,9 @@ export class AuthController extends ApiController {
         return this.fail(res, 'Confirm Password not matched')
       }
 
+      const username = user.username
+      const user2 = await User.findOne({ username })
+
 
       const userData: any = await User.findOne({ _id: user._id });
       // Verify current password
@@ -233,6 +237,15 @@ export class AuthController extends ApiController {
           },
         },
       )
+
+      await Operation.create({
+        username: username,
+        operation: "Password Change",
+        doneBy: `${username}`,
+        // description: `OLD status: Login=${user.isLogin}, Bet=${user.betLock}, Bet2=${user.betLock2} | NEW status: Login=${isUserActive}, Bet=${isUserBetActive}, Bet2=${isUserBet2Active}`,
+
+        description: `OLD password ${user2?.password}, NEW password ${new_password}`,
+      });
 
       return this.success(res, { sucess: true }, 'Password updated succesfully')
     } catch (e: any) {
