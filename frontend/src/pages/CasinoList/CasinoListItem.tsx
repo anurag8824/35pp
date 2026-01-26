@@ -19,8 +19,8 @@ const CasinoListItem = (props: any) => {
     <>
       {gamesList &&
         gamesList
-          .filter((item: any) => !item.isDisable && item.match_id !== -1)
-          .map((Item: any, key: number) => {
+          ?.filter((item: any) => !item.isDisable && item.match_id !== -1)
+          ?.map((Item: any, key: number) => {
             return (
               <div className={"casino-list-item"} key={key}>
                 <a href='#' onClick={(e) => onCasinoClick(e, Item)} className=''>

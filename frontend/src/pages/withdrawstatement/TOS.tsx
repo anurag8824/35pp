@@ -8,16 +8,16 @@ const TOS = () => {
           Terms & Conditions
         </h2>
         <p className="text-muted text-center mb-5">
-          Welcome to <strong>DiamondExchange11.com</strong> — your trusted
-          platform for cricket, casino, and sports betting entertainment.
+          Welcome to <strong>35peti.com</strong> — your trusted platform for
+          cricket, casino, and sports betting entertainment.
         </p>
 
         <section className="mb-4">
           <h5 className="fw-semibold">1. Acceptance of Terms</h5>
           <p>
-            By accessing and using <strong>DiamondExchange11.com</strong>, you
-            agree to comply with and be bound by these Terms & Conditions. If
-            you do not agree, please do not use the website or its services.
+            By accessing and using <strong>35peti.com</strong>, you agree to
+            comply with and be bound by these Terms & Conditions. If you do not
+            agree, please do not use the website or its services.
           </p>
         </section>
 
@@ -70,9 +70,9 @@ const TOS = () => {
         <section className="mb-4">
           <h5 className="fw-semibold">7. Fair Play Policy</h5>
           <p>
-            <strong>DiamondExchange11</strong> reserves the right to suspend or
-            terminate any account found engaging in unfair, illegal, or
-            manipulative behavior on the platform.
+            <strong>35peti</strong> reserves the right to suspend or terminate
+            any account found engaging in unfair, illegal, or manipulative
+            behavior on the platform.
           </p>
         </section>
 
@@ -80,9 +80,8 @@ const TOS = () => {
           <h5 className="fw-semibold">8. Limitation of Liability</h5>
           <p>
             We do not guarantee that our services will be uninterrupted or
-            error-free. <strong>DiamondExchange11.com</strong> is not liable for
-            any financial losses or damages arising from the use of our
-            platform.
+            error-free. <strong>35peti.com</strong> is not liable for any
+            financial losses or damages arising from the use of our platform.
           </p>
         </section>
 
@@ -100,16 +99,12 @@ const TOS = () => {
           <p>
             For any questions or concerns regarding these Terms & Conditions,
             please contact our support team at{" "}
-            <a href="mailto:support@diamondexchange11.com">
-              support@diamondexchange11.com
-            </a>
-            .
+            <a href="mailto:support@35peti.com">support@35peti.com</a>.
           </p>
         </section>
 
         <p className="text-center mt-5 small text-secondary">
-          © {new Date().getFullYear()} DiamondExchange11.com — All Rights
-          Reserved.
+          © {new Date().getFullYear()} 35peti.com — All Rights Reserved.
         </p>
       </div>
     </div>

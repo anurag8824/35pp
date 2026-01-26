@@ -28,7 +28,7 @@ const NavMobileMenu = (props: any) => {
        <ul className="nav nav-tabs d-xl-none menu-tabs flex-nowrap">
 
           <li className="nav-item">
-            <CustomLink className="nav-link d-flex align-items-center justify-content-center gap-1" to="/aviator-list">
+            <CustomLink  style={{fontSize:"12px", padding:"10px"}} className="nav-link d-flex align-items-center justify-content-center gap-1" to="/aviator-list">
               <svg
                 id="Layer_2"
                 data-name="Layer 2"
@@ -70,41 +70,41 @@ const NavMobileMenu = (props: any) => {
             </CustomLink>
           </li>
           <li className="nav-item">
-            <a className="nav-link d-flex align-items-center justify-content-center gap-1" href="#">
+            <CustomLink style={{fontSize:"12px", padding:"10px"}} className="nav-link d-flex align-items-center justify-content-center gap-1" to="#">
               Lottery
-            </a>
+            </CustomLink>
           </li>
           <li className="nav-item">
-            <CustomLink className="nav-link d-flex align-items-center justify-content-center gap-1" to="match/4/sports" aria-current="page">
+            <CustomLink style={{fontSize:"12px", padding:"10px"}} className="nav-link d-flex align-items-center justify-content-center gap-1" to="match/4/sports" aria-current="page">
               Sports
             </CustomLink>
           </li>
           <li className="nav-item">
-            <CustomLink className="nav-link d-flex align-items-center justify-content-center gap-1" to="/casino-games">
+            <CustomLink style={{fontSize:"12px", padding:"10px"}} className="nav-link d-flex align-items-center justify-content-center gap-1" to="/casino-games">
               Our Casino
             </CustomLink>
           </li>
           <li className="nav-item">
-            <CustomLink className="nav-link d-flex align-items-center justify-content-center gap-1" to="/casino-games">
+            <CustomLink style={{fontSize:"12px", padding:"10px"}} className="nav-link d-flex align-items-center justify-content-center gap-1" to="/casino-games">
               Live Casino
             </CustomLink>
           </li>
           <li className="nav-item">
-            <a className="nav-link d-flex align-items-center justify-content-center gap-1" href="#">
+            <CustomLink style={{fontSize:"12px", padding:"10px"}} className="nav-link d-flex align-items-center justify-content-center gap-1" to="#">
               Slots
-            </a>
+            </CustomLink>
           </li>
           <li className="nav-item">
-            <a className="nav-link d-flex align-items-center justify-content-center gap-1" href="#">
+            <CustomLink style={{fontSize:"12px", padding:"10px"}} className="nav-link d-flex align-items-center justify-content-center gap-1" to="#">
               Fantasy
-            </a>
+            </CustomLink>
           </li>
         </ul>
       </div>
       {isMobile &&
         !location.pathname.includes("/odds") &&
         !location.pathname.includes("/casino") && (
-          <ul className="list-unstyled navbarnav">
+          <ul className="list-unstyled navbarnav d-none">
             <li className={"nav-item"}>
               <CustomLink
                 className={

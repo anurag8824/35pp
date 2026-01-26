@@ -28,6 +28,13 @@ import IMatch from '../../../models/IMatch'
 import casinoSlugs from '../../../utils/casino-slugs.json'
 import UserService from "../../../services/user.service";
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import { selectSportList } from '../../../redux/actions/sports/sportSlice'
+import { Drawer, Tree } from 'antd'
+import { DataNode } from 'antd/es/tree'
+import sportsService from '../../../services/sports.service'
+import ISport from '../../../models/ISport'
+import SideBar from './sidebar'
+import SideBarInside from './sidebarinside'
 
 
 
@@ -56,6 +63,11 @@ const Header = () => {
   const [isOpen, setIsOpen] = React.useState<any>(false)
   const [isOpenRule, setIsOpenRule] = React.useState<any>(false)
   const [getExposerEvent, setGetExposerEvent] = React.useState<any>([])
+  const [treeData, setTreeData] = React.useState<any>([])
+   const sportsList = useAppSelector(selectSportList)
+     const [expandedKeys, setExpandedKeys] = React.useState<any[]>([])
+     const [isOpenD, setIsOpenD] = React.useState(false)
+   
 
   // React.useEffect(() => {
   //   axios.get(`userMessage.json?v=${Date.now()}`).then((res: AxiosResponse) => {
@@ -164,17 +176,106 @@ const Header = () => {
         }
       );
     }, [userState]);
+   
+
+    const selectExpend = (item: any) => {
+      if (item.matchId) {
+        setIsOpenD(false)
+        window.location.href = `/admin/odds/${item.matchId}`
+      }
+    }
+
+      const toggleDrawer = () => {
+        setIsOpenD((prevState) => !prevState)
+        setTreeData(
+          sportsList.sports.map((sport: ISport) => ({ title: (
+            <div className="d-flex align-items-center">
+              {/* 👇 PLUS SIGN YAHI ADD HOTA HAI */}
+              <span>{sport.name}</span>
+    
+              <span
+                className="ml-2"
+                style={{ cursor: 'pointer', fontWeight: 'bold' }}
+                onClick={(e) => {
+                  e.stopPropagation() // node select hone se rokta hai
+                  setExpandedKeys((prev) =>
+                    prev.includes(sport.sportId)
+                      ? prev.filter((k) => k !== sport.sportId)
+                      : [...prev, sport.sportId]
+                  )
+                }}
+              >
+                {expandedKeys.includes(sport.sportId) ? '+' : '+'}
+              </span>
+      
+              {/* 👇 Sport ka naam */}
+            </div>
+          ), key: sport.sportId })),
+        )
+      }
+
+      const updateTreeData = (list: DataNode[], key: React.Key, children: DataNode[]): DataNode[] =>
+          list.map((node) => {
+            if (node.key === key) {
+              return {
+                ...node,
+                children,
+              }
+            }
+            if (node.children) {
+              return {
+                ...node,
+                children: updateTreeData(node.children, key, children),
+              }
+            }
+            return node
+          })
+
+        const onLoadData = (data: any) => {
+          if (data.matchId) {
+            selectExpend(data)
+            return Promise.resolve()
+          }
+          return sportsService.getSeriesWithMatch(data.key).then((series: any) => {
+            const items = series?.data?.data.map((series: any) => {
+              const { id, name } = series.competition
+              const matchNodes = series.matches.map((match: any) => {
+                return {
+                  key: match.event.id,
+                  title: match.event.name,
+                  matchId: match.event.id,
+                }
+              })
+              return {
+                key: id,
+                title: name,
+                children: matchNodes,
+              }
+            })
+            setTreeData((origin: any) => {
+              return updateTreeData(origin, data.key, items)
+            })
+      
+            return items
+          })
+        }
 
   return (
+    <>
     <header className='header'>
       <div className='container-fluid'>
         <div className='row'>
           <div className='header-top col-md-12'>
-            <div className='flex05'>
+            <div className='flex05 d-flex'>
               {isMobile ? (
-                <CustomLink to='/match/4/in-play'>
-                  <i className='fas fa-home' />
-                </CustomLink>
+                // <CustomLink to='/match/4/in-play'>
+                //   <i className='fas fa-home' />
+                // </CustomLink>
+                <div className='side-menu-button' onClick={toggleDrawer}>
+                <div className='bar1' />
+                <div className='bar2' />
+                <div className='bar3' />
+              </div>
               ) : (
                 ''
               )}
@@ -532,6 +633,24 @@ style={{position: "fixed",
         </div>
       </ReactModal>
     </header>
+
+      <Drawer open={isOpenD} onClose={toggleDrawer} placement="left" >
+      <div className='drawer-content'>
+        {/* <Tree
+          showIcon={false}
+          expandedKeys={expandedKeys}
+          onExpand={(keys) => setExpandedKeys(keys)}
+          switcherIcon={null} 
+          loadData={onLoadData}
+          treeData={treeData}
+          onSelect={(selectedKeys, e) => {
+            selectExpend(e.node)
+          }}
+        /> */}
+        <SideBarInside/>
+      </div>
+    </Drawer>
+    </>
   )
 }
 export default Header

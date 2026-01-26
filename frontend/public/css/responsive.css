@@ -549,7 +549,7 @@
     flex: 1 1 auto;
     position: relative;
     text-align: center;
-    line-height: 32px;
+    /* line-height: 32px; */
     white-space: nowrap;
   }
 
@@ -572,7 +572,10 @@
     content: "|";
     position: absolute;
     right: 0;
-    top: 8px;
+           /* top: 2px; */
+           height: 15px;
+           background: white;
+           width: 2px;
   }
 
   .header-mobile .nav-item .active {

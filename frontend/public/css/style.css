@@ -9233,6 +9233,67 @@ footer p {
   background-color: transparent;
 }
 
+
+.side-menu-button {
+  cursor: pointer;
+  /* position: absolute; */
+  left: 135px;
+  top: 15px;
+  z-index: 10;
+}
+
+
+.bar1,
+.bar2,
+.bar3 {
+  width: 20px;
+  height: 3px;
+  background-color: var(--primary-color);
+  margin: 4px 0;
+  transition: 0.4s;
+}
+
+
+.drawer-header {
+  background: var(--theme1-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0px;
+}
+
+.drawer-header img {
+  width: 100px;
+}
+
+.side-menu-button.change .bar1 {
+  -webkit-transform: rotate(-45deg) translate(-2px, 6px);
+  transform: rotate(-45deg) translate(-2px, 6px);
+}
+
+.side-menu-button.change .bar2 {
+  opacity: 0;
+}
+
+
+
+.sidebarin {
+  padding: 0 !important;
+  height: 100vh;
+  min-height: 100%;
+  max-width: 100% !important;
+  background-color: var(--grey-bg);
+  color: var(--site-color);
+  overflow-y: auto;
+}
+
+
+
+.side-menu-button.change .bar3 {
+  -webkit-transform: rotate(45deg) translate(-4px, -8px);
+  transform: rotate(45deg) translate(-4px, -8px);
+}
+
 .menu-tabs {
   overflow-x: auto;
   white-space: nowrap;
