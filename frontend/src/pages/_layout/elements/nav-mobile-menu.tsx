@@ -28,12 +28,13 @@ const NavMobileMenu = (props: any) => {
        <ul className="nav nav-tabs d-xl-none menu-tabs flex-nowrap">
 
           <li className="nav-item">
-            <CustomLink  style={{fontSize:"12px", padding:"10px"}} className="nav-link d-flex align-items-center justify-content-center gap-1" to="/aviator-list">
+            <CustomLink  style={{fontSize:"12px", padding:"6px 4px"}} className="nav-link d-flex align-items-center justify-content-center gap-1" to="/aviator-list">
               <svg
                 id="Layer_2"
                 data-name="Layer 2"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 457.6 277.4"
+                fill="red"
                 style={{ height: "22px", width: "22px", flexShrink: 0 }}
               >
                 <defs></defs>
@@ -70,32 +71,32 @@ const NavMobileMenu = (props: any) => {
             </CustomLink>
           </li>
           <li className="nav-item">
-            <CustomLink style={{fontSize:"12px", padding:"10px"}} className="nav-link d-flex align-items-center justify-content-center gap-1" to="#">
+            <CustomLink style={{fontSize:"12px", padding:"6px 4px"}} className="nav-link d-flex align-items-center justify-content-center gap-1" to="#">
               Lottery
             </CustomLink>
           </li>
           <li className="nav-item">
-            <CustomLink style={{fontSize:"12px", padding:"10px"}} className="nav-link d-flex align-items-center justify-content-center gap-1" to="match/4/sports" aria-current="page">
+            <CustomLink style={{fontSize:"12px", padding:"6px 4px"}} className="nav-link d-flex align-items-center justify-content-center gap-1" to="match/4/sports" aria-current="page">
               Sports
             </CustomLink>
           </li>
           <li className="nav-item">
-            <CustomLink style={{fontSize:"12px", padding:"10px"}} className="nav-link d-flex align-items-center justify-content-center gap-1" to="/casino-games">
+            <CustomLink style={{fontSize:"12px", padding:"6px 4px"}} className="nav-link d-flex align-items-center justify-content-center gap-1" to="/casino-games">
               Our Casino
             </CustomLink>
           </li>
           <li className="nav-item">
-            <CustomLink style={{fontSize:"12px", padding:"10px"}} className="nav-link d-flex align-items-center justify-content-center gap-1" to="/casino-games">
+            <CustomLink style={{fontSize:"12px", padding:"6px 4px"}} className="nav-link d-flex align-items-center justify-content-center gap-1" to="/casino-games">
               Live Casino
             </CustomLink>
           </li>
           <li className="nav-item">
-            <CustomLink style={{fontSize:"12px", padding:"10px"}} className="nav-link d-flex align-items-center justify-content-center gap-1" to="#">
+            <CustomLink style={{fontSize:"12px", padding:"6px 4px"}} className="nav-link d-flex align-items-center justify-content-center gap-1" to="#">
               Slots
             </CustomLink>
           </li>
           <li className="nav-item">
-            <CustomLink style={{fontSize:"12px", padding:"10px"}} className="nav-link d-flex align-items-center justify-content-center gap-1" to="#">
+            <CustomLink style={{fontSize:"12px", padding:"6px 4px"}} className="nav-link d-flex align-items-center justify-content-center gap-1" to="#">
               Fantasy
             </CustomLink>
           </li>

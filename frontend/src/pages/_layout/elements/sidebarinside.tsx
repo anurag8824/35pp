@@ -112,7 +112,7 @@ const SideBarInside = () => {
       <nav className="collapse sports show">
         <ul>
           {sportListState.sports
-            ?.filter((sport: any) => [4, 1, 2].includes(sport?.sportId))
+            // ?.filter((sport: any) => [4, 1, 2].includes(sport?.sportId))
             ?.map((sport: ISport) => (
               <li key={sport._id} className="nav-item">
                 <CustomLink
