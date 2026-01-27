@@ -3,15 +3,20 @@ import { redisReplica } from "../../database/redis";
 import api from "../../utils/api";
 import axios from "axios"
 
-const fetchDataFromApi = async (EventID: any, sportId: any,markettype:any) => {
+const fetchDataFromApi = async (EventID: any, sportId: any, markettype: any) => {
   try {
     const res = await axios.get(`http://130.250.191.174:3009/getPriveteData?gmid=${EventID}&sid=${sportId}&key=dijbfuwd719e12rqhfbjdqdnkqnd11eqdqd`);
     const competitions = res?.data?.data || [];
     // console.log(competitions,"competitions")
     let fcompetitions;
-    if(markettype == "matchodds") { fcompetitions = competitions.filter((match:any)=>match.mname == "MATCH_ODDS")}
-    if(markettype == "Bookmaker") { fcompetitions = competitions.filter((match:any)=>match.gtype.includes('match') )}
-
+    if (markettype == "matchodds") { fcompetitions = competitions.filter((match: any) => match.mname == "MATCH_ODDS") }
+    if (markettype === "Bookmaker") {
+      fcompetitions = competitions.filter(
+        (match: any) =>
+          match.gtype?.includes("match") ||
+          match.gtype?.includes("cricketcasino")
+      );
+    }
     // const matchedMarkets = competitions.flatMap((s: any) =>
     //   s.markets
     //     .filter((m: any) => m?.version ==EventID)
@@ -39,15 +44,15 @@ const fetchDataFromApi = async (EventID: any, sportId: any,markettype:any) => {
     //       oddsType: m.description.bettingType,
     //     }))
     // );
-    
 
-    
+
+
     const matchedMarkets = fcompetitions.map((m: any) => ({
       seriesId: m.cid,
       sportId: sportId,
       matchId: m.gmid,
       marketId: m.mid,
-      marketName: m.mname === "MATCH_ODDS" ? "Match Odds":m.mname,
+      marketName: m.mname === "MATCH_ODDS" ? "Match Odds" : m.mname,
       marketStartTime: m.stime,
       runners: (m.section || []).map((r: any, index: number) => ({
         selectionId: r?.sid,
@@ -57,9 +62,9 @@ const fetchDataFromApi = async (EventID: any, sportId: any,markettype:any) => {
       })),
       oddsType: m?.description?.bettingType || "Di",
     }));
-    
-    
-    
+
+
+
     // console.log(matchedMarkets, 'Filtered Market Data');
     return matchedMarkets;
   } catch (error) {
@@ -106,31 +111,31 @@ const fetchDataFromApi = async (EventID: any, sportId: any,markettype:any) => {
 const fetchBookMakerDataFromApi = async (EventID: any, sportId: any) => {
   try {
     const res = await axios.get(`http://195.110.59.236:3000/allMatchData/4/${EventID}`);
-    console.log(res,"res is BookMaker")
-    const d = res?.data?.data|| [];
-   const c = d.filter((m:any) => m.mname == "Bookmaker")
-    console.log(c,"competitions for BookMaker")
- 
-    const matchedMarkets = 
-     
-      [  {
-          seriesId: c?.id || 321,
-          sportId: sportId,
-          matchId: EventID,
-          marketId: c[0]?.mid,
-          marketName: "Bookmaker",
-          marketStartTime: c[0]?.marketStartTime || null,
-          runners: (c[0].section || []).map((r: any,index:any) => ({
-            selectionId: r?.sid,
-            runnerName: r?.nat,
-            handicap: r?.handicap || 0,
-            sortPriority: r?.sortPriority || index,
-            status:c[0]?.gstatus || ""
-          })),
-          oddsType: 'bookMaker',
-        }]
-    
-    
+    console.log(res, "res is BookMaker")
+    const d = res?.data?.data || [];
+    const c = d.filter((m: any) => m.mname == "Bookmaker")
+    console.log(c, "competitions for BookMaker")
+
+    const matchedMarkets =
+
+      [{
+        seriesId: c?.id || 321,
+        sportId: sportId,
+        matchId: EventID,
+        marketId: c[0]?.mid,
+        marketName: "Bookmaker",
+        marketStartTime: c[0]?.marketStartTime || null,
+        runners: (c[0].section || []).map((r: any, index: any) => ({
+          selectionId: r?.sid,
+          runnerName: r?.nat,
+          handicap: r?.handicap || 0,
+          sortPriority: r?.sortPriority || index,
+          status: c[0]?.gstatus || ""
+        })),
+        oddsType: 'bookMaker',
+      }]
+
+
     console.log(matchedMarkets[0].runners, 'Filtered Market Data');
     return matchedMarkets;
   } catch (error) {
@@ -143,9 +148,9 @@ const fetchBookMakerDataFromApi = async (EventID: any, sportId: any) => {
 const GetsessionFromApi = async (MatchId: any, sportId: any) => {
   try {
     const res = await axios.get(`http://130.250.191.174:3009/getPriveteData?gmid=${MatchId}&sid=${sportId}&key=dijbfuwd719e12rqhfbjdqdnkqnd11eqdqd`);
-    console.log(res?.data?.data,"fancy data Lokesh")
+    console.log(res?.data?.data, "fancy data Lokesh")
     const fancyData: any = res?.data?.data
-      ?.filter((p: any) => 
+      ?.filter((p: any) =>
         p.gtype != p.gtype.includes('match') // fixed logical condition
         // p.marketType !== "BOOKMAKER" // uncomment if needed
       )
@@ -456,22 +461,22 @@ class OddsController {
         }
       } else if (req.originalUrl.includes("get-marketes")) {
         // const data = await redisReplica.get(`getMarketList-${EventID}`);
-        const data :any =  await fetchDataFromApi(EventID,sportId,"Matchodds")
-        console.log(data,"data here is data ")
+        const data: any = await fetchDataFromApi(EventID, sportId, "Matchodds")
+        console.log(data, "data here is data ")
         // if (data) matchList = JSON.parse(data);
         if (data.length == 0) {
           const res = await api.get(
             `/get-marketes?sportId=${sportId}&EventID=${EventID}`
           );
-         return matchList = data;
+          return matchList = data;
           // console.log(matchList,"matchList")
         }
         matchList = data;
       } else if (req.originalUrl.includes("get-bookmaker-marketes")) {
-        const data = await fetchDataFromApi(EventID,sportId,"Bookmaker")
+        const data = await fetchDataFromApi(EventID, sportId, "Bookmaker")
         // await redisReplica.get(`getMarketList-bm-${EventID}`);
         if (data) matchList = data
-        console.log("Bookmaker data",data)
+        console.log("Bookmaker data", data)
         if (!data) {
           const res = await api.get(
             `/get-bookmaker-marketes?sportId=${sportId}&EventID=${EventID}`
@@ -489,7 +494,7 @@ class OddsController {
         error: e.message,
       });
     }
-}
+  }
 
   // public static async getSessions(
   //   req: Request,
@@ -566,7 +571,7 @@ class OddsController {
   //   }
   //   })
 
-    
+
 
 
   //     return res.json({
@@ -589,13 +594,13 @@ class OddsController {
   //     const { MatchID }: any = req.query;
   //     console.log(MatchID,"matchId for odds data")
   //     if (!MatchID) throw Error("MatchID is required field");
-  
+
   //     // Fetch the data from the API
   //     let response: any = await axios.get(
   //       `http://185.211.4.99:3000/allMatchData/4/${MatchID}`
   //     );
   //     console.log(response,"response")
-  
+
   //     // Use Promise.all to handle async processing of each section
   //     const data = await Promise.all(
   //       response.data.data.map(async (item: any) => {
@@ -630,7 +635,7 @@ class OddsController {
   //               };
   //             })
   //           );
-  
+
   //           // Return the item with the processed section data
   //           return {data:sectionData} ;
   //         }
@@ -638,7 +643,7 @@ class OddsController {
   //     );
 
   //     console.log(data,"data for odds ")
-  
+
   //     return res.json({
   //       data,
   //       error: "Hello world",
@@ -651,136 +656,136 @@ class OddsController {
   // }
 
 
-//   public static async fancyData(
-//     req: Request,
-//     res: Response
-// ): Promise<Response> {
-//     try {
-//         const { MatchID }: any = req.query;
-//         console.log(MatchID, "matchId for odds data");
-//         if (!MatchID) throw Error("MatchID is required field");
+  //   public static async fancyData(
+  //     req: Request,
+  //     res: Response
+  // ): Promise<Response> {
+  //     try {
+  //         const { MatchID }: any = req.query;
+  //         console.log(MatchID, "matchId for odds data");
+  //         if (!MatchID) throw Error("MatchID is required field");
 
-//         // Fetch the data from the API
-//         let response: any = await axios.get(
-//             `http://185.211.4.99:3000/allMatchData/4/${MatchID}`
-//         );
-//         console.log(response, "response");
+  //         // Fetch the data from the API
+  //         let response: any = await axios.get(
+  //             `http://185.211.4.99:3000/allMatchData/4/${MatchID}`
+  //         );
+  //         console.log(response, "response");
 
-//         // Use Promise.all to handle async processing of each section
-//         const data = await Promise.all(
-//             response.data.data.map(async (item: any) => {
-//                 if (item.mname === "MATCH_ODDS" || item.mname === "Bookmaker") {
-//                     // Skip processing for "MATCH_ODDS" or "Bookmaker" items
-//                     return null; // You could also return an empty object or another placeholder
-//                 } else {
-//                     // Process each section concurrently using Promise.all
-//                     const sectionData = await Promise.all(
-//                         item.section.map(async (i: any) => {
-//                             return {
-//                                 "BackPrice1": i?.odds[0]?.odds || 0,
-//                                 "BackPrice2": 0,
-//                                 "BackPrice3": 0,
-//                                 "LayPrice1": i?.odds[1]?.odds || 0,
-//                                 "LayPrice2": 0,
-//                                 "LayPrice3": 0,
-//                                 "BackSize1": i?.odds[0]?.size || 0,
-//                                 "BackSize2": 0,
-//                                 "BackSize3": 0,
-//                                 "LaySize1": i?.odds[1]?.size || 0,
-//                                 "LaySize2": 0,
-//                                 "LaySize3": 0,
-//                                 "RunnnerName": i.nat,
-//                                 "SelectionId": i.sid.toString(),
-//                                 "GameStatus": "",
-//                                 "gtstatus": i.gstatus,
-//                                 "max": i.max,
-//                                 "min": i.min,
-//                                 "rem": i.rem,
-//                                 "srno": i.sno.toString(),
-//                                 mname: item.mname,
-//                             };
-//                         })
-//                     );
+  //         // Use Promise.all to handle async processing of each section
+  //         const data = await Promise.all(
+  //             response.data.data.map(async (item: any) => {
+  //                 if (item.mname === "MATCH_ODDS" || item.mname === "Bookmaker") {
+  //                     // Skip processing for "MATCH_ODDS" or "Bookmaker" items
+  //                     return null; // You could also return an empty object or another placeholder
+  //                 } else {
+  //                     // Process each section concurrently using Promise.all
+  //                     const sectionData = await Promise.all(
+  //                         item.section.map(async (i: any) => {
+  //                             return {
+  //                                 "BackPrice1": i?.odds[0]?.odds || 0,
+  //                                 "BackPrice2": 0,
+  //                                 "BackPrice3": 0,
+  //                                 "LayPrice1": i?.odds[1]?.odds || 0,
+  //                                 "LayPrice2": 0,
+  //                                 "LayPrice3": 0,
+  //                                 "BackSize1": i?.odds[0]?.size || 0,
+  //                                 "BackSize2": 0,
+  //                                 "BackSize3": 0,
+  //                                 "LaySize1": i?.odds[1]?.size || 0,
+  //                                 "LaySize2": 0,
+  //                                 "LaySize3": 0,
+  //                                 "RunnnerName": i.nat,
+  //                                 "SelectionId": i.sid.toString(),
+  //                                 "GameStatus": "",
+  //                                 "gtstatus": i.gstatus,
+  //                                 "max": i.max,
+  //                                 "min": i.min,
+  //                                 "rem": i.rem,
+  //                                 "srno": i.sno.toString(),
+  //                                 mname: item.mname,
+  //                             };
+  //                         })
+  //                     );
 
-//                     // Return the sectionData directly, no need to wrap it
-//                     return sectionData;
-//                 }
-//             })
-//         );
+  //                     // Return the sectionData directly, no need to wrap it
+  //                     return sectionData;
+  //                 }
+  //             })
+  //         );
 
-//         // Filter out any null values (items with "MATCH_ODDS" or "Bookmaker")
-//         const filteredData = data.filter(item => item !== null);
+  //         // Filter out any null values (items with "MATCH_ODDS" or "Bookmaker")
+  //         const filteredData = data.filter(item => item !== null);
 
-//         console.log(filteredData, "filtered data for odds");
+  //         console.log(filteredData, "filtered data for odds");
 
-//         return res.json({
-//             data: filteredData.flat(), // Flatten the array if you want a single-level array
-//             error: null,
-//         });
-//     } catch (e: any) {
-//         return res.json({
-//             error: e.message,
-//         });
-//     }
-// }
+  //         return res.json({
+  //             data: filteredData.flat(), // Flatten the array if you want a single-level array
+  //             error: null,
+  //         });
+  //     } catch (e: any) {
+  //         return res.json({
+  //             error: e.message,
+  //         });
+  //     }
+  // }
 
-public static async getSessions(
-  req: Request,
-  res: Response
-): Promise<Response> {
-  try {
-    const { MatchID,sportId} = req.query;
-    if (!MatchID) throw Error("MatchID is required field");
+  public static async getSessions(
+    req: Request,
+    res: Response
+  ): Promise<Response> {
+    try {
+      const { MatchID, sportId } = req.query;
+      if (!MatchID) throw Error("MatchID is required field");
 
-    let matchList = [];
-    // const data = await redisReplica.get(`fancy-${MatchID}`);
-    const data:any = await GetsessionFromApi(MatchID,sportId)
-    matchList = data;
-    console.log(matchList)
-    // if (data) matchList = JSON.parse(data);
-    if (req.originalUrl.includes("get-sessions-t10") && data.length ==0) {
-      const res = await api.get(`/get-sessions-t10?MatchID=${MatchID}`);
-      matchList = res.data.sports;
-    } else if (req.originalUrl.includes("get-sessions") && data.length ==0) {
-      const res = await api.get(`/get-sessions?MatchID=${MatchID}`);
-       matchList = res.data.sports;
+      let matchList = [];
+      // const data = await redisReplica.get(`fancy-${MatchID}`);
+      const data: any = await GetsessionFromApi(MatchID, sportId)
+      matchList = data;
+      console.log(matchList)
+      // if (data) matchList = JSON.parse(data);
+      if (req.originalUrl.includes("get-sessions-t10") && data.length == 0) {
+        const res = await api.get(`/get-sessions-t10?MatchID=${MatchID}`);
+        matchList = res.data.sports;
+      } else if (req.originalUrl.includes("get-sessions") && data.length == 0) {
+        const res = await api.get(`/get-sessions?MatchID=${MatchID}`);
+        matchList = res.data.sports;
+      }
+
+      return res.json({
+        sports: matchList,
+      });
+    } catch (e: any) {
+      return res.json({
+        sports: [],
+        error: e.message,
+      });
     }
-
-    return res.json({
-      sports: matchList,
-    });
-  } catch (e: any) {
-    return res.json({
-      sports: [],
-      error: e.message,
-    });
   }
-}
 
-public static async fancyData(
-  req: Request,
-  res: Response
-): Promise<Response> {
-  try {
-    const { MatchID }: any = req.query;
-    if (!MatchID) throw Error("MatchID is required field");
+  public static async fancyData(
+    req: Request,
+    res: Response
+  ): Promise<Response> {
+    try {
+      const { MatchID }: any = req.query;
+      if (!MatchID) throw Error("MatchID is required field");
 
-    let response: any = await redisReplica.get(`fancy-${MatchID}`);
-    // console.log(response,"response Hahahah")
-    response = response ? { data: JSON.parse(response) } : { data: [] };
+      let response: any = await redisReplica.get(`fancy-${MatchID}`);
+      // console.log(response,"response Hahahah")
+      response = response ? { data: JSON.parse(response) } : { data: [] };
 
-    return res.json({
-      ...response,
-      error: "",
-    });
-  } catch (e: any) {
-    return res.json({
-      error: e.message,
-    });
+      return res.json({
+        ...response,
+        error: "",
+      });
+    } catch (e: any) {
+      return res.json({
+        error: e.message,
+      });
+    }
   }
-}
 
-  
+
 
   public static getSeriesListRedis = async (
     req: Request,

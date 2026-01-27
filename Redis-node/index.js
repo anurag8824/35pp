@@ -382,10 +382,10 @@
 
 
 //       if (bData?.length > 0) {
-      
+
 //       bData.map(async(Data)=>{
-        
-    
+
+
 //         const transformRunners = (inputRunners) => {
 //           return {
 //             runners: inputRunners.map(runner => {
@@ -674,8 +674,8 @@ const formattedFancyData = async () => {
 
             ballsess: "1",
             gtype: f?.gtype,
-            GameStatus: "",
-            gtstatus: f?.gstatus,
+            GameStatus: fa?.gstatus,
+            gtstatus: fa?.gstatus,
 
             max: "50000",
             min: "100",
@@ -745,9 +745,15 @@ const BookMakerOddsData = async () => {
       if (!allFancy || !Array.isArray(allFancy)) continue;
 
       // Bookmaker / match type
-      const bData = allFancy.filter((x) =>
-        (x?.gtype || "").toLowerCase().includes("match")
-      );
+      const bData = allFancy.filter((x) => {
+        const gtype = (x?.gtype || "").toLowerCase();
+
+        return (
+          gtype.includes("match") ||
+          gtype.includes("cricketcasino")
+        );
+      });
+
 
       if (!bData || bData.length === 0) continue;
 

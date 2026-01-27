@@ -18,11 +18,11 @@ setInterval(() => {
   } catch (e) { }
 }, 3000)
 
-setInterval(() => {
-  try {
-    new CasinoController().setFancyResult();
-  } catch (e) { }
-}, 120000);
+// setInterval(() => {
+//   try {
+//     new CasinoController().setFancyResult();
+//   } catch (e) { }
+// }, 120000);
 
 
 export class CasinoController extends ApiController {
