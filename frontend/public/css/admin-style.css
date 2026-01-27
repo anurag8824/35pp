@@ -41,6 +41,25 @@ body {
   background-color: var(--primary-bg);
 }
 
+
+.tree-row {
+  display: flex;
+  align-items: center;
+}
+
+.plus-box {
+  border: 2px solid black;
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 14px;
+}
+
+
+
+
 .dashboard-card {
   background-color: #d6f0ff; /* light blue */
   border-radius: 12px;

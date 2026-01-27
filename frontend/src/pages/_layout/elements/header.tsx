@@ -187,36 +187,63 @@ const Header = () => {
 
       const toggleDrawer = () => {
         setIsOpenD((prevState) => !prevState)
-        setTreeData
-        (
-          sportsList.sports.map((sport: ISport) => ({ title: (
-            <div className="d-flex align-items-center tree-row drawer-itemmm">
-              {/* 👇 PLUS SIGN YAHI ADD HOTA HAI */}
+        // setTreeData
+        // (
+        //   sportsList.sports.map((sport: ISport) => ({ title: (
+        //     <div className="d-flex align-items-center tree-row drawer-itemmm">
+        //       {/* 👇 PLUS SIGN YAHI ADD HOTA HAI */}
           
     
-              <span
-                className="plus-box"
-                style={{ cursor: 'pointer', fontWeight: 'bold' }}
-                onClick={(e) => {
-                  e.stopPropagation() // node select hone se rokta hai
-                  setExpandedKeys((prev) =>
-                    prev.includes(sport.sportId)
-                      ? prev.filter((k) => k !== sport.sportId)
-                      : [...prev, sport.sportId]
-                  )
-                }}
-              >
-                {expandedKeys.includes(sport.sportId) ? '-' : '+'}
-              </span>
-              <span>{sport.name}</span>
+        //       <span
+        //         className="plus-box"
+        //         style={{ cursor: 'pointer', fontWeight: 'bold' }}
+        //         onClick={(e) => {
+        //           e.stopPropagation() // node select hone se rokta hai
+        //           setExpandedKeys((prev) =>
+        //             prev.includes(sport.sportId)
+        //               ? prev.filter((k) => k !== sport.sportId)
+        //               : [...prev, sport.sportId]
+        //           )
+        //         }}
+        //       >
+        //         {expandedKeys.includes(sport.sportId) ? '-' : '+'}
+        //       </span>
+        //       <span>{sport.name}</span>
       
-              {/* 👇 Sport ka naam */}
-            </div>
-          ), key: sport.sportId })),
+        //       {/* 👇 Sport ka naam */}
+        //     </div>
+        //   ), key: sport.sportId })),
+        // )
+        setTreeData(
+          sportsList.sports.map((sport: ISport) => ({
+            key: sport.sportId,
+            title: (
+              <div className="d-flex align-items-center tree-row drawer-itemmm">
+                <span
+                  className="plus-box"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setExpandedKeys((prev) =>
+                      prev.includes(sport.sportId)
+                        ? prev.filter((k) => k !== sport.sportId)
+                        : [...prev, sport.sportId]
+                    )
+                  }}
+                >
+                  {expandedKeys.includes(sport.sportId) ? '-' : '+'}
+                </span>
+                <span>{sport.name}</span>
+              </div>
+            ),
+            type: 'sport',
+            isLeaf: false,
+            children: undefined,
+          }))
         )
+        
       }
 
-      const updateTreeData = (list: DataNode[], key: React.Key, children: DataNode[]): DataNode[] =>
+      const updateTreeDataold = (list: DataNode[], key: React.Key, children: DataNode[]): DataNode[] =>
           list.map((node) => {
             if (node.key === key) {
               return {
@@ -233,7 +260,26 @@ const Header = () => {
             return node
           })
 
-        const onLoadData = (data: any) => {
+          const updateTreeData = (
+            list: DataNode[],
+            key: React.Key,
+            children: DataNode[]
+          ): DataNode[] =>
+            list.map((node) => {
+              if (node.key === key) {
+                return { ...node, children }
+              }
+              if (node.children) {
+                return {
+                  ...node,
+                  children: updateTreeData(node.children, key, children),
+                }
+              }
+              return node
+            })
+          
+
+        const onLoadDataold = (data: any) => {
           if (data.matchId) {
             selectExpend(data)
             return Promise.resolve()
@@ -261,6 +307,94 @@ const Header = () => {
             return items
           })
         }
+
+        const onLoadData = (node: any) => {
+          // 🛑 already loaded
+          if (node.children) {
+            return Promise.resolve()
+          }
+        
+          // 🎯 match click → redirect
+          if (node.type === 'match') {
+            setIsOpenD(false)
+            window.location.href = `/admin/odds/${node.matchId}`
+            return Promise.resolve()
+          }
+        
+          // 🏏 SPORT → load SERIES
+          if (node.type === 'sport') {
+            return sportsService.getSeriesWithMatch(node.key).then((res: any) => {
+              const seriesNodes: DataNode[] = res.data.data.map((series: any) => {
+                const seriesKey = `series-${series.competition.id}`
+              
+                return {
+                  key: seriesKey,
+                  type: 'series',
+                  competitionId: series.competition.id,
+                  sportId: node.key,
+                  isLeaf: false,
+                  title: (
+                    <div className="d-flex align-items-center tree-row drawer-itemmm">
+                      {/* ➕➖ PLUS / MINUS FOR SERIES */}
+                      <span
+                        className="plus-box"
+                        style={{ cursor: 'pointer', fontWeight: 'bold' }}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setExpandedKeys((prev) =>
+                            prev.includes(seriesKey)
+                              ? prev.filter((k) => k !== seriesKey)
+                              : [...prev, seriesKey]
+                          )
+                        }}
+                      >
+                        {expandedKeys.includes(seriesKey) ? '-' : '+'}
+                      </span>
+              
+                      <span>{series.competition.name}</span>
+                    </div>
+                  ),
+                }
+              })
+              
+        
+              setTreeData((origin: any) =>
+                updateTreeData(origin, node.key, seriesNodes)
+              )
+        
+              return seriesNodes
+            })
+          }
+        
+          // 🎯 SERIES → load MATCHES
+          if (node.type === 'series') {
+            return sportsService
+              .getSeriesWithMatch(node.sportId)
+              .then((res: any) => {
+                const series = res.data.data.find(
+                  (s: any) => s.competition.id === node.competitionId
+                )
+        
+                const matchNodes: DataNode[] =
+                  series?.matches?.map((match: any) => ({
+                    key: `match-${match.event.id}`,
+                    title: match.event.name,
+                    type: 'match',
+                    matchId: match.event.id,
+                    isLeaf: true,
+                  })) || []
+        
+                setTreeData((origin: any) =>
+                  updateTreeData(origin, node.key, matchNodes)
+                )
+        
+                return matchNodes
+              })
+          }
+        
+          return Promise.resolve()
+        }
+        
 
         // React.useEffect(() => {
         //   if (sportsList?.sports?.length) {
@@ -722,7 +856,12 @@ style={{position: "fixed",
         onExpand={(keys) => setExpandedKeys(keys)}
         loadData={onLoadData}
         treeData={treeData}
-        onSelect={(keys, e) => selectExpend(e.node)}
+        onSelect={(keys, e) => {
+          if (e.node.type === 'match') {
+            setIsOpenD(false)
+            window.location.href = `/odds/${e.node.matchId}`
+          }
+        }}
       />
     </Section>
 

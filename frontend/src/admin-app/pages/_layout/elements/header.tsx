@@ -71,33 +71,36 @@ const Header = () => {
   }, [])
 
   const toggleDrawer = () => {
-    setIsOpen((prevState) => !prevState)
-    setTreeData(
-      sportsList.sports.map((sport: ISport) => ({ title: (
-        <div className="d-flex align-items-center">
-          {/* 👇 PLUS SIGN YAHI ADD HOTA HAI */}
-          <span>{sport.name}</span>
-
-          <span
-            className="ml-2"
-            style={{ cursor: 'pointer', fontWeight: 'bold' }}
-            onClick={(e) => {
-              e.stopPropagation() // node select hone se rokta hai
-              setExpandedKeys((prev) =>
-                prev.includes(sport.sportId)
-                  ? prev.filter((k) => k !== sport.sportId)
-                  : [...prev, sport.sportId]
-              )
-            }}
-          >
-            {expandedKeys.includes(sport.sportId) ? '+' : '+'}
-          </span>
+    setIsOpen((prev) => !prev)
   
-          {/* 👇 Sport ka naam */}
-        </div>
-      ), key: sport.sportId })),
+    setTreeData(
+      sportsList.sports.map((sport: ISport) => ({
+        key: sport.sportId,
+        type: 'sport',
+        isLeaf: false,
+        children: undefined,
+        title: (
+          <div className="d-flex align-items-center tree-row">
+            <span
+              className="plus-box"
+              onClick={(e) => {
+                e.stopPropagation()
+                setExpandedKeys((prev) =>
+                  prev.includes(sport.sportId)
+                    ? prev.filter((k) => k !== sport.sportId)
+                    : [...prev, sport.sportId]
+                )
+              }}
+            >
+              {expandedKeys.includes(sport.sportId) ? '-' : '+'}
+            </span>
+            <span>{sport.name}</span>
+          </div>
+        ),
+      }))
     )
   }
+  
 
   const logoutUser = (e: any) => {
     e.preventDefault()
@@ -140,34 +143,88 @@ const Header = () => {
       return node
     })
 
-  const onLoadData = (data: any) => {
-    if (data.matchId) {
-      selectExpend(data)
+    const onLoadData = (node: any) => {
+      // already loaded
+      if (node.children) {
+        return Promise.resolve()
+      }
+    
+      // MATCH click
+      if (node.type === 'match') {
+        setIsOpen(false)
+        window.location.href = `/admin/odds/${node.matchId}`
+        return Promise.resolve()
+      }
+    
+      // SPORT → SERIES
+      if (node.type === 'sport') {
+        return sportsService.getSeriesWithMatch(node.key).then((res: any) => {
+          const seriesNodes: DataNode[] = res.data.data.map((series: any) => {
+            const seriesKey = `series-${series.competition.id}`
+    
+            return {
+              key: seriesKey,
+              type: 'series',
+              sportId: node.key,
+              competitionId: series.competition.id,
+              isLeaf: false,
+              children: undefined,
+              title: (
+                <div className="d-flex align-items-center tree-row">
+                  <span
+                    className="plus-box"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setExpandedKeys((prev) =>
+                        prev.includes(seriesKey)
+                          ? prev.filter((k) => k !== seriesKey)
+                          : [...prev, seriesKey]
+                      )
+                    }}
+                  >
+                    {expandedKeys.includes(seriesKey) ? '-' : '+'}
+                  </span>
+                  <span>{series.competition.name}</span>
+                </div>
+              ),
+            }
+          })
+    
+          setTreeData((origin: any) =>
+            updateTreeData(origin, node.key, seriesNodes)
+          )
+    
+          return seriesNodes
+        })
+      }
+    
+      // SERIES → MATCHES
+      if (node.type === 'series') {
+        return sportsService.getSeriesWithMatch(node.sportId).then((res: any) => {
+          const series = res.data.data.find(
+            (s: any) => s.competition.id === node.competitionId
+          )
+    
+          const matchNodes: DataNode[] =
+            series?.matches?.map((match: any) => ({
+              key: `match-${match.event.id}`,
+              title: match.event.name,
+              type: 'match',
+              matchId: match.event.id,
+              isLeaf: true,
+            })) || []
+    
+          setTreeData((origin: any) =>
+            updateTreeData(origin, node.key, matchNodes)
+          )
+    
+          return matchNodes
+        })
+      }
+    
       return Promise.resolve()
     }
-    return sportsService.getSeriesWithMatch(data.key).then((series: any) => {
-      const items = series?.data?.data.map((series: any) => {
-        const { id, name } = series.competition
-        const matchNodes = series.matches.map((match: any) => {
-          return {
-            key: match.event.id,
-            title: match.event.name,
-            matchId: match.event.id,
-          }
-        })
-        return {
-          key: id,
-          title: name,
-          children: matchNodes,
-        }
-      })
-      setTreeData((origin: any) => {
-        return updateTreeData(origin, data.key, items)
-      })
-
-      return items
-    })
-  }
+    
 
   return (
     <>
@@ -435,17 +492,21 @@ const Header = () => {
           <img src='/imgs/logo.png' className='wd-100' />
         </div>
         <div className='drawer-content'>
-          <Tree
-            showIcon={false}
-            expandedKeys={expandedKeys}
-            onExpand={(keys) => setExpandedKeys(keys)}
-            switcherIcon={null} 
-            loadData={onLoadData}
-            treeData={treeData}
-            onSelect={(selectedKeys, e) => {
-              selectExpend(e.node)
-            }}
-          />
+        <Tree
+  showIcon={false}
+  switcherIcon={null}
+  expandedKeys={expandedKeys}
+  onExpand={(keys) => setExpandedKeys(keys)}
+  loadData={onLoadData}
+  treeData={treeData}
+  onSelect={(keys, e) => {
+    if (e.node.type === 'match') {
+      setIsOpen(false)
+      window.location.href = `/admin/odds/${e.node.matchId}`
+    }
+  }}
+/>
+
         </div>
       </Drawer>
     </>
