@@ -187,33 +187,33 @@ const Header = () => {
 
       const toggleDrawer = () => {
         setIsOpenD((prevState) => !prevState)
-        setTreeData(
-          sportsList.sports.map((sport: ISport) => ({
-            key: sport.sportId,
-            title: (
-              <div className="tree-row drawer-ite">
-                <span
-                  className="plus-box"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    setExpandedKeys((prev) =>
-                      prev.includes(sport.sportId)
-                        ? prev.filter((k) => k !== sport.sportId)
-                        : [...prev, sport.sportId]
-                    )
-                  }}
-                >
-                  {expandedKeys.includes(sport.sportId) ? '-' : '+'}
-                </span>
-                <span>{sport.name}</span>
-              </div>
-            ),
-            isLeaf: false,
-            children: undefined, // ✅ CRITICAL
-          }))
+        setTreeData
+        (
+          sportsList.sports.map((sport: ISport) => ({ title: (
+            <div className="d-flex align-items-center tree-row drawer-itemmm">
+              {/* 👇 PLUS SIGN YAHI ADD HOTA HAI */}
+          
+    
+              <span
+                className="plus-box"
+                style={{ cursor: 'pointer', fontWeight: 'bold' }}
+                onClick={(e) => {
+                  e.stopPropagation() // node select hone se rokta hai
+                  setExpandedKeys((prev) =>
+                    prev.includes(sport.sportId)
+                      ? prev.filter((k) => k !== sport.sportId)
+                      : [...prev, sport.sportId]
+                  )
+                }}
+              >
+                {expandedKeys.includes(sport.sportId) ? '-' : '+'}
+              </span>
+              <span>{sport.name}</span>
+      
+              {/* 👇 Sport ka naam */}
+            </div>
+          ), key: sport.sportId })),
         )
-        
-        
       }
 
       const updateTreeData = (list: DataNode[], key: React.Key, children: DataNode[]): DataNode[] =>
@@ -233,40 +233,34 @@ const Header = () => {
             return node
           })
 
-          const onLoadData = (node: any) => {
-            // 🛑 already loaded → stop
-            if (node.children) {
-              return Promise.resolve()
-            }
-          
-            // 🎯 match click
-            if (node.matchId) {
-              selectExpend(node)
-              return Promise.resolve()
-            }
-          
-            return sportsService.getSeriesWithMatch(node.key).then((res: any) => {
-              const items: DataNode[] = res.data.data.map((series: any) => ({
-                key: series.competition.id,
-                title: series.competition.name,
-                isLeaf: false, // ✅ VERY IMPORTANT
-                children: series.matches.map((match: any) => ({
+        const onLoadData = (data: any) => {
+          if (data.matchId) {
+            selectExpend(data)
+            return Promise.resolve()
+          }
+          return sportsService.getSeriesWithMatch(data.key).then((series: any) => {
+            const items = series?.data?.data.map((series: any) => {
+              const { id, name } = series.competition
+              const matchNodes = series.matches.map((match: any) => {
+                return {
                   key: match.event.id,
                   title: match.event.name,
                   matchId: match.event.id,
-                  isLeaf: true, // ✅ VERY IMPORTANT
-                })),
-              }))
-          
-              setTreeData((origin: any) =>
-                updateTreeData(origin, node.key, items)
-              )
-          
-              return items
+                }
+              })
+              return {
+                key: id,
+                title: name,
+                children: matchNodes,
+              }
             })
-          }
-          
-          
+            setTreeData((origin: any) => {
+              return updateTreeData(origin, data.key, items)
+            })
+      
+            return items
+          })
+        }
 
         // React.useEffect(() => {
         //   if (sportsList?.sports?.length) {
