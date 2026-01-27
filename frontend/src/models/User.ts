@@ -39,6 +39,7 @@ export default interface User {
   balance?: IBalance
   isLogin?: boolean
   betLock?: boolean
+  betLock2?: boolean
   logs?: string
   transactionPassword?: string
   selected?: boolean

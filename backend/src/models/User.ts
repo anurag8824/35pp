@@ -27,6 +27,7 @@ export interface IUser {
   parentId: PopulatedDoc<IUser> | null
   parentStr?: Array<string>
   betLock?: boolean
+  betLock2?: boolean
   // isMaster?: boolean;
   isLogin?: boolean
   isDeleted?: boolean
@@ -60,6 +61,7 @@ export const userSchema: Schema = new Schema(
     parentId: { type: Types.ObjectId, ref: 'User' },
     parentStr: [],
     betLock: Boolean,
+    betLock2: Boolean,
     // isMaster: Boolean,
     isLogin: Boolean,
     isDeleted: Boolean,

@@ -108,6 +108,7 @@ export class DealersController extends ApiController {
             level: parentUser.level + 1,
             isLogin: true,
             betLock: true,
+            betLock2: true,
             parentId: parentUser._id,
             parentStr: newUserParentStr,
             fullName: fullname,
@@ -246,6 +247,7 @@ export class DealersController extends ApiController {
       paymode: 1,
       isLogin: 1,
       betLock: 1,
+      betLock2: 1,
       partnership: 1,
       parentStr: 1,
       'balance.balance': 1,
@@ -393,6 +395,7 @@ export class DealersController extends ApiController {
       exposerLimit: 1,
       isLogin: 1,
       betLock: 1,
+      betLock2: 1,
       'balance.balance': 1,
       'balance.mainBalance': 1,
       parent: 1,
@@ -458,6 +461,7 @@ export class DealersController extends ApiController {
       exposerLimit: 1,
       isLogin: 1,
       betLock: 1,
+      betLock2: 1,
       'balance.balance': 1,
       'balance.mainBalance': 1,
       parent: 1,
@@ -613,7 +617,7 @@ export class DealersController extends ApiController {
 
   async updateUserStatus(req: Request, res: Response): Promise<Response> {
     try {
-      const { username, isUserActive, isUserBetActive, transactionPassword, single } = req.body
+      const { username, isUserActive, isUserBetActive, isUserBet2Active , transactionPassword, single } = req.body
       const currentUser: any = req.user
       const currentUserData: any = await User.findOne({ _id: currentUser._id })
       if (!single) {
@@ -634,6 +638,7 @@ export class DealersController extends ApiController {
           {
             isLogin: isUserActive,
             betLock: isUserBetActive,
+            betLock2: isUserBet2Active,
           },
         )
         // Create operation log

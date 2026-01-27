@@ -32,6 +32,7 @@ exports.userSchema = new mongoose_1.Schema({
     parentId: { type: mongoose_1.Types.ObjectId, ref: 'User' },
     parentStr: [],
     betLock: Boolean,
+    betLock2: Boolean,
     // isMaster: Boolean,
     isLogin: Boolean,
     isDeleted: Boolean,

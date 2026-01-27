@@ -9275,6 +9275,109 @@ footer p {
   opacity: 0;
 }
 
+.sports-drawer .ant-drawer-body {
+  padding: 0;
+  background: #e5e5e5;
+}
+
+.drawer-search {
+  width: 90%;
+  margin: 10px;
+  padding: 6px;
+}
+
+.drawer-section-header {
+  background: #0288d1;
+  color: white;
+  padding: 10px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.drawer-item {
+  background: #d3d3d3;
+  padding: 10px;
+  border-bottom: 1px solid #bbb;
+  cursor: pointer;
+  width: 100% !important;
+}
+
+.drawer-item:hover {
+  background: #c5c5c5;
+}
+
+.tree-row {
+  display: flex;
+  align-items: center;
+}
+
+.plus-box {
+  border: 2px solid black;
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 14px;
+}
+
+
+
+
+.place-bet-ui {
+  border-radius: 0;
+  overflow: hidden;
+  border: none;
+}
+
+.placebet-header {
+  background: #0288d1;
+  padding: 10px 15px;
+}
+
+.placebet-header .close-btn {
+  cursor: pointer;
+  font-size: 20px;
+  color: #fff;
+}
+
+.placebet-body {
+  background: #ffb6c1;
+  padding: 15px;
+}
+
+.bet-title {
+  background: #ff9eb0;
+  padding: 8px 10px;
+  font-size: 14px;
+}
+
+.odds-box button {
+  width: 40px;
+}
+
+.stake-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.stake-grid button {
+  background: #4b4f63;
+  color: #fff;
+  border: none;
+  padding: 8px 0;
+  font-weight: 600;
+}
+
+.range-text {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+
 
 
 .sidebarin {

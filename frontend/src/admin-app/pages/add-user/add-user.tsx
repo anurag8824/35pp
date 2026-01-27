@@ -67,6 +67,8 @@ const [isUnlimited, setIsUnlimited] = React.useState(false);
     formState: { errors },
   } = useForm<User>({ resolver: yupResolver(validationSchema),defaultValues: {
     paymode: 'direct', // ✅ DEFAULT VALUE
+    betLock: true,     // ✅ Sports
+    betLock2: true,
   }, })
 
   React.useEffect(() => {
@@ -200,6 +202,13 @@ const [isUnlimited, setIsUnlimited] = React.useState(false);
         data.userSetting = userSettingArr;
     }
 
+     // ✅ ONLY SUPER ADMIN → betLock fields allowed
+  if (userState?.user?.role !== RoleType.admin) {
+    delete data.betLock;
+    delete data.betLock2;
+  }
+
+
     // Parent Name
     data.parent = userData?.username;
 
@@ -208,6 +217,7 @@ const [isUnlimited, setIsUnlimited] = React.useState(false);
     delete data.minbet;
     delete data.delay;
     delete data.partnershipOur;
+    console.log("Final data to submit:", data);
 
     UserService.addUser(data)
         .then(() => {
@@ -432,6 +442,45 @@ const [isUnlimited, setIsUnlimited] = React.useState(false);
                           )}
                         </div>
                       </div>
+
+                      {/* BET LOCK – ONLY FOR SUPER ADMIN */}
+{userState?.user?.role === RoleType.admin && (
+  <div className="col-md-6">
+    <div className="form-group">
+      <label className="d-block">Bet Lock</label>
+
+      <div className="form-check">
+        <input
+          className="form-check-input"
+          type="checkbox"
+          id="betLock"
+          {...register('betLock')}
+          defaultChecked
+        />
+        <label className="form-check-label" htmlFor="betLock">
+          Sports
+        </label>
+      </div>
+
+      <div className="form-check mt-1">
+        <input
+          className="form-check-input"
+          type="checkbox"
+          id="betLock2"
+          {...register('betLock2')}
+          defaultChecked
+        />
+        <label className="form-check-label" htmlFor="betLock2">
+          Casino
+        </label>
+      </div>
+    </div>
+  </div>
+)}
+
+
+
+
                       {/* {isExposerAllow && (
                         <div className='col-md-6'>
                           <div className='form-group' id='exposer-limit'>

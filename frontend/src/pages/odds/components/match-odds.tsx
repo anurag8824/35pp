@@ -169,7 +169,7 @@ class MatchOdds extends React.PureComponent<
                     </span>
                   </a>
                   <span className='float-right m-r-10'>
-                    Maximum Bet <span>{this.offplaylimit(market)}</span>
+                    Minimum Bet <span>100</span>
                   </span>
                 </div>
                 <div className='table-header'>

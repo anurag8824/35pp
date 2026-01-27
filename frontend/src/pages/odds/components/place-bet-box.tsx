@@ -163,6 +163,7 @@ const PlaceBetBox = ({ stake }: { stake: IUserBetStake }) => {
           type='button'
           onClick={() => onStack(stake[`value${i}`])}
           className='btn btn-secondary m-l-5 m-b-5'
+          style={{borderRadius:"0px"}}
         >
           {stake[`name${i}`]}
         </button>,
@@ -207,55 +208,58 @@ const PlaceBetBox = ({ stake }: { stake: IUserBetStake }) => {
                 X
               </span>
             </div>
-            <div className={`table-responsive ${betObj.isBack ? 'back' : 'lay'}`}>
+            <div className={`table-responsive px-2 ${betObj.isBack ? 'back' : 'lay'}`}>
               <form onSubmit={onSubmit}>
-                <table className='coupon-table table table-borderedless'>
-                  <thead>
-                    <tr>
-                      <th style={{ width: '35%', textAlign: 'left' }}>(Bet for)</th>
-                      <th style={{ width: '25%', textAlign: 'left' }}>Odds</th>
-                      <th style={{ width: '15%', textAlign: 'left' }}>Stake</th>
-                      <th style={{ width: '15%', textAlign: 'right' }}>Profit</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td className='text-center'>
-                        <a onClick={closeBetPopup} className='text-danger'>
+                <div className='coupon-table table table-borderedless'>
+              
+                  <div>
+                    <div>
+                      <div className='text-center d-flex justify-content-between align-items-center px-2 py-2' style={{ fontWeight:"600", fontSize:"16px"}}>
+                        {/* <a onClick={closeBetPopup} className='text-danger'>
                           <i className='fa fa-times' />
-                        </a>
+                        </a> */}
                         {betObj.selectionName}
-                      </td>
-                      <td className='bet-odds'>
-                        <div className='form-group'>
-                          <input
-                            value={parseFloat(betObj?.odds?.toFixed(4)) || ''}
-                            type='text'
-                            required
-                            maxLength={4}
-                            readOnly
-                            className='amountint'
-                            style={{ width: 60, verticalAlign: 'middle' }}
-                          />
-                          <div className='spinner-buttons input-group-btn btn-group-vertical'>
-                            <button
-                              type='button'
-                              className='custom-btn-spinner btn btn-xs btn-default'
-                              onClick={() => incrementDecrementOdds('inc')}
-                            >
-                              <i className='fa fa-angle-up' />
-                            </button>
-                            <button
-                              type='button'
-                              className='custom-btn-spinner btn btn-xs btn-default'
-                              onClick={() => incrementDecrementOdds('dec')}
-                            >
-                              <i className='fa fa-angle-down' />
-                            </button>
-                          </div>
-                        </div>
-                      </td>
-                      <td className='bet-stakes'>
+                      <div className=' bet-profit text-nowrap'>Profit:{betValues.betData.pnl}</div>
+
+                      </div>
+                       <div className="row mt-3 px-2" style={{background:"#ffffff45"}}>
+      <div className="col-6 text-center">
+        <label className=''>Odds</label>
+        <div className="d-flex odds-box align-items-center">
+          <button
+          style={{height:"35px" ,fontSize:"25px"}}
+            type="button"
+            className="btn btn-dark text-light"
+            onClick={() => incrementDecrementOdds('dec')}
+          >−</button>
+
+          <input
+            type="text"
+            value={betObj.odds}
+            readOnly
+            className="form-control text-center"
+          />
+
+          <button
+             style={{height:"35px" ,fontSize:"25px"}}
+            type="button"
+            className="btn btn-dark text-light"
+            onClick={() => incrementDecrementOdds('inc')}
+          >+</button>
+        </div>
+      </div>
+
+      <div className="col-6 text-center">
+        <label>Amount</label>
+        <input
+          type="number"
+          className="form-control"
+          value={betObj.stack || ''}
+          onChange={onChangeStack}
+        />
+      </div>
+    </div>
+                      {/* <div className='bet-stakes'>
                         <div className='form-group bet-stake'>
                           <input
                             maxLength={10}
@@ -266,30 +270,36 @@ const PlaceBetBox = ({ stake }: { stake: IUserBetStake }) => {
                             onChange={onChangeStack}
                           />
                         </div>
-                      </td>
-                      <td className='text-right bet-profit'>{betValues.betData.pnl}</td>
-                    </tr>
-                    <tr>
-                      <td colSpan={5} className='value-buttons' style={{ padding: 5 }}>
+                      </div> */}
+                      {/* <td className='text-right bet-profit'>{betValues.betData.pnl}</td> */}
+                    </div>
+                    <div>
+                      <div className='value-buttons' style={{ padding: 5 }}>
                         {renderStakeButtons()}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <div className='col-md-12'>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className='col-md-12 d-flex justify-content-between align-items-center p-2'>
+                <button className="btn w-100 btn-link text-primary p-0" onClick={reset}>
+        Clear
+      </button>
+
+      <button className="btn btn-info px-4 w-100">Edit</button>
+
                   <button
                     onClick={reset}
                     type='button'
-                    className='btn btn-sm btn-danger float-left'
+                    className='btn  btn-danger float-left w-100'
                   >
                     Reset
                   </button>
                   <button
                     type='submit'
                     disabled={getPlaceBet.status === IApiStatus.Loading}
-                    className='btn btn-sm btn-success float-right m-b-5'
+                    className='btn btn-success float-right  w-100'
                   >
-                    Submit
+                    Place Bet
                     {getPlaceBet.status === IApiStatus.Loading ? (
                       <i className='mx-5 fas fa-spinner fa-spin'></i>
                     ) : (
@@ -297,6 +307,11 @@ const PlaceBetBox = ({ stake }: { stake: IUserBetStake }) => {
                     )}
                   </button>
                 </div>
+                <div className="range-text mt-2">
+      Range: 100 to 2L
+    </div>
+    <div style={{background: "#ffffff45",
+        padding: "4px"}} className="odds-count mt-1 h-2"></div>
               </form>
             </div>
           </div>

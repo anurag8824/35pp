@@ -16,12 +16,12 @@ const LimitInfo = (props:any) => {
     <div id={`min-max-info${nameString.replace(' ', '')}`} className='min-max-info collapse'>
       <span className='m-r-5'>
         <b>Min:</b>
-        {min}
+        {100}
       </span>{' '}
-      <span className='m-r-5'>
+      {/* <span className='m-r-5'>
         <b>Max:</b>
         {max}
-      </span>
+      </span> */}
     </div>
   </div>
 }

@@ -158,9 +158,9 @@ export const FancyList = React.memo(
                         <span className='d-block'>
                           Min: <span>{getCurrentMatch.inPlayFancyMinLimit}</span>
                         </span>
-                        <span className='d-block'>
+                        {/* <span className='d-block'>
                           Max: <span>{getCurrentMatch.inPlayFancyMaxLimit}</span>
-                        </span>
+                        </span> */}
                       </div>
                     )}
                   </div>

@@ -168,11 +168,18 @@ const ListClients = () => {
     const updateListOfItems =
       users && users.items.length > 0 ? [...users.items] : [];
     const item = updateListOfItems[itemIndex];
-    type === "user" ? (item.isLogin = value) : (item.betLock = value);
+    if (type === "user") {
+      item.isLogin = value;
+    } else if (type === "bet") {
+      item.betLock = value;
+    } else if (type === "bet2") {
+      item.betLock2 = value;
+    }
     setUserList({ ...users, items: updateListOfItems });
     const formData = {
       isUserActive: item.isLogin ? item.isLogin : false,
       isUserBetActive: item.betLock ? item.betLock : false,
+      isUserBet2Active: item.betLock2 ? item.betLock2 : false,
       username: item.username,
       single: true,
     };
@@ -214,6 +221,7 @@ const ListClients = () => {
         balance,
         isLogin,
         betLock,
+        betLock2,
         exposerLimit,
         role,
       } = user;
@@ -228,6 +236,7 @@ const ListClients = () => {
         ).toFixed(2),
         "Is Login": isLogin,
         "Bet Lock": betLock,
+        "Bet Lock2": betLock2,
         "Exposer Limit": exposerLimit,
         Percentage: 0,
         Role: RoleName[role!],
@@ -795,6 +804,7 @@ const ListClients = () => {
                       <th>Available Balance</th>
                       <th className="noExport">U St</th>
                       <th className="noExport">B St</th>
+                      <th className="noExport">B2 St</th>
                       <th>Exposure Limit</th>
                       <th>Default %</th>
                       <th>Account Type</th>
@@ -886,6 +896,19 @@ const ListClients = () => {
                                 checked={user?.betLock}
                                 onChange={() =>
                                   updateStatus(index, !user?.betLock, "bet")
+                                }
+                              />
+                            )}
+                          </td>
+                          <td>
+                            {user.role !== RoleType.admin && (
+                              <input
+                                className="form-control"
+                                type="checkbox"
+                                name={"B2 St"}
+                                checked={user?.betLock2}
+                                onChange={() =>
+                                  updateStatus(index, !user?.betLock2, "bet2")
                                 }
                               />
                             )}

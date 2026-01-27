@@ -187,14 +187,15 @@ const Header = () => {
 
       const toggleDrawer = () => {
         setIsOpenD((prevState) => !prevState)
-        setTreeData(
+        setTreeData
+        (
           sportsList.sports.map((sport: ISport) => ({ title: (
-            <div className="d-flex align-items-center">
+            <div className="d-flex align-items-center tree-row drawer-ite">
               {/* 👇 PLUS SIGN YAHI ADD HOTA HAI */}
-              <span>{sport.name}</span>
+          
     
               <span
-                className="ml-2"
+                className="plus-box"
                 style={{ cursor: 'pointer', fontWeight: 'bold' }}
                 onClick={(e) => {
                   e.stopPropagation() // node select hone se rokta hai
@@ -207,6 +208,7 @@ const Header = () => {
               >
                 {expandedKeys.includes(sport.sportId) ? '+' : '+'}
               </span>
+              <span>{sport.name}</span>
       
               {/* 👇 Sport ka naam */}
             </div>
@@ -259,6 +261,50 @@ const Header = () => {
             return items
           })
         }
+
+        // React.useEffect(() => {
+        //   if (sportsList?.sports?.length) {
+        //     setTreeData(
+        //       sportsList.sports.map((sport: ISport) => ({
+        //         key: sport.sportId,
+        //         title: (
+        //           <div className="tree-row">
+        //             <span className="plus-box">
+        //               {expandedKeys.includes(sport.sportId) ? '-' : '+'}
+        //             </span>
+        //             <span>{sport.name}</span>
+        //           </div>
+        //         ),
+        //       }))
+        //     )
+        //   }
+        // }, [sportsList, expandedKeys])
+        
+
+        const Section = ({ title, children, defaultOpen = true }: any) => {
+          const [open, setOpen] = React.useState(defaultOpen)
+        
+          return (
+            <div className="drawer-section">
+              <div
+                className="drawer-section-header"
+                onClick={() => setOpen(!open)}
+              >
+                <span>{title}</span>
+                <span className="arrow">{open ? '▲' : '▼'}</span>
+              </div>
+        
+              {open && <div className="drawer-section-body">{children}</div>}
+            </div>
+          )
+        }
+        
+        const Item = ({ label, onClick }: any) => (
+          <div className="drawer-item" onClick={onClick}>
+            {label}
+          </div>
+        )
+        
 
   return (
     <>
@@ -634,22 +680,55 @@ style={{position: "fixed",
       </ReactModal>
     </header>
 
-      <Drawer open={isOpenD} onClose={toggleDrawer} placement="left" >
-      <div className='drawer-content'>
-        {/* <Tree
-          showIcon={false}
-          expandedKeys={expandedKeys}
-          onExpand={(keys) => setExpandedKeys(keys)}
-          switcherIcon={null} 
-          loadData={onLoadData}
-          treeData={treeData}
-          onSelect={(selectedKeys, e) => {
-            selectExpend(e.node)
-          }}
-        /> */}
-        <SideBarInside/>
-      </div>
-    </Drawer>
+    <Drawer
+  open={isOpenD}
+  onClose={toggleDrawer}
+  placement="left"
+  width={300}
+  className="sports-drawer"
+>
+  <div className="drawer-content">
+
+    {/* 🔍 SEARCH */}
+    <input
+      className="drawer-search"
+      placeholder="Search here"
+    />
+
+    {/* 🏇 RACING SPORTS */}
+    <Section title="Racing Sports" defaultOpen>
+      <Item label="Horse Racing" />
+      <Item label="Greyhound Racing" />
+    </Section>
+
+    {/* 🎰 OTHERS / CASINO */}
+    <Section title="Others" defaultOpen>
+      <Item label="Our Casino" />
+      <Item label="Our VIP Casino" />
+      <Item label="Our Premium Casino" />
+      <Item label="Our Virtual" />
+      <Item label="Tembo" />
+      <Item label="Live Casino" />
+      <Item label="Slot Game" />
+      <Item label="Fantasy Game" />
+    </Section>
+
+    {/* ⚽ ALL SPORTS (DYNAMIC) */}
+    <Section title="All Sports" defaultOpen>
+      <Tree
+        showIcon={false}
+        switcherIcon={null}
+        expandedKeys={expandedKeys}
+        onExpand={(keys) => setExpandedKeys(keys)}
+        loadData={onLoadData}
+        treeData={treeData}
+        onSelect={(keys, e) => selectExpend(e.node)}
+      />
+    </Section>
+
+  </div>
+</Drawer>
+
     </>
   )
 }
