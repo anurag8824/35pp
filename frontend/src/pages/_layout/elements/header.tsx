@@ -208,9 +208,11 @@ const Header = () => {
                 <span>{sport.name}</span>
               </div>
             ),
-            isLeaf: false, // 👈 VERY IMPORTANT
+            isLeaf: false,
+            children: undefined, // ✅ CRITICAL
           }))
         )
+        
         
       }
 
@@ -232,33 +234,29 @@ const Header = () => {
           })
 
           const onLoadData = (node: any) => {
-            // ✅ Agar children already aa chuke hain → STOP
-            if (node.children && node.children.length > 0) {
+            // 🛑 already loaded → stop
+            if (node.children) {
               return Promise.resolve()
             }
           
-            // ✅ Match click
+            // 🎯 match click
             if (node.matchId) {
               selectExpend(node)
               return Promise.resolve()
             }
           
-            // ✅ API CALL ONLY ONCE
             return sportsService.getSeriesWithMatch(node.key).then((res: any) => {
-              const items = res?.data?.data.map((series: any) => {
-                const { id, name } = series.competition
-          
-                return {
-                  key: id,
-                  title: name,
-                  children: series.matches.map((match: any) => ({
-                    key: match.event.id,
-                    title: match.event.name,
-                    matchId: match.event.id,
-                    isLeaf: true, // 👈 IMPORTANT
-                  })),
-                }
-              })
+              const items: DataNode[] = res.data.data.map((series: any) => ({
+                key: series.competition.id,
+                title: series.competition.name,
+                isLeaf: false, // ✅ VERY IMPORTANT
+                children: series.matches.map((match: any) => ({
+                  key: match.event.id,
+                  title: match.event.name,
+                  matchId: match.event.id,
+                  isLeaf: true, // ✅ VERY IMPORTANT
+                })),
+              }))
           
               setTreeData((origin: any) =>
                 updateTreeData(origin, node.key, items)
@@ -267,6 +265,7 @@ const Header = () => {
               return items
             })
           }
+          
           
 
         // React.useEffect(() => {
