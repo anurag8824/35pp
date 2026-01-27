@@ -443,38 +443,150 @@ class SportsController extends ApiController_1.ApiController {
         //       return this.fail(res, e)
         //     }
         //   }
+        // getSeriesWithMarketWithDate = async (req: Request, res: Response): Promise<any> => {
+        //   try {
+        //     const { EventTypeID } = req.query
+        //     if (!EventTypeID) return this.fail(res, 'EventTypeID is required field')
+        //     const response = await sportsApi
+        //       .get(`/get-series?EventTypeID=${EventTypeID}`)
+        //       .then(async (series: any) => {
+        //         const getMatches = series.data.sports.map(async (s: any) => {
+        //           const matches = await sportsApi
+        //             .get(`/get-matches?EventTypeID=${EventTypeID}&CompetitionID=${s.competition.id}`)
+        //             .then((m) => {
+        //               return m.data.sports.map((fm: any) => {
+        //                 return fm
+        //               })
+        //             })
+        //           s.matches = matches
+        //           return s
+        //         })
+        //         return Promise.all(getMatches)
+        //       })
+        //       .then((m) => {
+        //         return m
+        //           .filter((element) => {
+        //             return !Array.isArray(element.matches) || element.matches.length !== 0
+        //           })
+        //           .flat()
+        //       })
+        //     return this.success(res, response, '')
+        //   } catch (e: any) {
+        //     return this.fail(res, e)
+        //   }
+        // }
+        // getSeriesWithMarketWithDate = async (req: Request, res: Response): Promise<any> => {
+        //   try {
+        //     const { EventTypeID } = req.query
+        //     if (!EventTypeID) return this.fail(res, 'EventTypeID is required field')
+        //     const responseone = await axios.get(`http://130.250.191.174:3009/esid?sid=${EventTypeID}&key=dijbfuwd719e12rqhfbjdqdnkqnd11eqdqd`)
+        //     const parseCompetitionWiseMatches = (apiResponse) => {
+        //       if (!apiResponse?.success || !apiResponse?.data) {
+        //         return { data: [] };
+        //       }
+        //       const { t1 = [] } = apiResponse.data;
+        //       const allMatches = [...t1];
+        //       const competitionMap = new Map();
+        //       allMatches.forEach((match) => {
+        //         if (match?.gtype !== "match") return;
+        //         if (match?.mname !== "MATCH_ODDS") return;
+        //         const competitionId = String(match.cid);
+        //         const competitionName = match.cname;
+        //         // create competition bucket if not exists
+        //         if (!competitionMap.has(competitionId)) {
+        //           competitionMap.set(competitionId, {
+        //             competition: {
+        //               id: competitionId,
+        //               name: competitionName,
+        //             },
+        //             marketCount: 0,
+        //             competitionRegion:
+        //               competitionName?.toLowerCase().includes("india")
+        //                 ? "IND"
+        //                 : "International",
+        //             matches: [],
+        //           });
+        //         }
+        //         const competitionObj = competitionMap.get(competitionId);
+        //         competitionObj.marketCount += 1;
+        //         competitionObj.matches.push({
+        //           event: {
+        //             id: match.gmid || match.mid,
+        //             name: match.ename,
+        //             timezone: "GMT",
+        //             openDate: new Date(match.stime).toISOString(),
+        //           },
+        //           marketCount: "",
+        //         });
+        //       });
+        //       return competitionMap.values();
+        //     };
+        //     const response = parseCompetitionWiseMatches(responseone.data);
+        //     console.log(response, "response is here with date")
+        //     return this.success(res, response, '')
+        //   } catch (e: any) {
+        //     return this.fail(res, e)
+        //   }
+        // }
         this.getSeriesWithMarketWithDate = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const { EventTypeID } = req.query;
-                if (!EventTypeID)
+                if (!EventTypeID) {
                     return this.fail(res, 'EventTypeID is required field');
-                const response = yield api_1.sportsApi
-                    .get(`/get-series?EventTypeID=${EventTypeID}`)
-                    .then((series) => __awaiter(this, void 0, void 0, function* () {
-                    const getMatches = series.data.sports.map((s) => __awaiter(this, void 0, void 0, function* () {
-                        const matches = yield api_1.sportsApi
-                            .get(`/get-matches?EventTypeID=${EventTypeID}&CompetitionID=${s.competition.id}`)
-                            .then((m) => {
-                            return m.data.sports.map((fm) => {
-                                return fm;
+                }
+                const responseone = yield axios_1.default.get(`http://130.250.191.174:3009/esid?sid=${EventTypeID}&key=dijbfuwd719e12rqhfbjdqdnkqnd11eqdqd`);
+                const parseCompetitionWiseMatches = (apiResponse) => {
+                    var _a;
+                    if (!(apiResponse === null || apiResponse === void 0 ? void 0 : apiResponse.success) || !((_a = apiResponse === null || apiResponse === void 0 ? void 0 : apiResponse.data) === null || _a === void 0 ? void 0 : _a.t1)) {
+                        return [];
+                    }
+                    const allMatches = apiResponse.data.t1;
+                    const competitionMap = new Map();
+                    allMatches.forEach((match) => {
+                        // ✅ required filters
+                        if (((match === null || match === void 0 ? void 0 : match.gtype) || '').toLowerCase() !== 'match')
+                            return;
+                        if ((match === null || match === void 0 ? void 0 : match.mname) !== 'MATCH_ODDS')
+                            return;
+                        const competitionId = String(match.cid);
+                        const competitionName = match.cname || '';
+                        // ✅ create bucket
+                        if (!competitionMap.has(competitionId)) {
+                            competitionMap.set(competitionId, {
+                                competition: {
+                                    id: competitionId,
+                                    name: competitionName,
+                                },
+                                marketCount: 0,
+                                competitionRegion: competitionName.toLowerCase().includes('india')
+                                    ? 'IND'
+                                    : 'International',
+                                matches: [],
                             });
+                        }
+                        const competitionObj = competitionMap.get(competitionId);
+                        // ✅ increment market count
+                        competitionObj.marketCount += 1;
+                        // ✅ push match
+                        competitionObj.matches.push({
+                            event: {
+                                id: match.gmid || match.mid,
+                                name: match.ename,
+                                timezone: 'GMT',
+                                openDate: new Date(match.stime).toISOString(),
+                            },
+                            marketCount: '',
                         });
-                        s.matches = matches;
-                        return s;
-                    }));
-                    return Promise.all(getMatches);
-                }))
-                    .then((m) => {
-                    return m
-                        .filter((element) => {
-                        return !Array.isArray(element.matches) || element.matches.length !== 0;
-                    })
-                        .flat();
-                });
+                    });
+                    // ❌ iterator nahi
+                    // ✅ pure array return
+                    return Array.from(competitionMap.values());
+                };
+                const response = parseCompetitionWiseMatches(responseone.data);
                 return this.success(res, response, '');
             }
             catch (e) {
-                return this.fail(res, e);
+                return this.fail(res, (e === null || e === void 0 ? void 0 : e.message) || e);
             }
         });
         this.inplayMarket = (req, res) => __awaiter(this, void 0, void 0, function* () {

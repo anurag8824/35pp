@@ -12,8 +12,8 @@ import { UserBetStake } from '../models/UserBetStake'
 import { SportSetting } from '../models/SportSetting'
 import { BetLock } from '../models/BetLock'
 
-const  setMatchData = async () => {
-  const response = await axios.get("http://185.211.4.99:3000/") 
+const setMatchData = async () => {
+  const response = await axios.get("http://185.211.4.99:3000/")
 }
 
 class SportsController extends ApiController {
@@ -62,7 +62,7 @@ class SportsController extends ApiController {
     try {
       const matches = req.body.data
       const syncData = req.body.syncData
-      
+
       const matchArray: any = matches.map((match: any) => match.matchId)
       let matchData: any = []
       if (matches && Object.keys(matches[0]).length === 1) {
@@ -148,7 +148,7 @@ class SportsController extends ApiController {
 
   async saveMatchResyncCron(req: Request, res: Response): Promise<Response> {
     try {
-      const market = await Market.find({ isActive: true, sportId: 4, marketName:"Bookmaker" }).distinct("matchId")
+      const market = await Market.find({ isActive: true, sportId: 4, marketName: "Bookmaker" }).distinct("matchId")
       const matches = await Match.find({ active: true, sportId: 4, matchId: { $nin: market } }, {
         matchId: 1,
         sportId: 1,
@@ -157,7 +157,7 @@ class SportsController extends ApiController {
         _id: 0,
       })
 
-      
+
       const matchArray: any = matches.map((match: any) => match.matchId)
       let matchData: any = []
       if (matches && Object.keys(matches[0]).length === 1) {
@@ -178,13 +178,13 @@ class SportsController extends ApiController {
         matchId: match.matchId.toString(),
         sportId: match.sportId.toString(),
       }))
- 
+
       axios
         .post(`${process.env.SUPER_NODE_URL}api/save-match`, { matches: matchDataRedis })
         .catch((e: any) => {
           console.log(e.response)
         })
-      let syncData =true
+      let syncData = true
       await matchData.map(async (match: any) => {
         await this.marketesData(match, syncData)
         const isFancy = await this.fancyData(match)
@@ -297,7 +297,7 @@ class SportsController extends ApiController {
 
   async bookmakermarketesData(match: IMatch) {
     const markets = await sportsService.getBookmakerMarkets(match)
-    console.log(markets,"markets data from backend ibn ths codew sw")
+    console.log(markets, "markets data from backend ibn ths codew sw")
     if (markets?.data?.sports?.length > 0) {
       let i = 0
       await markets.data.sports.map(async (market: any) => {
@@ -361,7 +361,7 @@ class SportsController extends ApiController {
   }
 
   async fancyData(match: IMatch) {
-    const fancy = await sportsService.getSession(match.matchId,match.sportId)
+    const fancy = await sportsService.getSession(match.matchId, match.sportId)
 
     if (fancy.data.sports) {
       await fancy.data.sports.map(async (market: any) => {
@@ -461,7 +461,7 @@ class SportsController extends ApiController {
 
 
       let matchQuery: any = { $match: { active: true } }
-      console.log(matchQuery,"match Query")
+      console.log(matchQuery, "match Query")
       if (sportId && sportId !== 'all' && status !== 'in-play') {
         matchQuery = { $match: { sportId: parseInt(sportId), active: true } }
       }
@@ -636,7 +636,7 @@ class SportsController extends ApiController {
         active: true,
         // ...filter,
       })
-      .sort({ sr_no: 1, marketId: 1 })
+        .sort({ sr_no: 1, marketId: 1 })
       // const  fancy = await Fancy.find()
 
       // console.log(fancy,"hello worldz")
@@ -702,7 +702,7 @@ class SportsController extends ApiController {
   //     const fancyDataOne: any = await axios.get(`http://185.211.4.99:3000/allMatchData/4/${id}`)
   //     const fancy: any = fancyDataOne.data.data;
   //     console.log(fancy, "fancys");
-  
+
   //     // Wrap the map logic inside Promise.all to handle async operations correctly
   //     const updatePromises = fancy.map(async (item: any) => {
 
@@ -739,11 +739,11 @@ class SportsController extends ApiController {
   //       )
   //     })
   //       })
-      
-  
+
+
   //     // Wait for all promises to resolve
   //     const fancyNew = await Promise.all(updatePromises);
-  
+
   //     // Since we have multiple updated objects, decide what to return (e.g., last one or all)
   //     return this.success(res, fancyNew, 'Fancy added');
   //   } catch (e: any) {
@@ -755,17 +755,17 @@ class SportsController extends ApiController {
   //   try {
   //     console.log(req.params);
   //     const id = req.params.id;
-  
+
   //     const fancyDataOne: any = await axios.get(`http://185.211.4.99:3000/allMatchData/4/${id}`);
   //     const fancy: any = fancyDataOne.data.data;
   //     // sconsole.log(fancy, "fancy");
-  
+
   //     // Wrap the map logic inside Promise.all to handle async operations correctly
   //     const updatePromises = fancy.map(async (item: any) => {
   //       // Assuming each item can have multiple sections
   //       const innerPromises = item.section.map(async (p: any) => {
   //         let type = '';
-  
+
   //         if (p.nat.includes(' ball run ')) {
   //           type = 'ballRun';
   //         }
@@ -778,7 +778,7 @@ class SportsController extends ApiController {
   //         }
 
   //         console.log(p,"p  is here hello world for this side ")
-  
+
   //         const fancyData: IFancy = {
   //           sportId: 4,
   //           matchId: item.gmid,
@@ -792,7 +792,7 @@ class SportsController extends ApiController {
 
 
   //         console.log(fancyData,"fancyData hello this is  fancy Data")
-  
+
   //         // Ensure that the update or insert happens and store the result
   //         return await Fancy.findOneAndUpdate(
   //           { marketId: item.mid, matchId: item.gmid },  // Fixed the query to match the correct field
@@ -803,14 +803,14 @@ class SportsController extends ApiController {
   //           },
   //         );
   //       });
-  
+
   //       // Wait for all inner promises to resolve for each item
   //       return await Promise.all(innerPromises);
   //     });
-  
+
   //     // Wait for all outer promises to resolve
   //     const fancyNew = await Promise.all(updatePromises);
-  
+
   //     // Since we have multiple updated objects, decide what to return (e.g., last one or all)
   //     return this.success(res, fancyNew, 'Fancy added');
   //   } catch (e: any) {
@@ -855,13 +855,13 @@ class SportsController extends ApiController {
       return this.fail(res, e)
     }
   }
-  
-  
+
+
 
   deactivateMarkets = async (req: Request, res: Response): Promise<Response> => {
     try {
       const { market } = req.body
-      console.log("ghjklhjk",req.body)
+      console.log("ghjklhjk", req.body)
       let matchDelete = false
       let matchId = null
       if (market && market.marketId) {
@@ -902,7 +902,7 @@ class SportsController extends ApiController {
                 })
 
                 if (BookMarketData?.length > 0) {
-                  BookMarketData.map(async  (bmMarket: IMarket) => {
+                  BookMarketData.map(async (bmMarket: IMarket) => {
                     let bmSid = null
                     if (bmMarket.marketName === 'Tied Match') {
                       bmSid = bmMarket.runners.reduce((win: any, name: any) => {
@@ -1013,9 +1013,9 @@ class SportsController extends ApiController {
       return this.fail(res, e)
     }
   }
- 
 
- getSeriesWithMarket = async (req: Request, res: Response): Promise<any> => {
+
+  getSeriesWithMarket = async (req: Request, res: Response): Promise<any> => {
     try {
       const { EventTypeID } = req.query
       if (!EventTypeID) return this.fail(res, 'EventTypeID is required field')
@@ -1097,7 +1097,7 @@ class SportsController extends ApiController {
           console.log(series, "series from api");
 
           const getMatches = series?.data?.data?.t1?.flatMap((s: any) => {
-            return{
+            return {
               event: {
                 id: s.gmid,
                 name: s.ename,
@@ -1254,79 +1254,217 @@ class SportsController extends ApiController {
   //   }
   // }
 
-//  getSeriesWithMarket = async (req: Request, res: Response): Promise<any> => {
-//     try {
-//       const { EventTypeID } = req.query
-//       if (!EventTypeID) return this.fail(res, 'EventTypeID is required field')
-//       const alreadyAdded = await Match.find({ active: true }, { matchId: 1 })
-//       const matchIds = alreadyAdded.map((match: any) => match.matchId)
-//       const response = await sportsApi
-//         .get(`/get-series-redis/${EventTypeID}`)
-//         .then(async (series: any) => {
-//           console.log(series,"series is here hahhahahahahahaha")
-//           const getMatches = series.data.data.map(async (s: any) => {
-//             return s.match.map((fm: any) => {
-//               fm.series = s.competition
-//               fm.matchId = fm.event.id
-//               fm.matchDateTime = fm.event.openDate
-//               fm.name = fm.event.name
-//               fm.seriesId = s.competition?.id
-//               fm.sportId = EventTypeID
-//               fm.active = matchIds.indexOf(parseInt(fm.event.id)) > -1 ? true : false
-//               return fm
-//             })
-//           })
-//           return Promise.all([...getMatches])
-//         })
-//         .then((m) => {
-//           return m
-//             .filter((element: any) => {
-//               return !Array.isArray(element) || element.length !== 0
-//             })
-//             .flat()
-//         })
-//         .catch((e) => console.log('error', e))
+  //  getSeriesWithMarket = async (req: Request, res: Response): Promise<any> => {
+  //     try {
+  //       const { EventTypeID } = req.query
+  //       if (!EventTypeID) return this.fail(res, 'EventTypeID is required field')
+  //       const alreadyAdded = await Match.find({ active: true }, { matchId: 1 })
+  //       const matchIds = alreadyAdded.map((match: any) => match.matchId)
+  //       const response = await sportsApi
+  //         .get(`/get-series-redis/${EventTypeID}`)
+  //         .then(async (series: any) => {
+  //           console.log(series,"series is here hahhahahahahahaha")
+  //           const getMatches = series.data.data.map(async (s: any) => {
+  //             return s.match.map((fm: any) => {
+  //               fm.series = s.competition
+  //               fm.matchId = fm.event.id
+  //               fm.matchDateTime = fm.event.openDate
+  //               fm.name = fm.event.name
+  //               fm.seriesId = s.competition?.id
+  //               fm.sportId = EventTypeID
+  //               fm.active = matchIds.indexOf(parseInt(fm.event.id)) > -1 ? true : false
+  //               return fm
+  //             })
+  //           })
+  //           return Promise.all([...getMatches])
+  //         })
+  //         .then((m) => {
+  //           return m
+  //             .filter((element: any) => {
+  //               return !Array.isArray(element) || element.length !== 0
+  //             })
+  //             .flat()
+  //         })
+  //         .catch((e) => console.log('error', e))
 
-//       return this.success(res, response, '')
-//     } catch (e: any) {
-//       return this.fail(res, e)
-//     }
-//   }
+  //       return this.success(res, response, '')
+  //     } catch (e: any) {
+  //       return this.fail(res, e)
+  //     }
+  //   }
+
+  // getSeriesWithMarketWithDate = async (req: Request, res: Response): Promise<any> => {
+  //   try {
+  //     const { EventTypeID } = req.query
+  //     if (!EventTypeID) return this.fail(res, 'EventTypeID is required field')
+  //     const response = await sportsApi
+  //       .get(`/get-series?EventTypeID=${EventTypeID}`)
+  //       .then(async (series: any) => {
+  //         const getMatches = series.data.sports.map(async (s: any) => {
+  //           const matches = await sportsApi
+  //             .get(`/get-matches?EventTypeID=${EventTypeID}&CompetitionID=${s.competition.id}`)
+  //             .then((m) => {
+  //               return m.data.sports.map((fm: any) => {
+  //                 return fm
+  //               })
+  //             })
+  //           s.matches = matches
+  //           return s
+  //         })
+
+  //         return Promise.all(getMatches)
+  //       })
+  //       .then((m) => {
+  //         return m
+  //           .filter((element) => {
+  //             return !Array.isArray(element.matches) || element.matches.length !== 0
+  //           })
+  //           .flat()
+  //       })
+
+  //     return this.success(res, response, '')
+  //   } catch (e: any) {
+  //     return this.fail(res, e)
+  //   }
+  // }
+
+  // getSeriesWithMarketWithDate = async (req: Request, res: Response): Promise<any> => {
+  //   try {
+  //     const { EventTypeID } = req.query
+  //     if (!EventTypeID) return this.fail(res, 'EventTypeID is required field')
+  //     const responseone = await axios.get(`http://130.250.191.174:3009/esid?sid=${EventTypeID}&key=dijbfuwd719e12rqhfbjdqdnkqnd11eqdqd`)
+  //     const parseCompetitionWiseMatches = (apiResponse) => {
+  //       if (!apiResponse?.success || !apiResponse?.data) {
+  //         return { data: [] };
+  //       }
+
+  //       const { t1 = [] } = apiResponse.data;
+  //       const allMatches = [...t1];
+
+  //       const competitionMap = new Map();
+
+  //       allMatches.forEach((match) => {
+  //         if (match?.gtype !== "match") return;
+  //         if (match?.mname !== "MATCH_ODDS") return;
+
+  //         const competitionId = String(match.cid);
+  //         const competitionName = match.cname;
+
+  //         // create competition bucket if not exists
+  //         if (!competitionMap.has(competitionId)) {
+  //           competitionMap.set(competitionId, {
+  //             competition: {
+  //               id: competitionId,
+  //               name: competitionName,
+  //             },
+  //             marketCount: 0,
+  //             competitionRegion:
+  //               competitionName?.toLowerCase().includes("india")
+  //                 ? "IND"
+  //                 : "International",
+  //             matches: [],
+  //           });
+  //         }
+
+  //         const competitionObj = competitionMap.get(competitionId);
+
+  //         competitionObj.marketCount += 1;
+
+  //         competitionObj.matches.push({
+  //           event: {
+  //             id: match.gmid || match.mid,
+  //             name: match.ename,
+  //             timezone: "GMT",
+  //             openDate: new Date(match.stime).toISOString(),
+  //           },
+  //           marketCount: "",
+  //         });
+  //       });
+
+  //       return competitionMap.values();
+        
+  //     };
+  //     const response = parseCompetitionWiseMatches(responseone.data);
+  //     console.log(response, "response is here with date")
+
+  //     return this.success(res, response, '')
+  //   } catch (e: any) {
+  //     return this.fail(res, e)
+  //   }
+  // }
 
   getSeriesWithMarketWithDate = async (req: Request, res: Response): Promise<any> => {
-    try {
-      const { EventTypeID } = req.query
-      if (!EventTypeID) return this.fail(res, 'EventTypeID is required field')
-      const response = await sportsApi
-        .get(`/get-series?EventTypeID=${EventTypeID}`)
-        .then(async (series: any) => {
-          const getMatches = series.data.sports.map(async (s: any) => {
-            const matches = await sportsApi
-              .get(`/get-matches?EventTypeID=${EventTypeID}&CompetitionID=${s.competition.id}`)
-              .then((m) => {
-                return m.data.sports.map((fm: any) => {
-                  return fm
-                })
-              })
-            s.matches = matches
-            return s
-          })
-
-          return Promise.all(getMatches)
-        })
-        .then((m) => {
-          return m
-            .filter((element) => {
-              return !Array.isArray(element.matches) || element.matches.length !== 0
-            })
-            .flat()
-        })
-
-      return this.success(res, response, '')
-    } catch (e: any) {
-      return this.fail(res, e)
+  try {
+    const { EventTypeID } = req.query;
+    if (!EventTypeID) {
+      return this.fail(res, 'EventTypeID is required field');
     }
+
+    const responseone = await axios.get(
+      `http://130.250.191.174:3009/esid?sid=${EventTypeID}&key=dijbfuwd719e12rqhfbjdqdnkqnd11eqdqd`
+    );
+
+    const parseCompetitionWiseMatches = (apiResponse: any) => {
+      if (!apiResponse?.success || !apiResponse?.data?.t1) {
+        return [];
+      }
+
+      const allMatches = apiResponse.data.t1;
+      const competitionMap = new Map<string, any>();
+
+      allMatches.forEach((match: any) => {
+        // ✅ required filters
+        if ((match?.gtype || '').toLowerCase() !== 'match') return;
+        if (match?.mname !== 'MATCH_ODDS') return;
+
+        const competitionId = String(match.cid);
+        const competitionName = match.cname || '';
+
+        // ✅ create bucket
+        if (!competitionMap.has(competitionId)) {
+          competitionMap.set(competitionId, {
+            competition: {
+              id: competitionId,
+              name: competitionName,
+            },
+            marketCount: 0,
+            competitionRegion: competitionName.toLowerCase().includes('india')
+              ? 'IND'
+              : 'International',
+            matches: [],
+          });
+        }
+
+        const competitionObj = competitionMap.get(competitionId);
+
+        // ✅ increment market count
+        competitionObj.marketCount += 1;
+
+        // ✅ push match
+        competitionObj.matches.push({
+          event: {
+            id: match.gmid || match.mid,
+            name: match.ename,
+            timezone: 'GMT',
+            openDate: new Date(match.stime).toISOString(),
+          },
+          marketCount: '',
+        });
+      });
+
+      // ❌ iterator nahi
+      // ✅ pure array return
+      return Array.from(competitionMap.values());
+    };
+
+    const response = parseCompetitionWiseMatches(responseone.data);
+
+    return this.success(res, response, '');
+  } catch (e: any) {
+    return this.fail(res, e?.message || e);
   }
+};
+
 
   inplayMarket = async (req: Request, res: Response): Promise<any> => {
     try {
