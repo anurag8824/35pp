@@ -435,36 +435,36 @@ export class AccountController extends ApiController {
 
   settelement2 = async (req: Request, res: Response) => {
     console.log(req.body, "data from settlement");
-  
+
     const { username } = req.body;
-  
+
     if (!username) {
       return this.fail(res, "Username is required");
     }
-  
+
     try {
       const operations = await Operation
         .find({ username })
         .sort({ createdAt: -1 });
-  
+
       if (!operations || operations.length === 0) {
         return this.success(res, {
           msg: "No operations found for this username",
           operations: []
         });
       }
-  
+
       return this.success(res, {
         msg: "Success",
         operations
       });
-  
+
     } catch (error: any) {
       console.error(error);
       return this.fail(res, "Server error: " + error.message);
     }
   };
-  
+
 
 
   getUserBalanceWithExposer = async (req: Request, res: Response) => {
@@ -586,7 +586,7 @@ export class AccountController extends ApiController {
   getAccountStmtList = async (req: Request, res: Response) => {
     try {
       const { page }: any = req.query
-      const { startDate, endDate, reportType, userId }: any = req.body
+      const { startDate, endDate, reportType, userId, gameId }: any = req.body
       const user: any = req.user
       const options = {
         page: page ? page : 1,
@@ -600,19 +600,23 @@ export class AccountController extends ApiController {
           $lte: new Date(`${endDate} 23:59:59`),
         },
       }
-      if (reportType === "cgame") {
+      if (reportType === "cgame" && gameId != "") {
         filter = {
           ...filter,
           betId: { $ne: null },
           sportId: 5000,
+          matchId: parseInt(gameId)
         };
       }
 
-      if (reportType === "sgame") {
+      if (reportType === "sgame" && gameId !== "") {
         filter = {
           ...filter,
           betId: { $ne: null },
-          sportId: { $ne: 5000 },
+          sportId: {
+            $ne: 5000,
+            $eq: parseInt(gameId)
+          }
         };
       }
 

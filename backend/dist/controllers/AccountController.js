@@ -209,7 +209,7 @@ class AccountController extends ApiController_1.ApiController {
             var _a;
             try {
                 const { page } = req.query;
-                const { startDate, endDate, reportType, userId } = req.body;
+                const { startDate, endDate, reportType, userId, gameId } = req.body;
                 const user = req.user;
                 const options = {
                     page: page ? page : 1,
@@ -223,11 +223,14 @@ class AccountController extends ApiController_1.ApiController {
                         $lte: new Date(`${endDate} 23:59:59`),
                     },
                 };
-                if (reportType === "cgame") {
-                    filter = Object.assign(Object.assign({}, filter), { betId: { $ne: null }, sportId: 5000 });
+                if (reportType === "cgame" && gameId != "") {
+                    filter = Object.assign(Object.assign({}, filter), { betId: { $ne: null }, sportId: 5000, matchId: parseInt(gameId) });
                 }
-                if (reportType === "sgame") {
-                    filter = Object.assign(Object.assign({}, filter), { betId: { $ne: null }, sportId: { $ne: 5000 } });
+                if (reportType === "sgame" && gameId !== "") {
+                    filter = Object.assign(Object.assign({}, filter), { betId: { $ne: null }, sportId: {
+                            $ne: 5000,
+                            $eq: parseInt(gameId)
+                        } });
                 }
                 if (reportType == 'chip') {
                     filter = Object.assign(Object.assign({}, filter), { betId: null });
