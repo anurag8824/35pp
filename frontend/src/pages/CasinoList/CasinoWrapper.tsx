@@ -243,7 +243,7 @@ const CasinoWrapper = (props: any) => {
   }, [updateOdds, checkRoundIdChange])
 
   React.useEffect(() => {
-    if (!interValCasino && gameCode) interValCasino = setInterval(getMatchLiveInfoInterval, 900)
+    // if (!interValCasino && gameCode) interValCasino = setInterval(getMatchLiveInfoInterval, 900)
     return () => {
       clearInterval(interValCasino)
     }
