@@ -7072,6 +7072,10 @@ footer p {
   .home-page .casino-list-item {
     width: calc(25% - 2px);
   }
+
+  .home-page .aviator-list-item {
+    width: calc(33% - 1px);
+  }
   .btn-deposit {
     padding: 5px;
     margin-bottom: 5px;
@@ -9085,6 +9089,16 @@ footer p {
   cursor: pointer;
   position: relative;
 }
+
+.aviator-list-item {
+  width: calc(10% - 10px);
+  margin-left: 1px;
+  margin-right: 1px;
+  margin-bottom: 2px;
+  cursor: pointer;
+  position: relative;
+}
+
 
 
 

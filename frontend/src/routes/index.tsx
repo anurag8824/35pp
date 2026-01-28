@@ -10,6 +10,7 @@ import WithdrawStatement from '../pages/withdrawstatement/withdrawstatement'
 import Login2 from '../pages/login/login2'
 import TOS from '../pages/withdrawstatement/TOS'
 import RG from '../pages/withdrawstatement/RG'
+import AviatorList from '../pages/CasinoList/AviatorList'
 
 const AccountStatement = React.lazy(() => import('../pages/AccountStatement/AccountStatement'))
 const BetHistory = React.lazy(() => import('../pages/BetHistory/BetHistory'))
@@ -92,6 +93,8 @@ const Routers = () => {
             { path: '/withdrawstatement', element: <WithdrawStatement /> },
             { path: '/terms-and-conditions', element: <TOS /> },
             { path: '/responsible-gaming', element: <RG /> },
+            { path: '/aviator-list', element: <AviatorList /> },
+
 
 
            
