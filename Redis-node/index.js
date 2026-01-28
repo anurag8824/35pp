@@ -778,7 +778,7 @@ const BookMakerOddsData = async () => {
 
                 return {
                   selectionId: runner.sid,
-                  status: runner.gstatus,
+                  status: runner.gstatus.toUpperCase(),
                   lastPriceTraded: null,
                   runnerName: runner.nat,
                   totalMatched: 0,
